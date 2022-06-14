@@ -45,8 +45,8 @@
 #include <TVectorD.h>
 #include <TDecompSVD.h>
 
-//#define CLOSURE
-#define BLTest
+#define CLOSURE
+//#define BLTest
 
 
 using namespace std;
@@ -154,7 +154,6 @@ void testUnfold2c(){
   TH1D *Data_Reco_JC[ndef][njet][nkappa];
 #ifdef CLOSURE
   TH1D *Data_Gen_JC[ndef][njet][nkappa];
-
   TH1D *Data_fake_JC[ndef][njet][nkappa];
   TH1D *Data_miss_JC[ndef][njet][nkappa];
   TH1D *Data_fakerate_JC[ndef][njet][nkappa];
@@ -211,38 +210,45 @@ void testUnfold2c(){
         		Data_Reco_JC[id][ij][ik]= (TH1D*)ReadHist1D(HistDir+"/dd_reco_D"+to_string(id)+"_j"+to_string(ij)+"_k"+ to_string(ik)+"_eta0",inputData)->Clone();
         		HT2_NormalV3(Data_Reco_JC[id][ij][ik], binsRec_JC[id][ij][ik], Axisname,nHLTmx);
 #ifdef CLOSURE
-			Data_Gen_JC[id][ij][ik]= (TH1D*)ReadHist1D(HistDir+"/dd_gen_D"+to_string(id)+"_j"+to_string(ij)+"_k"+ to_string(ik)+"_eta0",inputData)->Clone();
-		        HT2_NormalV3(Data_Gen_JC[id][ij][ik], binsGen_JC[id][ij][ik], Axisname,nHLTmx);
-//dd_gen_D1_j1_k8_eta0
-//dd_genmiss_D1_j1_k9_eta0
+	Data_Gen_JC[id][ij][ik]= (TH1D*)ReadHist1D(HistDir+"/dd_gen_D"+to_string(id)+"_j"+to_string(ij)+"_k"+ to_string(ik)+"_eta0",inputData)->Clone();
+	HT2_NormalV3(Data_Gen_JC[id][ij][ik], binsGen_JC[id][ij][ik], Axisname, nHLTmx);
+
 	TH1D *Datafake_JC = (TH1D*)ReadHist1D( HistDir+"/dd_recofake_D"+to_string(id)+"_j"+to_string(ij)+"_k"+ to_string(ik)+"_eta0",inputData)->Clone();
         TH1D *Datamiss_JC = (TH1D*)ReadHist1D( HistDir+"/dd_genmiss_D"+to_string(id)+"_j"+to_string(ij)+"_k"+ to_string(ik)+"_eta0",inputData)->Clone();
-	/*
+	
 	Data_fake_JC[id][ij][ik] = (TH1D*)Datafake_JC->Clone();
         Data_miss_JC[id][ij][ik] = (TH1D*)Datamiss_JC->Clone();
 
-	cout <<"Test 1"<<endl;	
+	//cout <<"Test 1"<<endl;	
 	
 	Data_fakerate_JC[id][ij][ik] = (TH1D*)Datafake_JC->Clone();   Data_fakerate_JC[id][ij][ik]->Divide(Data_fakerate_JC[id][ij][ik], Data_Reco_JC[id][ij][ik], 1, 1, "b");
         Data_fakerate_JC[id][ij][ik]->SetNameTitle(Form("%sData_fakerate_D%i_j%i_k%i_eta0", Histtag, id, ij, ik),Form("%sData_fakerate_D%i_j%i_k%i_eta0", Histtag, id, ij, ik));
 	
-	cout <<"Test 2"<<endl;
+	//cout <<"Test 2"<<endl;
 	
 	Data_fakerateInv_JC[id][ij][ik]=(TH1D*)Data_fakerate_JC[id][ij][ik]->Clone();  Data_fakerateInv_JC[id][ij][ik]->Reset();
 	for (int i = 1; i <= Data_fakerate_JC[id][ij][ik]->GetNbinsX(); ++i) {
           double factor = Data_fakerate_JC[id][ij][ik]->GetBinContent(i);
           double content =1-factor;  Data_fakerateInv_JC[id][ij][ik]->SetBinContent(i, content);
         }
-	
-	Data_missrate_JC[id][ij][ik]= (TH1D*)Datamiss_JC->Clone();  Data_missrate_JC[id][ij][ik]->Divide(Data_missrate_JC[id][ij][ij], Data_Gen_JC[id][ij][ik], 1, 1, "b");
+
+	//cout << "Test 3"<<endl;
+
+	Data_missrate_JC[id][ij][ik]= (TH1D*)Datamiss_JC->Clone();  
+	//cout <<"Test 4"<<endl;
+	//Data_missrate_JC[id][ij][ik]->Divide(Data_missrate_JC[id][ij][ij], Data_Gen_JC[id][ij][ik], 1, 1, "b");
+	Data_missrate_JC[id][ij][ik]->Divide(Data_missrate_JC[id][ij][ik], Data_Gen_JC[id][ij][ik], 1, 1, "b");
+	//cout <<"Test 5"<<endl;
+	//Data_missrate_JC[id][ij][ik]->SetNameTitle(Form("%sDatamiss_rate_D%i_j%i_k%i_eta0", Histtag, id, ij, ik),Form("%sDatamiss_rate_D%i_j%i_k%i_eta0", Histtag, id, ij, ik));
         sprintf(name,"%sDatamiss_rate_D%i_j%i_k%i_eta0", Histtag, id, ij, ik); Data_missrate_JC[id][ij][ik]->SetNameTitle(name,name);
 
+	//cout << "Test 6"<<endl;
 	Data_missrateInv_JC[id][ij][ik]=(TH1D*)Data_missrate_JC[id][ij][ik]->Clone();  Data_missrateInv_JC[id][ij][ik]->Reset();
 	for (int i = 1; i <= Data_missrate_JC[id][ij][ik]->GetNbinsX(); ++i) {
           double factor = Data_missrate_JC[id][ij][ik]->GetBinContent(i);
           double content =1-factor; Data_missrateInv_JC[id][ij][ik]->SetBinContent(i, content);
         }
-	
+	//cout << "Test 7"<<endl;
 	sprintf(name,"%sDataRecominusfake_D%i_j%i_k%i_eta0",Histtag ,id, ij, ik);
         Data_reco_fake_JC[id][ij][ik] = (TH1D*)Data_fakerateInv_JC[id][ij][ik]->Clone();
         Data_reco_fake_JC[id][ij][ik]->SetNameTitle(name,name);
@@ -254,7 +260,6 @@ void testUnfold2c(){
         Data_gen_miss_JC[id][ij][ik]->SetNameTitle(name,name);
         Data_gen_miss_JC[id][ij][ik]->Multiply(Data_Gen_JC[id][ij][ik]);
         Extract(Data_gen_miss_JC[id][ij][ik], binsGen_JC[id][ij][ik], Axisname);
-	*/
 #endif
 //--------------------------------------------MC for Read RM------------------------------------
         DirRMinput->cd();
@@ -313,7 +318,7 @@ void testUnfold2c(){
           	HT2_NormalV3(MC_miss_JC[imc][id][ij][ik], binsGen_JC[id][ij][ik], Axisname,nHLTmx);
 
 		cout << " Fake= " <<MC_fake_JC[imc][id][ij][ik]->GetEntries() <<" Reco-fake: " <<(MC_Reco_JC[imc][id][ij][ik]->GetEntries() -  MC_fake_JC[imc][id][ij][ik]->GetEntries())<<endl;
-	        cout << " Miss= " <<MC_miss_JC[imc][id][ij][ik]->GetEntries() <<" Gen-Miss: " << (MC_Gen_JC[imc][id][ij][ik]->GetEntries() - MC_miss_JC[imc][id][ij][ik]->GetEntries()) ;		 //Response Matrix
+	        cout << " Miss= " <<MC_miss_JC[imc][id][ij][ik]->GetEntries() <<" Gen-Miss: " << (MC_Gen_JC[imc][id][ij][ik]->GetEntries() - MC_miss_JC[imc][id][ij][ik]->GetEntries()) <<endl ;		 //Response Matrix
 	        h2dGenDetMC_JC[imc][id][ij][ik] = (TH2D*)ReadHist2D(HistDir+"/dd_corr_D"+to_string(id)+"_j"+to_string(ij)+"_k"+ to_string(ik)+"_eta0", inputMC[imc])->Clone();
           	cout << " Corr = "  << h2dGenDetMC_JC[imc][id][ij][ik]->GetEntries() <<endl;
           	//--------------------------------------Calculate Fake rate and Miss Rate
