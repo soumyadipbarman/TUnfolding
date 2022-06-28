@@ -218,37 +218,28 @@ void testUnfold2c(){
 	
 	Data_fake_JC[id][ij][ik] = (TH1D*)Datafake_JC->Clone();
         Data_miss_JC[id][ij][ik] = (TH1D*)Datamiss_JC->Clone();
-
-	//cout <<"Test 1"<<endl;	
 	
 	Data_fakerate_JC[id][ij][ik] = (TH1D*)Datafake_JC->Clone();   Data_fakerate_JC[id][ij][ik]->Divide(Data_fakerate_JC[id][ij][ik], Data_Reco_JC[id][ij][ik], 1, 1, "b");
         Data_fakerate_JC[id][ij][ik]->SetNameTitle(Form("%sData_fakerate_D%i_j%i_k%i_eta0", Histtag, id, ij, ik),Form("%sData_fakerate_D%i_j%i_k%i_eta0", Histtag, id, ij, ik));
-	
-	//cout <<"Test 2"<<endl;
-	
+		
 	Data_fakerateInv_JC[id][ij][ik]=(TH1D*)Data_fakerate_JC[id][ij][ik]->Clone();  Data_fakerateInv_JC[id][ij][ik]->Reset();
 	for (int i = 1; i <= Data_fakerate_JC[id][ij][ik]->GetNbinsX(); ++i) {
           double factor = Data_fakerate_JC[id][ij][ik]->GetBinContent(i);
           double content =1-factor;  Data_fakerateInv_JC[id][ij][ik]->SetBinContent(i, content);
         }
 
-	//cout << "Test 3"<<endl;
-
 	Data_missrate_JC[id][ij][ik]= (TH1D*)Datamiss_JC->Clone();  
-	//cout <<"Test 4"<<endl;
 	//Data_missrate_JC[id][ij][ik]->Divide(Data_missrate_JC[id][ij][ij], Data_Gen_JC[id][ij][ik], 1, 1, "b");
 	Data_missrate_JC[id][ij][ik]->Divide(Data_missrate_JC[id][ij][ik], Data_Gen_JC[id][ij][ik], 1, 1, "b");
-	//cout <<"Test 5"<<endl;
 	//Data_missrate_JC[id][ij][ik]->SetNameTitle(Form("%sDatamiss_rate_D%i_j%i_k%i_eta0", Histtag, id, ij, ik),Form("%sDatamiss_rate_D%i_j%i_k%i_eta0", Histtag, id, ij, ik));
         sprintf(name,"%sDatamiss_rate_D%i_j%i_k%i_eta0", Histtag, id, ij, ik); Data_missrate_JC[id][ij][ik]->SetNameTitle(name,name);
 
-	//cout << "Test 6"<<endl;
 	Data_missrateInv_JC[id][ij][ik]=(TH1D*)Data_missrate_JC[id][ij][ik]->Clone();  Data_missrateInv_JC[id][ij][ik]->Reset();
 	for (int i = 1; i <= Data_missrate_JC[id][ij][ik]->GetNbinsX(); ++i) {
           double factor = Data_missrate_JC[id][ij][ik]->GetBinContent(i);
           double content =1-factor; Data_missrateInv_JC[id][ij][ik]->SetBinContent(i, content);
         }
-	//cout << "Test 7"<<endl;
+
 	sprintf(name,"%sDataRecominusfake_D%i_j%i_k%i_eta0",Histtag ,id, ij, ik);
         Data_reco_fake_JC[id][ij][ik] = (TH1D*)Data_fakerateInv_JC[id][ij][ik]->Clone();
         Data_reco_fake_JC[id][ij][ik]->SetNameTitle(name,name);
@@ -302,8 +293,10 @@ void testUnfold2c(){
         RMinput_gen_miss_JC[id][ij][ik]->SetNameTitle(Form("%sRMinputGenminusmiss_D%i_j%i_k%i_eta0",Histtag ,id,ij,ik),Form("%s Gen - miss D%i j%i k%i eta0", Histtag ,id, ij, ik));
         RMinput_gen_miss_JC[id][ij][ik]->Multiply(RMinput_Gen_JC[id][ij][ik]);
         HT2_NormalV3(RMinput_gen_miss_JC[id][ij][ik], binsGen_JC[id][ij][ik], Axisname,nHLTmx);
+
 //--------------------------------------------Read MC--------------------------------------------- 
 	for (int imc=0; imc<nmc ; imc++){
+	//for (int imc=0; imc<1 ; imc++){
         	cout <<  " MC number : " << imc << endl;
           	outputDir[imc]->cd(); //..........................MC directory .......................................
 		//cout <<"Test 1"<<endl;
@@ -439,13 +432,14 @@ void testUnfold2c(){
     		}
 	}
     //----------------------------Condition  number of Probability Matrix
+    
     for(int id=1; id<4; id++){
         for (int ij=1; ij<3; ij++){
                 for (int ik=0; ik<10; ik++){
         		TH2D* RM_JC  = (TH2D*)RMinput_RM_JC[id][ij][ik]->Clone();
         		TH1D* miss_JC = (TH1D*)RMinput_miss_JC[id][ij][ik]->Clone();
         		RM_JC->RebinY(irbin); miss_JC->Rebin(irbin);
-        		//cout <<setw(2) << ity <<setw(5) <<ivar << setw(5) <<'\n';
+        		cout <<setw(3) << id <<setw(2) << ij << setw(10) << ik <<'\n';
         		Condition(RM_JC, miss_JC);
       			}
     		}
