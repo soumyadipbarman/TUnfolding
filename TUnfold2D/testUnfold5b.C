@@ -186,7 +186,7 @@ void testUnfold5b()
   const int nkappa=10;
   const int njetetamn=1;
 
-  int recojcd1bins[nkappa]={40,40,40,30,20,20,20,20,20,20};
+  int recojcd1bins[nkappa]={40,40,40,40,20,20,20,20,20,20};
   double recojcd1minran[nkappa]={-8.0,-5.0,-4.0,-3.0,-2.0,-2.0,-2.0,-2.0,-1.0,-1.0};
   double recojcd1maxran[nkappa]={8.0,5.0,4.0,3.0,2.0,2.0,2.0,2.0,1.0,1.0};
 
@@ -194,7 +194,7 @@ void testUnfold5b()
   double recojcd23minran[nkappa]={-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0};
   double recojcd23maxran[nkappa]={1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0};
 
-  int genjcd1bins[nkappa]={20,20,20,15,10,10,10,10,10,10};
+  int genjcd1bins[nkappa]={20,20,20,20,10,10,10,10,10,10};
   double genjcd1minran[nkappa]={-8.0,-5.0,-4.0,-3.0,-2.0,-2.0,-2.0,-2.0,-1.0,-1.0};
   double genjcd1maxran[nkappa]={8.0,5.0,4.0,3.0,2.0,2.0,2.0,2.0,1.0,1.0};
 
@@ -247,114 +247,114 @@ void testUnfold5b()
 
   for (int iet=0; iet<njetetamn; iet++) {                         //Default 1
         for (int ik=0; ik<10; ik++){
-                sprintf(RecoBinName, "Detector2d_D1_j1_k%i_eta%i", ik, iet);
+                sprintf(RecoBinName, "Detector2d_d0_j0_k%i_eta%i", ik, iet);
                 binsRec2D_D1J1[ik][iet] = new TUnfoldBinning(RecoBinName);
-                sprintf(RecoBinName, "Recobin2d_D1_j1_k%i_eta%i",ik, iet);
+                sprintf(RecoBinName, "Recobin2d_d0_j0_k%i_eta%i",ik, iet);
                 RecoBinning2D_D1J1[ik][iet]= binsRec2D_D1J1[ik][iet]->AddBinning(RecoBinName);
-                sprintf(Axisname, "D1_j1_k%i", ik);
+                sprintf(Axisname, "d0_j0_k%i", ik);
                 RecoBinning2D_D1J1[ik][iet]->AddAxis(Axisname, recojcd1bins[ik], recojcd1minran[ik], recojcd1maxran[ik], false, false);
                 sprintf(Axisname, "ht");
                 RecoBinning2D_D1J1[ik][iet]->AddAxis(Axisname, nHLTmx, recohtbins, false, false);
 
 
-                sprintf(RecoBinName, "Detector2d_D1_j2_k%i_eta%i", ik, iet);
+                sprintf(RecoBinName, "Detector2d_d0_j1_k%i_eta%i", ik, iet);
                 binsRec2D_D1J2[ik][iet] = new TUnfoldBinning(RecoBinName);
-                sprintf(RecoBinName, "Recobin2d_D1_j2_k%i_eta%i",ik, iet);
+                sprintf(RecoBinName, "Recobin2d_d0_j1_k%i_eta%i",ik, iet);
                 RecoBinning2D_D1J2[ik][iet]= binsRec2D_D1J2[ik][iet]->AddBinning(RecoBinName);
-                sprintf(Axisname, "D1_j2_k%i", ik);
+                sprintf(Axisname, "d0_j1_k%i", ik);
                 RecoBinning2D_D1J2[ik][iet]->AddAxis(Axisname, recojcd1bins[ik], recojcd1minran[ik], recojcd1maxran[ik], false, false);
                 sprintf(Axisname, "ht");
                 RecoBinning2D_D1J2[ik][iet]->AddAxis(Axisname, nHLTmx, recohtbins, false, false);
 
 
-                sprintf(RecoBinName, "Detector2d_D2_j1_k%i_eta%i", ik, iet);
+                sprintf(RecoBinName, "Detector2d_d1_j0_k%i_eta%i", ik, iet);
                 binsRec2D_D2J1[ik][iet] = new TUnfoldBinning(RecoBinName);
-                sprintf(RecoBinName, "Recobin2d_D2_j1_k%i_eta%i",ik, iet);
+                sprintf(RecoBinName, "Recobin2d_d1_j0_k%i_eta%i",ik, iet);
                 RecoBinning2D_D2J1[ik][iet]= binsRec2D_D2J1[ik][iet]->AddBinning(RecoBinName);
-                sprintf(Axisname, "D2_j1_k%i", ik);
+                sprintf(Axisname, "d1_j0_k%i", ik);
                 RecoBinning2D_D2J1[ik][iet]->AddAxis(Axisname, recojcd23bins[ik], recojcd23minran[ik], recojcd23maxran[ik], false, false);
                 sprintf(Axisname, "ht");
                 RecoBinning2D_D2J1[ik][iet]->AddAxis(Axisname, nHLTmx, recohtbins, false, false);
 
-                sprintf(RecoBinName, "Detector2d_D2_j2_k%i_eta%i", ik, iet);
+                sprintf(RecoBinName, "Detector2d_d1_j1_k%i_eta%i", ik, iet);
                 binsRec2D_D2J2[ik][iet] = new TUnfoldBinning(RecoBinName);
-                sprintf(RecoBinName, "Recobin2d_D2_j2_k%i_eta%i",ik, iet);
+                sprintf(RecoBinName, "Recobin2d_d1_j1_k%i_eta%i",ik, iet);
                 RecoBinning2D_D2J2[ik][iet]= binsRec2D_D2J2[ik][iet]->AddBinning(RecoBinName);
-                sprintf(Axisname, "D2_j2_k%i", ik);
+                sprintf(Axisname, "d1_j1_k%i", ik);
                 RecoBinning2D_D2J2[ik][iet]->AddAxis(Axisname, recojcd23bins[ik], recojcd23minran[ik], recojcd23maxran[ik], false, false);
                 sprintf(Axisname, "ht");
                 RecoBinning2D_D2J2[ik][iet]->AddAxis(Axisname, nHLTmx, recohtbins, false, false);
 
 
-                sprintf(RecoBinName, "Detector2d_D3_j1_k%i_eta%i", ik, iet);
+                sprintf(RecoBinName, "Detector2d_d2_j0_k%i_eta%i", ik, iet);
                 binsRec2D_D3J1[ik][iet] = new TUnfoldBinning(RecoBinName);
-                sprintf(RecoBinName, "Recobin2d_D3_j1_k%i_eta%i",ik, iet);
+                sprintf(RecoBinName, "Recobin2d_d2_j0_k%i_eta%i",ik, iet);
                 RecoBinning2D_D3J1[ik][iet]= binsRec2D_D3J1[ik][iet]->AddBinning(RecoBinName);
-                sprintf(Axisname, "D3_j1_k%i", ik);
+                sprintf(Axisname, "d2_j0_k%i", ik);
                 RecoBinning2D_D3J1[ik][iet]->AddAxis(Axisname, recojcd23bins[ik], recojcd23minran[ik], recojcd23maxran[ik], false, false);
                 sprintf(Axisname, "ht");
                 RecoBinning2D_D3J1[ik][iet]->AddAxis(Axisname, nHLTmx, recohtbins, false, false);
 
-                sprintf(RecoBinName, "Detector2d_D3_j2_k%i_eta%i", ik, iet);
+                sprintf(RecoBinName, "Detector2d_d2_j1_k%i_eta%i", ik, iet);
                 binsRec2D_D3J2[ik][iet] = new TUnfoldBinning(RecoBinName);
-                sprintf(RecoBinName, "Recobin2d_D3_j2_k%i_eta%i",ik, iet);
+                sprintf(RecoBinName, "Recobin2d_d2_j1_k%i_eta%i",ik, iet);
                 RecoBinning2D_D3J2[ik][iet]= binsRec2D_D3J2[ik][iet]->AddBinning(RecoBinName);
-                sprintf(Axisname, "D3_j2_k%i", ik);
+                sprintf(Axisname, "d2_j1_k%i", ik);
                 RecoBinning2D_D3J2[ik][iet]->AddAxis(Axisname, recojcd23bins[ik], recojcd23minran[ik], recojcd23maxran[ik], false, false);
                 sprintf(Axisname, "ht");
                 RecoBinning2D_D3J2[ik][iet]->AddAxis(Axisname, nHLTmx, recohtbins, false, false);
 
 
-		sprintf(GenBinName, "Generator2d_D1_j1_k%i_eta%i", ik, iet);
+		sprintf(GenBinName, "Generator2d_d0_j0_k%i_eta%i", ik, iet);
                 binsGen2D_D1J1[ik][iet] = new TUnfoldBinning(GenBinName);
-                sprintf(GenBinName, "Genbin2d_D1_j1_k%i_eta%i",ik, iet);
+                sprintf(GenBinName, "Genbin2d_d0_j0_k%i_eta%i",ik, iet);
                 GenBinning2D_D1J1[ik][iet]= binsGen2D_D1J1[ik][iet]->AddBinning(GenBinName);
-                sprintf(Axisname, "D1_j1_k%i", ik);
+                sprintf(Axisname, "d0_j0_k%i", ik);
                 GenBinning2D_D1J1[ik][iet]->AddAxis(Axisname, genjcd1bins[ik], genjcd1minran[ik], genjcd1maxran[ik], false, false);
                 sprintf(Axisname, "ht");
                 GenBinning2D_D1J1[ik][iet]->AddAxis(Axisname, nHLTmx, recohtbins, false, false);
 
-                sprintf(GenBinName, "Generator2d_D1_j2_k%i_eta%i", ik, iet);
+                sprintf(GenBinName, "Generator2d_d0_j1_k%i_eta%i", ik, iet);
                 binsGen2D_D1J2[ik][iet] = new TUnfoldBinning(GenBinName);
-                sprintf(GenBinName, "Genbin2d_D1_j2_k%i_eta%i",ik, iet);
+                sprintf(GenBinName, "Genbin2d_d0_j1_k%i_eta%i",ik, iet);
                 GenBinning2D_D1J2[ik][iet]= binsGen2D_D1J2[ik][iet]->AddBinning(GenBinName);
-                sprintf(Axisname, "D1_j2_k%i", ik);
+                sprintf(Axisname, "d0_j1_k%i", ik);
                 GenBinning2D_D1J2[ik][iet]->AddAxis(Axisname, genjcd1bins[ik], genjcd1minran[ik], genjcd1maxran[ik], false, false);
                 sprintf(Axisname, "ht");
                 GenBinning2D_D1J2[ik][iet]->AddAxis(Axisname, nHLTmx, recohtbins, false, false);
 
-                sprintf(GenBinName, "Generator2d_D2_j1_k%i_eta%i", ik, iet);
+                sprintf(GenBinName, "Generator2d_d1_j0_k%i_eta%i", ik, iet);
                 binsGen2D_D2J1[ik][iet] = new TUnfoldBinning(GenBinName);
-                sprintf(GenBinName, "Genbin2d_D2_j1_k%i_eta%i",ik, iet);
+                sprintf(GenBinName, "Genbin2d_d1_j0_k%i_eta%i",ik, iet);
                 GenBinning2D_D2J1[ik][iet]= binsGen2D_D2J1[ik][iet]->AddBinning(GenBinName);
-                sprintf(Axisname, "D2_j1_k%i", ik);
+                sprintf(Axisname, "d1_j0_k%i", ik);
                 GenBinning2D_D2J1[ik][iet]->AddAxis(Axisname, genjcd23bins[ik], genjcd23minran[ik], genjcd23maxran[ik], false, false);
                 sprintf(Axisname, "ht");
                 GenBinning2D_D2J1[ik][iet]->AddAxis(Axisname, nHLTmx, recohtbins, false, false);
 
-                sprintf(GenBinName, "Generator2d_D2_j2_k%i_eta%i", ik, iet);
+                sprintf(GenBinName, "Generator2d_d1_j1_k%i_eta%i", ik, iet);
                 binsGen2D_D2J2[ik][iet] = new TUnfoldBinning(GenBinName);
-                sprintf(GenBinName, "Genbin2d_D2_j2_k%i_eta%i",ik, iet);
+                sprintf(GenBinName, "Genbin2d_d1_j1_k%i_eta%i",ik, iet);
                 GenBinning2D_D2J2[ik][iet]= binsGen2D_D2J2[ik][iet]->AddBinning(GenBinName);
-                sprintf(Axisname, "D2_j2_k%i", ik);
+                sprintf(Axisname, "d1_j1_k%i", ik);
                 GenBinning2D_D2J2[ik][iet]->AddAxis(Axisname, genjcd23bins[ik], genjcd23minran[ik], genjcd23maxran[ik], false, false);
                 sprintf(Axisname, "ht");
                 GenBinning2D_D2J2[ik][iet]->AddAxis(Axisname, nHLTmx, recohtbins, false, false);
 
-                sprintf(GenBinName, "Generator2d_D3_j1_k%i_eta%i", ik, iet);
+                sprintf(GenBinName, "Generator2d_d2_j0_k%i_eta%i", ik, iet);
                 binsGen2D_D3J1[ik][iet] = new TUnfoldBinning(GenBinName);
-                sprintf(GenBinName, "Genbin2d_D3_j1_k%i_eta%i",ik, iet);
+                sprintf(GenBinName, "Genbin2d_d2_j0_k%i_eta%i",ik, iet);
                 GenBinning2D_D3J1[ik][iet]= binsGen2D_D3J1[ik][iet]->AddBinning(GenBinName);
-                sprintf(Axisname, "D3_j1_k%i", ik);
+                sprintf(Axisname, "d2_j0_k%i", ik);
                 GenBinning2D_D3J1[ik][iet]->AddAxis(Axisname, genjcd23bins[ik], genjcd23minran[ik], genjcd23maxran[ik], false, false);
                 sprintf(Axisname, "ht");
                 GenBinning2D_D3J1[ik][iet]->AddAxis(Axisname, nHLTmx, recohtbins, false, false);
 
-                sprintf(GenBinName, "Generator2d_D3_j2_k%i_eta%i", ik, iet);
+                sprintf(GenBinName, "Generator2d_d2_j1_k%i_eta%i", ik, iet);
                 binsGen2D_D3J2[ik][iet] = new TUnfoldBinning(GenBinName);
-                sprintf(GenBinName, "Genbin2d_D3_j2_k%i_eta%i",ik, iet);
+                sprintf(GenBinName, "Genbin2d_d2_j1_k%i_eta%i",ik, iet);
                 GenBinning2D_D3J2[ik][iet]= binsGen2D_D3J2[ik][iet]->AddBinning(GenBinName);
-                sprintf(Axisname, "D3_j2_k%i", ik);
+                sprintf(Axisname, "d2_j1_k%i", ik);
                 GenBinning2D_D3J2[ik][iet]->AddAxis(Axisname, genjcd23bins[ik], genjcd23minran[ik], genjcd23maxran[ik], false, false);
                 sprintf(Axisname, "ht");
                 GenBinning2D_D3J2[ik][iet]->AddAxis(Axisname, nHLTmx, recohtbins, false, false);
