@@ -437,7 +437,6 @@ for(int id=0; id <ndef; id++){
       		Fold(RM, Reco, Gen, miss, fake, Folded);
       		sprintf(name,"Fold_d%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt);
       		Folded->SetNameTitle(name,name);
-
       		Folded->Write();
 			}
      		}

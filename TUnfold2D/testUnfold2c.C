@@ -46,7 +46,7 @@
 #include <TDecompSVD.h>
 
 #define CLOSURE
-//#define BLTest
+#define BLTest
 
 
 using namespace std;
@@ -132,8 +132,8 @@ void testUnfold2c(){
 
   TH1D *MC_Gen[nmc][ndef][njet][nkappa];  
   TH1D *MC_miss[nmc][ndef][njet][nkappa];  
-  TH1D *MC_Gen_miss[nmc][ndef][njet][nkappa];  
   TH1D *MC_missrate[nmc][ndef][njet][nkappa];
+  TH1D *MC_Gen_miss[nmc][ndef][njet][nkappa];  
 
   TH2D *h2dGenDetMC[nmc][ndef][njet][nkappa];  
   TH1D *RMX[nmc][ndef][njet][nkappa];  
@@ -149,8 +149,8 @@ void testUnfold2c(){
   TH1D *Data_miss[ndef][njet][nkappa];
   TH1D *Data_fakerate[ndef][njet][nkappa];
   TH1D *Data_fakerateInv[ndef][njet][nkappa];
-  TH1D *Data_missrateInv[ndef][njet][nkappa];
   TH1D *Data_missrate[ndef][njet][nkappa];
+  TH1D *Data_missrateInv[ndef][njet][nkappa];
   TH1D *Data_reco_fake[ndef][njet][nkappa];
   TH1D *Data_gen_miss[ndef][njet][nkappa];
 #endif
@@ -158,12 +158,12 @@ void testUnfold2c(){
   TH1D *RMinput_Gen[ndef][njet][nkappa];          
   TH1D *RMinput_fakerate[ndef][njet][nkappa];     
   TH1D *RMinput_fakerateInv[ndef][njet][nkappa];  
-  TH1D *RMinput_missrateInv[ndef][njet][nkappa];  
-  TH1D *RMinput_missrate[ndef][njet][nkappa];     
+  TH1D *RMinput_missrate[ndef][njet][nkappa];
+  TH1D *RMinput_missrateInv[ndef][njet][nkappa];
+  TH1D *RMinput_fake[ndef][njet][nkappa];  
   TH1D *RMinput_reco_fake[ndef][njet][nkappa];    
-  TH1D *RMinput_fake[ndef][njet][nkappa];         
-  TH1D *RMinput_gen_miss[ndef][njet][nkappa];     
   TH1D *RMinput_miss[ndef][njet][nkappa];         
+  TH1D *RMinput_gen_miss[ndef][njet][nkappa];              
   TH2D *RMinput_RM[ndef][njet][nkappa];           
 
   TUnfoldBinning *binsRec[ndef][njet][nkappa];
@@ -239,7 +239,7 @@ void testUnfold2c(){
 //--------------------------------------------MC for Read RM------------------------------------
         DirRMinput->cd();
         RMinput_Reco[id][ij][ik]= (TH1D*)ReadHist1D(HistDir+"/dd_reco_d"+to_string(id)+"_j"+to_string(ij)+"_k"+ to_string(ik)+"_eta0",RMinput)->Clone();
-	for(int i=1 ; i< RMinput_Reco[id][ij][ik]->GetNbinsX()+1; i++){ if(RMinput_Reco[id][ij][ik]->GetBinContent(i) == 0) {cout << " RMinput Bin entry Nil : bin no : "<< i << endl;}}
+	for(int i=1 ; i< RMinput_Reco[id][ij][ik]->GetNbinsX()+1; i++){ if(RMinput_Reco[id][ij][ik]->GetBinContent(i) == 0) {cout << "RMinput Bin entry Nil : bin no : "<< i << endl;}}
         HT2_NormalV3(RMinput_Reco[id][ij][ik], binsRec[id][ij][ik], Axisname,nHLTmx);
 
 	RMinput_Gen[id][ij][ik]=(TH1D*)ReadHist1D( HistDir+"/dd_gen_d"+to_string(id)+"_j"+to_string(ij)+"_k"+ to_string(ik)+"_eta0",RMinput)->Clone();
@@ -250,7 +250,7 @@ void testUnfold2c(){
 	RMinput_fake[id][ij][ik] = (TH1D*)ReadHist1D( HistDir+"/dd_recofake_d"+to_string(id)+"_j"+to_string(ij)+"_k"+ to_string(ik)+"_eta0",RMinput)->Clone();
         RMinput_miss[id][ij][ik] = (TH1D*)ReadHist1D( HistDir+"/dd_genmiss_d"+to_string(id)+"_j"+to_string(ij)+"_k"+ to_string(ik)+"_eta0",RMinput)->Clone();
 
-	RMinput_fakerate[id][ij][ik] = (TH1D*) RMinput_fake[id][ij][ik]->Clone();   RMinput_fakerate[id][ij][ik]->Divide(RMinput_fakerate[id][ij][ik], RMinput_Reco[id][ij][ik], 1, 1, "b");
+	RMinput_fakerate[id][ij][ik] = (TH1D*)RMinput_fake[id][ij][ik]->Clone(); RMinput_fakerate[id][ij][ik]->Divide(RMinput_fakerate[id][ij][ik], RMinput_Reco[id][ij][ik], 1, 1, "b");
         RMinput_fakerate[id][ij][ik]->SetNameTitle(Form("%sRMinputfake_rate_d%i_j%i_k%i_eta0", Histtag, id, ij, ik),Form("%s fakerate d%i j%i k%i eta0", Histtag, id, ij, ik));
         HT2_NormalV3(RMinput_fakerate[id][ij][ik], binsRec[id][ij][ik], Axisname,nHLTmx);
 
@@ -259,7 +259,7 @@ void testUnfold2c(){
           double factor = RMinput_fakerate[id][ij][ik]->GetBinContent(i);
           double content =1-factor;  RMinput_fakerateInv[id][ij][ik]->SetBinContent(i, content);
         }
-	RMinput_missrate[id][ij][ik] = (TH1D*)RMinput_miss[id][ij][ik]->Clone();  RMinput_missrate[id][ij][ik]->Divide(RMinput_missrate[id][ij][ik], RMinput_Gen[id][ij][ik], 1, 1, "b");
+	RMinput_missrate[id][ij][ik] = (TH1D*)RMinput_miss[id][ij][ik]->Clone(); RMinput_missrate[id][ij][ik]->Divide(RMinput_missrate[id][ij][ik], RMinput_Gen[id][ij][ik], 1, 1, "b");
         RMinput_missrate[id][ij][ik]->SetNameTitle(Form("%sRMinputmiss_rate_d%i_j%i_k%i_eta0", Histtag,id, ij, ik),Form("%s missrate d%i j%i k%i  eta0", Histtag,id, ij, ik));
         HT2_NormalV3(RMinput_missrate[id][ij][ik], binsGen[id][ij][ik], Axisname,nHLTmx);
 
@@ -268,6 +268,7 @@ void testUnfold2c(){
           double factor = RMinput_missrate[id][ij][ik]->GetBinContent(i);
           double content =1-factor; RMinput_missrateInv[id][ij][ik]->SetBinContent(i, content);
         }
+
 	RMinput_reco_fake[id][ij][ik] = (TH1D*)RMinput_fakerateInv[id][ij][ik]->Clone();
         RMinput_reco_fake[id][ij][ik]->SetNameTitle(Form("%sRMinputRecominusfake_d%i_j%i_k%i_eta0",Histtag ,id,ij,ik),Form("%s Reco - fake d%i j%i k%i eta0", Histtag ,id, ij, ik));
         RMinput_reco_fake[id][ij][ik]->Multiply(RMinput_Reco[id][ij][ik]);
@@ -281,7 +282,7 @@ void testUnfold2c(){
 //--------------------------------------------Read MC--------------------------------------------- 
 	for (int imc=0; imc<nmc ; imc++){
 	//for (int imc=0; imc<1 ; imc++){
-        	cout <<  " MC number : " << imc << endl;
+        	cout <<  "MC number : " << imc << endl;
           	outputDir[imc]->cd(); //..........................MC directory .......................................
 		//cout <<"Test 1"<<endl;
 		MC_Reco[imc][id][ij][ik] = (TH1D*)ReadHist1D(HistDir+"/dd_reco_d"+to_string(id)+"_j"+to_string(ij)+"_k"+ to_string(ik)+"_eta0", inputMC[imc])->Clone();
@@ -294,10 +295,10 @@ void testUnfold2c(){
         	HT2_NormalV3(MC_fake[imc][id][ij][ik], binsRec[id][ij][ik], Axisname,nHLTmx);
           	HT2_NormalV3(MC_miss[imc][id][ij][ik], binsGen[id][ij][ik], Axisname,nHLTmx);
 
-		cout << " Fake= " <<MC_fake[imc][id][ij][ik]->GetEntries() <<" Reco-fake: " <<(MC_Reco[imc][id][ij][ik]->GetEntries() -  MC_fake[imc][id][ij][ik]->GetEntries())<<endl;
-	        cout << " Miss= " <<MC_miss[imc][id][ij][ik]->GetEntries() <<" Gen-Miss: " << (MC_Gen[imc][id][ij][ik]->GetEntries() - MC_miss[imc][id][ij][ik]->GetEntries()) <<endl ;		 	 //Response Matrix
+		cout << "Fake= " <<MC_fake[imc][id][ij][ik]->GetEntries() <<" Reco-fake: " <<(MC_Reco[imc][id][ij][ik]->GetEntries() -  MC_fake[imc][id][ij][ik]->GetEntries())<<endl;
+	        cout << "Miss= " <<MC_miss[imc][id][ij][ik]->GetEntries() <<" Gen-Miss: " << (MC_Gen[imc][id][ij][ik]->GetEntries() - MC_miss[imc][id][ij][ik]->GetEntries()) <<endl ;		 	 //Response Matrix
 	        h2dGenDetMC[imc][id][ij][ik] = (TH2D*)ReadHist2D(HistDir+"/dd_corr_d"+to_string(id)+"_j"+to_string(ij)+"_k"+ to_string(ik)+"_eta0", inputMC[imc])->Clone();
-          	cout << " Corr = "  << h2dGenDetMC[imc][id][ij][ik]->GetEntries() <<endl;
+          	cout << "Corr = "  << h2dGenDetMC[imc][id][ij][ik]->GetEntries() <<endl;
           	//--------------------------------------Calculate Fake rate and Miss Rate
 		TH1D* fakerate = (TH1D*)MC_fake[imc][id][ij][ik]->Clone();
           	fakerate->Divide(fakerate,MC_Reco[imc][id][ij][ik], 1, 1, "b");
@@ -341,7 +342,7 @@ void testUnfold2c(){
 		//------------------------------------------------------Stability and Purity -----------------------------------------
 	        TH1* hist_pu = (TH1D*)MC_miss[imc][id][ij][ik]->Clone(); hist_pu->Reset();
           	TH1* hist_st = (TH1D*)MC_miss[imc][id][ij][ik]->Clone(); hist_st->Reset();
-          	TH2* RMcopy  = (TH2D*)h2dGenDetMC[imc][id][ij][ik]->Clone(); RMcopy->RebinX(2);
+          	TH2* RMcopy  = (TH2D*)h2dGenDetMC[imc][id][ij][ik]->Clone(); RMcopy->RebinX(2);   // CHECK REBIN required or not
 		for(int binRec=1; binRec<= hist_pu->GetNbinsX(); binRec++) {
             		double sum=0.;
             		for(int binGen=1; binGen<=hist_pu->GetNbinsX(); binGen++) {
@@ -368,7 +369,7 @@ void testUnfold2c(){
 
 		TH1D *h_pu = (TH1D*)fakerate->Clone(); h_pu->Reset();
           	TH1D *h_st = (TH1D*)fakerate->Clone(); h_st->Reset();
-          	int ir = h_pu->GetNbinsX(); int ig = missrate->GetNbinsX();  // ?? CHECK
+          	int ir = h_pu->GetNbinsX(); int ig = missrate->GetNbinsX(); 
           	double fk[ir]; double ef[ig]; double pu[ir]; double st[ir];
 
 		for(int i =1; i<h_pu->GetNbinsX()+1; i++){
@@ -415,18 +416,18 @@ void testUnfold2c(){
       			}
     		}
 	}
-    //----------------------------Condition  number of Probability Matrix
+//----------------------------Condition  number of Probability Matrix
     
     for(int id=0; id<ndef; id++){
         for (int ij=0; ij<njet; ij++){
                 for (int ik=0; ik<nkappa; ik++){
         		TH2D* RM  = (TH2D*)RMinput_RM[id][ij][ik]->Clone();
         		TH1D* miss = (TH1D*)RMinput_miss[id][ij][ik]->Clone();
-        		//RM->RebinY(irbin); miss->Rebin(irbin);
-			RM->RebinX(2);
-        		cout <<setw(3) << id <<setw(2) << ij << setw(10) << ik <<'\n';
+        		RM->RebinY(irbin); miss->Rebin(irbin);
+			//RM->RebinX(2);
+        		cout <<setw(3) << id <<setw(3) << ij << setw(3) << ik <<'\n';
         		Condition(RM, miss);
-			ConditionV3(RM);
+			//ConditionV3(RM);
       			}
     		}
     }
@@ -436,9 +437,8 @@ void testUnfold2c(){
         for (int ij=0; ij<njet; ij++){
                 for (int ik=0; ik<nkappa; ik++){
 		        cout << " TUnfoldBinning2D : "<< " Jet Definition : "<< id << " : Jet Number " << ij << " : Kappa " << ik << " ";
-
 		        //Rebin for match the condition of reco vs gen bin 
-        		RMinput_RM[id][ij][ik]->RebinY(irbin);   
+        		RMinput_RM[id][ij][ik]->RebinY(irbin);   // CHECK 
 			RMinput_Gen[id][ij][ik]->Rebin(irbin);
 			//----------------------------------------------------------Define Input---------------------   
         		TUnfoldBinning* RecoBin = binsRec[id][ij][ik];
@@ -473,13 +473,13 @@ void testUnfold2c(){
         				}
         				covM->Write();
 			//----------------------------------------------------------No Reguratization-------------------------------------
-		        TUnfoldDensity density(RMin,TUnfold::kHistMapOutputVert,
-                	               TUnfoldDensity::kRegModeNone,
+		        TUnfoldDensity density(RMin,TUnfold::kHistMapOutputVert, // truth level on y-axis of response matrix
+                	               TUnfoldDensity::kRegModeNone, // without regularisation
                         	       //TUnfoldDensity::kRegModeCurvature,
                                	       //TUnfoldDensity::kEConstraintArea,
-                               	       TUnfoldDensity::kEConstraintNone,
+                               	       TUnfoldDensity::kEConstraintNone,  // no constrain on area
                                        //TUnfoldDensity::kDensityModeNone,
-                                       TUnfoldDensity::kDensityModeBinWidthAndUser,
+                                       TUnfoldDensity::kDensityModeBinWidthAndUser, 
                                        GenBin,RecoBin);//REGULARISATION_DISTRIBUTION, REGULARISATION_AXISSTEERING);//,0,0,REGULARISATION_DISTRIBUTION,REGULARISATION_AXISSTEERING);
 			
 			density.SubtractBackground(mcbackground, "fake", 1.0, 0.00); // hist,name,scale, scale error 
@@ -492,7 +492,7 @@ void testUnfold2c(){
         		density.DoUnfold(0.0);//,input,biasScale);  // tau 0.0 means no regularization
 
 			sprintf(histname, "%sTUnfold_NoReg_typ_d%i_j%i_k%i_eta0", Histtag, id, ij, ik); //unfolded_typ_0_pt2_eta0_3
-		        sprintf(title, "Unfolded No Reg %s %s %s 2.5", jet_num[ij], obs_def[id], k_fact[ik]);  //??????????
+		        sprintf(title, "Unfolded No Reg %s %s %s 2.5", obs_def[id], jet_num[ij], k_fact[ik]);
         		bool AxisBin = false;
 
 			TH1 *Unfolded = density.GetOutput(histname,title,0,"*[UO]", AxisBin);//,0,"*[UO]" ,true);//,"","*[UO]");//,"signal"); ??
@@ -595,9 +595,9 @@ void testUnfold2c(){
 
     	delete outputFile;
 }
-          
-//------------------------FUNCTIONS-----------------------
-
+//-----------------------------------------------------------
+//------------------------FUNCTIONS--------------------------
+//-----------------------------------------------------------
 void Fold(TH2D* HistoMatrix, TH1D* HistReco, TH1D* HistGen, TH1D* miss, TH1D* fake, TH1D* HistoCorrect){
 	TH2D* Histprob = (TH2D*) HistoMatrix->Clone(); Histprob->Reset();
 	//calculate Probability Matrix
@@ -626,39 +626,7 @@ for(int i=0;i<Histprob->GetNbinsX()+2;i++){
        HistoCorrect->SetBinError(i,sqrt(Err));
         }
 }//end Fold
-
-//Condition number calculation------------------Using Patrick code
-void Condition (TH2* RM, TH1* miss){
-    const int Nx = RM->GetNbinsX(),
-              Ny = RM->GetNbinsY();
-    cout << Nx <<"  " << Ny << endl;
-    if (Ny*2 != Nx) { cout << Nx << ' ' << Ny << endl;  return; }
-
-    TH1D* RMy = RM->ProjectionY("RMy", 0, -1); //Gen Projection
-
-    // normalisation & condition
-    TMatrixD m(Ny,Ny);
-    for (int i = 1; i <= Ny; ++i) {
-        double normalisation = RMy->GetBinContent(i);
-      //         normalisation += miss->GetBinContent(i);
-        if (normalisation > 0)
-        for (int j = 1; j <= Nx; ++j) {
-            double content = RM->GetBinContent(j,i);
-           content /= normalisation;
-            m((j-1)/2,i-1) += content;
-        }
-    }
-    TDecompSVD svd(m);
-    TVectorD v = svd.GetSig();
-    cout <<" Condition :" << svd.Condition() << endl;
-    double Max = v[0];
-    for(int k = 0; k < Ny; ++k) {
-        if (abs(v[k]) < feps) break;
-    //    cout << setw(5) << k << setw(15) << v[k] << setw(15) << Max/v[k] << '\n';
-    }
-}
-
-//-----------------------------Set gstyle (Copy from TUnfold code)
+//-----------------------------------------------------------Set gstyle (Copy from TUnfold code)
 void setgstyle(){
   gStyle->SetOptFit(0);
   gStyle->SetOptStat(0);
@@ -679,8 +647,7 @@ void setgstyle(){
   gStyle->SetLabelSize(0.05,"xy");
   gStyle->SetLabelOffset(0.012,"xy");
 }
-
-//Bottom Line test --------------
+//-----------------------------------------------------------BOTTOM LINE TEST
 void BLT (TH1 * dataDistX, TH2 * dataCovX, TH1 * MCX, int rebin = 1)
 {
 
@@ -717,7 +684,7 @@ void BLT (TH1 * dataDistX, TH2 * dataCovX, TH1 * MCX, int rebin = 1)
 
     cout << "chi2/ndf = " << chi2 << " / " << ndf << " = " << (chi2/ndf) << endl;
 }
-
+//-----------------------------------------------------------
 void Chi2Root(TH1 * data, TH1 * MC, int rebin = 1){
 
  TH1D *chidata = (TH1D*)data->Clone("chidata");
@@ -734,37 +701,9 @@ void Chi2Root(TH1 * data, TH1 * MC, int rebin = 1){
 
  cout << "Root chi2/ndf = " << chi2 << " / " << ndf << " = " << (chi2/ndf) << endl;
 }
-
-//-----------------------------------Using Ashlye code
-void ConditionV2(TH2* prob_mat){
-       TH2* prob = (TH2*)prob_mat->Clone();
-       prob->RebinY(2);
-
-int nbiny =prob->GetNbinsX(); int nbinx =prob->GetNbinsY();
-cout << "Bin " << nbiny << " " << nbinx ;
-TMatrixD  matd(nbinx, nbiny);
-
-for( int i =0; i <nbiny ; i++){
-    for( int j =0; j <nbinx ; j++){
-matd[i][j] = prob->GetBinContent( j+1, i+1);
-    }
-}
-
-TDecompSVD svd(nbinx,nbiny);
-svd.SetMatrix(matd);
-
-cout <<" Condition :" << svd.Condition() << endl;
-svd.Decompose();
-
-TVectorD sig = svd.GetSig();
-cout << " SigmaMax : " << sig[0] <<endl;
-for(int i =0; i<nbiny; i++){
-//cout << i << " condition : " << sig[0]/sig[i] << endl;
-}
-}
-
+//-----------------------------------------------------------
 void Integralhist(TH1 *hist){ hist->Scale(1/(hist->Integral()));}
-
+//-----------------------------------------------------------
 double Chi2(const TH1* hData, const TH2* covmat, const TH1* hGen, int skip/* = -1*/)
 {
   //hGen->Print("all");
@@ -793,7 +732,7 @@ double Chi2(const TH1* hData, const TH2* covmat, const TH1* hGen, int skip/* = -
   //printf("CHI2 %.6f\n", chi2);
   return chi2;
 }
-
+//-----------------------------------------------------------
 void Normalise(TH1* h, TH2* covmat)
 {
   int n = h->GetNbinsX();
@@ -828,8 +767,7 @@ void Normalise(TH1* h, TH2* covmat)
       covmat->SetBinContent(i + 1, j + 1, res(i, j));
   }
 }
-
-//---------------------------------------------------------------------------------
+//-----------------------------------------------------------
 void Extract(TH1* global2d, TUnfoldBinning* Bin, char* Axisname, bool iw=0){
         if(iw){global2d->Write();}
         char  name[100], title[100];
@@ -844,8 +782,7 @@ void Extract(TH1* global2d, TUnfoldBinning* Bin, char* Axisname, bool iw=0){
         extract->Write();
         extractpx->Write();
 }
-
-//----------------------------------------------------------------------
+//-----------------------------------------------------------
 TH1D* ReadHist1D(string name, TFile* root){
 TString histname = name; cout << histname<< endl;
 TH1D* hist=(TH1D*)root->Get(histname);
@@ -859,7 +796,7 @@ TH2D* hist=(TH2D*)root->Get(histname);
 hist->Write();
 return hist;
 }
-//-------------------------------------------------
+//-----------------------------------------------------------
 void HT2_NormalV3(TH1* global2d, TUnfoldBinning* Bin, char* Axisname, int nht, bool iw=0){
     if(iw){global2d->Write();}
     char name[100], title[100];
@@ -875,12 +812,70 @@ void HT2_NormalV3(TH1* global2d, TUnfoldBinning* Bin, char* Axisname, int nht, b
 
     int nbiny= extract->GetNbinsY();  int nbinx= extract->GetNbinsX();
     for (int iht = 1; iht <= nbiny; ++iht) {
-       const char * name_hbin = Form("%s_pt%i",extract->GetName(), iht-1);
+        const char * name_hbin = Form("%s_pt%i",extract->GetName(), iht-1);
         TH1D* h_var  = extract->ProjectionX(name_hbin, iht, iht);
         h_var->SetTitle(Form("HT2 %s pt%i",global2d->GetTitle(),iht-1));
         h_var->Write();
       }
  }
+//-----------------------------------------------------------Condition number calculation (Patrick code)
+void Condition (TH2* RM, TH1* miss){
+    const int Nx = RM->GetNbinsX(),
+              Ny = RM->GetNbinsY();
+    cout << Nx <<"  " << Ny << endl;
+    if (Ny*2 != Nx) { cout << Nx << ' ' << Ny << endl;  return; }
+
+    TH1D* RMy = RM->ProjectionY("RMy", 0, -1); //Gen Projection
+
+    // normalisation & condition
+    TMatrixD m(Ny,Ny);
+    for (int i = 1; i <= Ny; ++i) {
+        double normalisation = RMy->GetBinContent(i);
+        //normalisation += miss->GetBinContent(i);
+        if (normalisation > 0)
+        for (int j = 1; j <= Nx; ++j) {
+            double content = RM->GetBinContent(j,i);
+           content /= normalisation;
+            m((j-1)/2,i-1) += content;
+        }
+    }
+    TDecompSVD svd(m);
+    TVectorD v = svd.GetSig();
+    cout <<" Condition :" << svd.Condition() << endl;
+    double Max = v[0];
+    for(int k = 0; k < Ny; ++k) {
+        if (abs(v[k]) < feps) break;
+    //    cout << setw(5) << k << setw(15) << v[k] << setw(15) << Max/v[k] << '\n';
+    }
+}
+//-----------------------------------------------------------Condition number calculation (Ashley code)
+void ConditionV2(TH2* prob_mat){
+       TH2* prob = (TH2*)prob_mat->Clone();
+       prob->RebinY(2); // need to check
+
+        int nbiny =prob->GetNbinsX(); int nbinx =prob->GetNbinsY();
+                cout << "Bin " << nbiny << " " << nbinx ;
+        TMatrixD  matd(nbinx, nbiny);
+
+        for( int i =0; i <nbiny ; i++){
+                for( int j =0; j <nbinx ; j++){
+                        matd[i][j] = prob->GetBinContent( j+1, i+1);
+                        }
+                }
+
+        TDecompSVD svd(nbinx,nbiny);
+        svd.SetMatrix(matd);
+
+        cout <<" Condition :" << svd.Condition() << endl;
+        svd.Decompose();
+
+        TVectorD sig = svd.GetSig();
+                cout << " SigmaMax : " << sig[0] <<endl;
+        for(int i =0; i<nbiny; i++){
+        //cout << i << " condition : " << sig[0]/sig[i] << endl;
+        }
+}
+//-----------------------------------------------------------Condition number calculation
 double ConditionV3(TH2* RM){
         const int nBinsX = RM->GetNbinsX(),
                   nBinsY = RM->GetNbinsY();
