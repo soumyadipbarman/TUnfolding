@@ -49,7 +49,7 @@
 #include <TVectorD.h>
 #include <TDecompSVD.h>
 
-//#define CLOUSER
+#define CLOUSER
 
 using namespace std;
 
@@ -65,13 +65,13 @@ void testUnfold2c()
   //TFile *inputData=new TFile("Data_UL2017.root");
   //TFile *inputData=new TFile("PY8_bin.root");
 #ifdef CLOUSER
-  TFile *inputData=new TFile("PY8_bin.root");
+  TFile *inputData=new TFile("PY8_bin.root"); // PY8 bin
 #else
-  TFile *inputData=new TFile("Data_UL2017.root");
+  TFile *inputData=new TFile("Data_UL2017.root"); // Data
 #endif
-  TFile *inputMC=new TFile("PY8_bin.root");
-  TFile *inputMC1=new TFile("MG5_PY8_bin.root");
-  TFile *inputMC2=new TFile("HW_CH3_QCD_Pt-15to7000_TuneCH3_Flat_13TeV_herwig7.root");
+  TFile *inputMC=new TFile("PY8_bin.root"); // PY8 bin
+  TFile *inputMC1=new TFile("MG5_PY8_bin.root"); // MG5+PY8
+  TFile *inputMC2=new TFile("HW_CH3_QCD_Pt-15to7000_TuneCH3_Flat_13TeV_herwig7.root"); // HW7 flat
   
   //Unfolded Data and Covarince matrix, efficincy,fake rate, purity, stability
   TFile *outputFile=new TFile("Unfolded_Result.root","recreate");
@@ -130,7 +130,7 @@ void testUnfold2c()
   TH1D *MG5_MC_Gen2[ndef][njet][nkappa][njetptmn];   //Generator level MC copy
   TH2D *MG5_h2dGenDetMC2[ndef][njet][nkappa][njetptmn]; // MC Gen Vs Reco copy
  
-  //----------------------HW
+  //----------------------HW7
   TH1D *HW7_MC_Reco[ndef][njet][nkappa][njetptmn];  //Reconstructed MC
   TH1D *HW7_MC_Gen[ndef][njet][nkappa][njetptmn];   //Generator level MC
   TH2D *HW7_h2dGenDetMC[ndef][njet][nkappa][njetptmn];   // MC Gen Vs Reco
@@ -191,11 +191,11 @@ void testUnfold2c()
  
   int subtract_background(TH2D* h2d_correl, TH1D* reco, TH1D* gen, TH1D* data, double* fakerate, double* effi, double* purity, double* stbl);
   void Fold(TH2D* HistoMatrix, TH1D* HistReco, TH1D* HistoGen, TH1D* miss, TH1D* fake, TH1D* HistoCorrect);
-  //void Condition (TH2* RM, TH1* miss);
-  double Condition (TH2 * RM);
-  double ConditionV2(TH2* RM); 
+  //void Condition(TH2* RM, TH1* miss);
+  double ConditionV2(TH2 * RM);
+  double ConditionV3(TH2* RM); 
 
-//Read Input Data MC and Response matrix
+//--------------------------------------------------------------Read Input Data MC and Response matrix
 for(int id=0; id<ndef; id++){
  	for (int ij=0; ij<njet; ij++){
 		for (int ik=0; ik<nkappa; ik++){
@@ -209,10 +209,10 @@ for(int id=0; id<ndef; id++){
        			if(Data_Reco1[id][ij][ik][ipt]->GetBinContent(ibin) == 0) {cout << "Data Reco Bin is Zero for bin number : ***** "<<  ibin  << endl; }
        			}      
 #ifdef CLOUSER
-       		sprintf(histname, "analyzeBasicPat/gen_jc_d%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt); //gen_jc_d0_j0_k0_pt0_eta0  ?? CHECK
+       		sprintf(histname, "analyzeBasicPat/gen_jc_d%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt); //gen_jc_d0_j0_k0_pt0_eta0
        		PsudoData_Gen[id][ij][ik][ipt] = (TH1D*) inputData->Get(histname);
-		cout << "Closure input histogram: "<<histname<<endl;
-		cout <<"Entries:"<<PsudoData_Gen[id][ij][ik][ipt]->GetNbinsX()<<endl;
+		//cout << "Closure input histogram: "<<histname<<endl;
+		//cout <<"Entries:"<<PsudoData_Gen[id][ij][ik][ipt]->GetNbinsX()<<endl;
 #else
        		PsudoData_Gen[id][ij][ik][ipt] = (TH1D*) inputMC->Get(histname);
 		//cout << "Closure extra histogram: "<<histname<<endl;
@@ -253,10 +253,8 @@ for(int id=0; id<ndef; id++){
        
        		//Response Matrix
        		sprintf(histname, "analyzeBasicPat/RM_jc_d%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt); //RM_jc_d0_j0_k0_pt0_eta0    
-       		h2dGenDetMC1[id][ij][ik][ipt] = (TH2D*) inputMC->Get(histname);   //Xgen(coarse) , Yreco(fine) IS IT FINE ??
-       		cout << "Corr = "  << h2dGenDetMC1[id][ij][ik][ipt]->GetEntries() <<endl;
-       		cout << "Corr NbinsX = "<<h2dGenDetMC1[id][ij][ik][ipt]->GetNbinsX() <<endl;
-       		cout << "Corr NbinsY = "<<h2dGenDetMC1[id][ij][ik][ipt]->GetNbinsY() <<endl;
+       		h2dGenDetMC1[id][ij][ik][ipt] = (TH2D*) inputMC->Get(histname);
+       		cout<<"Corr = "<<h2dGenDetMC1[id][ij][ik][ipt]->GetEntries()<<" NbinsX : "<<h2dGenDetMC1[id][ij][ik][ipt]->GetNbinsX()<<" NbinsY : "<<h2dGenDetMC1[id][ij][ik][ipt]->GetNbinsY()<<endl;
      
 	        // Clone histos	
        		Data_Reco2[id][ij][ik][ipt] = (TH1D*)Data_Reco1[id][ij][ik][ipt]->Clone();
@@ -266,8 +264,7 @@ for(int id=0; id<ndef; id++){
        
        		MC_miss2[id][ij][ik][ipt] = (TH1D*)MC_miss1[id][ij][ik][ipt]->Clone();
        		MC_fake2[id][ij][ik][ipt] = (TH1D*)MC_fake1[id][ij][ik][ipt]->Clone();
-      
-//----------------------Check RM Projection with Reco(gen)-Fake(miss)  : Patrick 1 Sep20		
+//--------------------------------------------------------------Check RM Projection with Reco(gen)-Fake(miss)  : Patrick 1 Sep20		
 		//Saved in Pythia8 directory
        		TH1* RMx = h2dGenDetMC1[id][ij][ik][ipt]->ProjectionX();
        		TH1* RMy = h2dGenDetMC1[id][ij][ik][ipt]->ProjectionY();
@@ -277,7 +274,7 @@ for(int id=0; id<ndef; id++){
        		RMx->Write();
 
        		sprintf(name,"Recominusfake_d%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt);
-       		TH1* RecoFakeCorrect = (TH1D*)MC_Reco1[id][ij][ik][ipt]->Clone();  // IS IT CORRECTED ??
+       		TH1* RecoFakeCorrect = (TH1D*)MC_Reco1[id][ij][ik][ipt]->Clone(); 
        		RecoFakeCorrect->Reset();
        		RecoFakeCorrect->SetNameTitle(name,name);
        
@@ -285,7 +282,7 @@ for(int id=0; id<ndef; id++){
        		RMy->SetNameTitle(name,name);
        		RMy->Write();
        
-       		sprintf(name,"Genminusmiss_d%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt);  // IS IT CORRECTED ??
+       		sprintf(name,"Genminusmiss_d%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt);
        		TH1* GenMissCorrect = (TH1D*)MC_Gen1[id][ij][ik][ipt]->Clone();
        		GenMissCorrect->Reset();
        		GenMissCorrect->SetNameTitle(name,name);
@@ -319,9 +316,7 @@ for(int id=0; id<ndef; id++){
 		//cout <<"GenMissCorrect: "<<GenMissCorrect->GetEntries()<<endl;
 		//cout <<"GenMissCorrect: "<<GenMissCorrect->GetBinContent()<<endl;
 	 	GenMissCorrect->Write();
-
 //--------------------------------Fake and Miss rate : Thanks to Patrick  14Aug20
-//
        		MC_fake1[id][ij][ik][ipt]->Divide(MC_fake1[id][ij][ik][ipt], MC_Reco1[id][ij][ik][ipt], 1, 1, "b");
        		//MC_fake1[ity][ivar][ipt]->Divide(MC_Reco1[ity][ivar][ipt]);
       		MC_miss1[id][ij][ik][ipt]->Divide(MC_miss1[id][ij][ik][ipt], MC_Gen1[id][ij][ik][ipt], 1, 1, "b");
@@ -351,8 +346,7 @@ for(int id=0; id<ndef; id++){
   	}
 }
 cout << "PY8 Histos OK" <<endl;
-
-//------------------Read Madgraph
+////--------------------------------------------------------------Read Madgraph
 cout << "Entering MG+PY8 Loop ..."<<endl;
 for(int id=0; id <ndef; id++){
 	for (int ij=0; ij<njet; ij++){
@@ -385,8 +379,7 @@ for(int id=0; id <ndef; id++){
    	}
  }
 cout << "MG+PY8 Histos OK" <<endl;
- 
-//----------------HW7
+////--------------------------------------------------------------HW7
 cout<<"Entering HW7 Loop ..."<<endl;
 for(int id=0; id <ndef; id++){
 	for (int ij=0; ij<njet; ij++){
@@ -419,8 +412,7 @@ for(int id=0; id <ndef; id++){
    	}
 }
 cout << "HW7 Histos OK" <<endl;
-
-//------------------Fold check : Patrick 1 Sep 20
+//--------------------------------------------------------------Fold check : Patrick 1 Sep 20
 //Get Probability Matrix  
 //(Multiply the gen level by the probability matrix. Of course, don't forget to account for miss and fake entries (if applicable).
 foldpy8->cd();
@@ -447,8 +439,7 @@ for(int id=0; id <ndef; id++){
      		}
    	}
 }
-
-//Condition of Probability Matrix
+//--------------------------------------------------------------Condition of Probability Matrix
 for(int id=0; id <ndef; id++){
         for (int ij=0; ij<njet; ij++){
                 for (int ik=0; ik<nkappa; ik++){
@@ -460,13 +451,12 @@ for(int id=0; id <ndef; id++){
 		//cout << "Checking Condition Number: "<<endl;
       		cout <<setw(3) << id <<setw(3) << ij << setw(3) << ik << setw(3) << ipt <<'\n';
       		//Condition(RM, miss);
-		Condition(RM);
-		//ConditionV2(RM);
+		ConditionV2(RM);
+		//ConditionV3(RM);
 			}
      		}
    	}
 }
-
 //--------------------------------------------------------------
 Unfold->cd();
 for(int id=0; id <ndef; id++){
@@ -502,7 +492,7 @@ for(int id=0; id <ndef; id++){
 			//cout <<  h2dGenDetMC[ity][ivar][ipt]->GetYaxis()->GetBinLowEdge(ix+1) <<" , ";
        			}
        
-       		cout << endl; 
+       		//cout << endl; 
        		sprintf(name,"Effi_d%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt);
        		hist_eff[id][ij][ik][ipt] = new TH1D(name,name,MC_Gen[id][ij][ik][ipt]->GetNbinsX(),gxbins);
        		hist_eff[id][ij][ik][ipt]->Sumw2();
@@ -537,18 +527,7 @@ for(int id=0; id <ndef; id++){
        		unfold_NoReg[id][ij][ik][ipt] = new TH1D(name,name, MC_Gen[id][ij][ik][ipt]->GetNbinsX(),gxbins);
        		unfold_NoReg[id][ij][ik][ipt]->Sumw2();
        		//unfold_NoReg[ity][ivar][ipt]->Rebin(2);
-       
-       		sprintf(name,"TauScan_d%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt);
-       		unfold_Tau[id][ij][ik][ipt] = new TH1D(name,name, MC_Gen[id][ij][ik][ipt]->GetNbinsX(),gxbins);
-       		unfold_Tau[id][ij][ik][ipt]->Sumw2();
-       		//unfold_Tau[ity][ivar][ipt]->Rebin(2);
-       
-       		sprintf(name,"Lcurve_d%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt);
-       		unfold_L[id][ij][ik][ipt] = new TH1D(name,name, MC_Gen[id][ij][ik][ipt]->GetNbinsX(),gxbins);
-       		unfold_L[id][ij][ik][ipt]->Sumw2();
-       		//unfold_L[ity][ivar][ipt]->Rebin(2);
-       
-       
+		
        		sprintf(name,"Cov_Matrix_NoReg_d%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt);
        		COV_Mat_NoReg[id][ij][ik][ipt] = new TH2D(name,name, MC_Reco[id][ij][ik][ipt]->GetNbinsX(), rxbins, MC_Gen[id][ij][ik][ipt]->GetNbinsX(), gxbins);
        		COV_Mat_NoReg[id][ij][ik][ipt]->Sumw2();
@@ -563,13 +542,12 @@ for(int id=0; id <ndef; id++){
      		}
    	}
 }
- 
-//cross check efficincy and purity calculation (Tunfold example code)
+//-----------------------cross check efficincy and purity calculation (Tunfold example code)
 for(int id=0; id <ndef; id++){
 	for (int ij=0; ij<njet; ij++){
         	for (int ik=0; ik<nkappa; ik++){
      			for(int ipt = 0 ; ipt < njetptmn ; ipt++){
-       //----------------------------------------
+     
        		for(int binGen=0;binGen<= h2dGenDetMC[id][ij][ik][ipt]->GetNbinsY()+1;binGen++) {
          		double sum0=0.;
          		double sum1=0.;
@@ -585,7 +563,7 @@ for(int id=0; id <ndef; id++){
 	   				hist_eff1[id][ij][ik][ipt]->SetBinContent(binGen,sum1/sum0);
          				}
        			}
-       //---------------------------
+      
        		hist_eff1[id][ij][ik][ipt]->SetMinimum(0.9); hist_eff1[id][ij][ik][ipt]->SetMaximum(1.1);
        		hist_eff1[id][ij][ik][ipt]->Write();
        
@@ -608,7 +586,7 @@ for(int id=0; id <ndef; id++){
    		}
   	}
 }
-//cross check efficincy and purity calculation
+//-----------------------------------------cross check efficincy and purity calculation
 for(int id=0; id <ndef; id++){
 	for (int ij=0; ij<njet; ij++){
         	for (int ik=0; ik<nkappa; ik++){
@@ -650,7 +628,7 @@ for(int id=0; id <ndef; id++){
    		}
  	}
 }
-
+//---------------------Unfolding Start---------------------------
 for(int id=0; id <ndef; id++){
 	for (int ij=0; ij<njet; ij++){
         	for (int ik=0; ik<nkappa; ik++){
@@ -669,12 +647,12 @@ for(int id=0; id <ndef; id++){
        		//Get Gen bins
        		double gxbins[MC_Gen[id][ij][ik][ipt]->GetNbinsX()+1]={0};
        		for (int ix=0; ix<MC_Gen[id][ij][ik][ipt]->GetNbinsX()+1; ix++) {
-	 		gxbins[ix] = MC_Gen[id][ij][ik][ipt]->GetXaxis()->GetBinLowEdge(ix+1); }
+	 		gxbins[ix] = MC_Gen[id][ij][ik][ipt]->GetXaxis()->GetBinLowEdge(ix+1); 
+			}
        
        		//Rebin for match the condition of reco vs gen bin 
-          	h2dGenDetMC[id][ij][ik][ipt]->RebinY(irbin);  // check rebin part
-          	MC_Gen[id][ij][ik][ipt]->Rebin(irbin);
-       
+          	//h2dGenDetMC[id][ij][ik][ipt]->RebinY(irbin);
+          	//MC_Gen[id][ij][ik][ipt]->Rebin(irbin);
 		//h2dGenDetMC[ity][ivar][ipt]->Rebin(1,2);
          
        		TH2* hist_migrationCoarseFine_MC = (TH2D*)h2dGenDetMC[id][ij][ik][ipt]->Clone();
@@ -683,13 +661,14 @@ for(int id=0; id <ndef; id++){
        
        		//correction for Fake as background subtraction : Patrick
        		TH1* mcbackground = (TH1D*)MC_fake[id][ij][ik][ipt]->Clone();
-       		mcbackground->Multiply(input);  // multiply or subtraction
+       		mcbackground->Multiply(input); 
 
        		//double biasScale =bias[ivar] ;
-       		double biasScale = 0.0;
+       		double biasScale = 0.0;  // check ?? 
        		const char *REGULARISATION_DISTRIBUTION=0;
        		const char *REGULARISATION_AXISSTEERING="*[UOB]";
-       		char Rhoname[100], Rhotitle[100], Lcursure[100], Lcurtitle[100], TauLsure[100], TuaLtitle[100], probMat[100], probmat_title[100], Rhoname2d[100], Rhotitle2d[100], Ematrix[100], Ematrixtitle[100], foldback[100], foldback_title[100];
+       		
+		//char Rhoname[100], Rhotitle[100], Lcursure[100], Lcurtitle[100], TauLsure[100], TuaLtitle[100], Rhoname2d[100], Rhotitle2d[100], Ematrix[100], Ematrixtitle[100];
        
        		//preserve the area
        		//TUnfold::EConstraint constraintMode= TUnfold::kEConstraintArea;
@@ -701,7 +680,7 @@ for(int id=0; id <ndef; id++){
        		//TUnfoldDensity::EDensityMode densityFlags = TUnfoldDensity::kDensityModeNone;
        		//TUnfoldDensity::EDensityMode densityFlags = TUnfoldDensity::kDensityModeBinWidth;
        
-       		//https://root.cern.ch/doc/master/testUnfold5d_8C.html      : this get input covariance matrix : Data covariance matrix
+       		//https://root.cern.ch/doc/master/testUnfold5d_8C.html : this get input covariance matrix : Data covariance matrix
        		sprintf(name,"Data_covariance_d%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt);
        		TH2D* covarianceM = new  TH2D(name,name, input->GetNbinsX(), rxbins, input->GetNbinsX(), rxbins);
        		covarianceM->Sumw2();
@@ -709,11 +688,7 @@ for(int id=0; id <ndef; id++){
           	double err = input->GetBinError(ix);
 	  		covarianceM->SetBinContent(ix,ix,err*err);
        			}
-       
        		covarianceM->Write();
-       
-       		double taumx = 0.; double taumi = 0.;
-       		double tau = 1e-4;
        
        		//TUnfoldDensity class
        		//No regularisation --------------------------------
@@ -722,18 +697,17 @@ for(int id=0; id <ndef; id++){
 					      TUnfoldDensity::kRegModeNone,         // without regularisation
 					      TUnfoldDensity::kEConstraintNone,     // no constrain on area
 					      TUnfoldDensity::kDensityModeNone);//,0,0,REGULARISATION_DISTRIBUTION,REGULARISATION_AXISSTEERING);//,binningCoarseGen, binningFineReco);
-       
-       		// TUnfoldDensity::kDensityModeBinWidthAndUser);//,0,0,REGULARISATION_DISTRIBUTION,REGULARISATION_AXISSTEERING);//,binningCoarseGen, binningFineReco);
+       		//TUnfoldDensity::kDensityModeBinWidthAndUser);//,0,0,REGULARISATION_DISTRIBUTION,REGULARISATION_AXISSTEERING);//,binningCoarseGen, binningFineReco);
        
        		tunfoldNoRegularisation.SubtractBackground(mcbackground, "Background", 1.0, 0.03); // hist,name,scale, scale error 
-       		int status = tunfoldNoRegularisation.SetInput(input,biasScale,0,covarianceM);
+       		//int status = tunfoldNoRegularisation.SetInput(input,biasScale,0,covarianceM);
+		int status = tunfoldNoRegularisation.SetInput(input);  // coded in TUnfold2D code
        
        		int nBadErrors = status%10000, nUnconstrOutBins = status/10000;
        		cout << nBadErrors << " bad errors and " << nUnconstrOutBins << " unconstrained output bins" << endl;
        		//tunfoldNoRegularisation.SubtractBackground(mcbackground,"Background", 1.0,0.04); // hist,name,scale, scale error 
        
-       		//if(>=10000) { std::cout<<"Unfolding result may be wrong\n";  }
-       
+       		//if(>=10000) { std::cout<<"Unfolding result may be wrong\n";  }       
        		//the initial bias vector is determined from the response matrix
       		//but may be changed by using this method https://root.cern.ch/doc/master/classTUnfold.html#a58a869050370480d020ece2df3eb2688
        		//tunfoldNoRegularisation.SetBias(mcgen);   //not much affect on result
@@ -751,34 +725,38 @@ for(int id=0; id <ndef; id++){
        		binMap[0]=-1;   binMap[binnos+1]=-1;
        		*/
 
-       		char unfoldhist[100], title[100], NoReg_RhoIJ[100], NoReg_RhoIJ_tit[100], NoReg_Ematrix[100], NoReg_Ematrix_tit[100];// NoReg_prob[100], NoReg_probtitle[100];
-       		sprintf(unfoldhist, "Tunfold_Noreg_D%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt); //unfolded_typ_0_pt2_eta0_3
-       		sprintf(title, "Tunfolded Noreg %i 2.5 %s %s %s", int(leadingPtThreshold[ipt]), obs_def[id], jet_num[ij], k_fact[ik] );
-       		sprintf(NoReg_RhoIJ, "Tunfold_Noreg_corr_D%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt); //unfolded_typ_0_pt2_eta0_3
-       		sprintf(NoReg_RhoIJ_tit, "2D correlation coefficients No Regularisation %i 2.5 %s %s %s", int(leadingPtThreshold[ipt]), obs_def[id], jet_num[ij], k_fact[ik]);
-       		sprintf(NoReg_Ematrix, "Tunfold_Noreg_Emat_typ_D%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt); //unfolded_typ_0_pt2_eta0_3
-       		sprintf(NoReg_Ematrix_tit, "EMatrix No Regularisation %i 2.5 %s %s %s", int(leadingPtThreshold[ipt]), obs_def[id], jet_num[ij], k_fact[ik]);
-       		sprintf(probMat, "Tunfold_Noreg_probM_D%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt);
-       		sprintf(probmat_title, "Probability matrix Noreg %i 2.5 %s %s %s", int(leadingPtThreshold[ipt]), obs_def[id], jet_num[ij], k_fact[ik]);
-       		sprintf(foldback, "Tunfold_NoReg_Refold_D%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt); //unfolded_typ_0_pt2_eta0_3
-       		sprintf(foldback_title, "TunfoldFolded back  NoReg %i 2.5 %s %s %s", int(leadingPtThreshold[ipt]), obs_def[id], jet_num[ij], k_fact[ik]);
-
+       		char unfoldhist[100], title[100], NoReg_RhoIJ[100], NoReg_RhoIJ_tit[100], NoReg_Ematrix[100], NoReg_Ematrix_tit[100], foldback[100], foldback_title[100], probMat[100], probmat_title[100];// NoReg_prob[100], NoReg_probtitle[100];
+       		
 	       	//unfolding result, signal only
+		sprintf(unfoldhist, "Tunfold_Noreg_D%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt); //unfolded_typ_0_pt2_eta0_3
+		sprintf(title, "Tunfolded Noreg %i 2.5 %s %s %s", int(leadingPtThreshold[ipt]), obs_def[id], jet_num[ij], k_fact[ik] );
        		TH1 *hist_PTunfolded_noRegularisation = tunfoldNoRegularisation.GetOutput(unfoldhist,title);//,0,"*[UO]" ,true);//,"","*[UO]");//,"signal");
        		//TH1 *hist_PTunfolded_noRegularisation = tunfoldNoRegularisation.GetOutput(unfoldhist,title);//,"","*[UO]");//,"signal");
        		//TH1 *hist_PTunfolded_noRegularisation = tunfoldNoRegularisation.GetOutput("hist_PTunfolded_noRegularisation", "P_{T,unfolded} [GeV]","signal");
 
+		sprintf(NoReg_RhoIJ, "Tunfold_Noreg_corr_D%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt); //unfolded_typ_0_pt2_eta0_3
+		sprintf(NoReg_RhoIJ_tit, "2D correlation coefficients No Regularisation %i 2.5 %s %s %s", int(leadingPtThreshold[ipt]), obs_def[id], jet_num[ij], k_fact[ik]);
        		TH2 *hist_RhoIJ_noRegularisation = tunfoldNoRegularisation.GetRhoIJtotal(NoReg_RhoIJ, NoReg_RhoIJ_tit);//,"signal");
+
+		sprintf(NoReg_Ematrix, "Tunfold_Noreg_Emat_typ_D%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt); //unfolded_typ_0_pt2_eta0_3
+		sprintf(NoReg_Ematrix_tit, "EMatrix No Regularisation %i 2.5 %s %s %s", int(leadingPtThreshold[ipt]), obs_def[id], jet_num[ij], k_fact[ik]);
        		TH2 *hist_Rho2D_noRegularisation = tunfoldNoRegularisation.GetEmatrixTotal(NoReg_Ematrix, NoReg_Ematrix_tit);//,"signal");
        		//tunfoldNoRegularisation.GetEmatrix(COV_Mat_NoReg[ity][ivar][ipt],binMap);//,"signal");
+
+		sprintf(foldback, "Tunfold_NoReg_Refold_D%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt); //unfolded_typ_0_pt2_eta0_3
+		sprintf(foldback_title, "TunfoldFolded back  NoReg %i 2.5 %s %s %s", int(leadingPtThreshold[ipt]), obs_def[id], jet_num[ij], k_fact[ik]);
        		TH1 *hist_foldedback_NoReg = tunfoldNoRegularisation.GetFoldedOutput(foldback, foldback_title);//,"signal");
+
+		sprintf(probMat, "Tunfold_Noreg_probM_D%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt);
+		sprintf(probmat_title, "Probability matrix Noreg %i 2.5 %s %s %s", int(leadingPtThreshold[ipt]), obs_def[id], jet_num[ij], k_fact[ik]);
        		TH2 *hist_prob_Noreg = tunfoldNoRegularisation.GetProbabilityMatrix(probMat, probmat_title,TUnfold::kHistMapOutputVert);//,"signal");
 
        		//correction for Miss entries  : Partick 
        		for (int i = 1; i <= hist_PTunfolded_noRegularisation->GetNbinsX(); ++i) {
 	 		double content = hist_PTunfolded_noRegularisation->GetBinContent(i);
 	 		double factor = 1;
-	 		factor += MC_miss1[id][ij][ik][ipt]->GetBinContent(i);
+	 		factor += MC_miss1[id][ij][ik][ipt]->GetBinContent(i);  // correction required ??
+			////////////////////////////
          		content *= factor;
 	 		hist_PTunfolded_noRegularisation->SetBinContent(i, content);
        			}
@@ -802,13 +780,11 @@ for(int id=0; id <ndef; id++){
    		}
 	}
 }
- 
 delete outputFile;
-//file.close();
 }
-
-//--------------FUNCTIONS-------------------
-
+//-----------------------------------------------------------
+//----------------------FUNCTIONS----------------------------
+//-----------------------------------------------------------
 //Copy of RooUnfold Subtract Background method with no correction to Reco or Gen --->Can be used  for purity and stability
 int subtract_background(TH2D* h2d_correl, TH1D* reco, TH1D* gen, TH1D* data, double* fakerate, double* effi, double* purity, double* stbl) {
 	int nbinx = h2d_correl->GetNbinsX();
@@ -873,7 +849,7 @@ int subtract_background(TH2D* h2d_correl, TH1D* reco, TH1D* gen, TH1D* data, dou
   	
 	return 0;
 } //end substract func
-
+//-----------------------------------------------------------
 void Fold(TH2D* HistoMatrix, TH1D* HistReco, TH1D* HistGen, TH1D* miss, TH1D* fake, TH1D* HistoCorrect){
 	TH2D* Histprob = (TH2D*) HistoMatrix->Clone(); Histprob->Reset();
 	//calculate Probability Matrix
@@ -902,6 +878,7 @@ void Fold(TH2D* HistoMatrix, TH1D* HistReco, TH1D* HistGen, TH1D* miss, TH1D* fa
      	 		HistoCorrect->SetBinError(i,sqrt(Err));
     			}
 }//end Fold
+//-----------------------------------------------------------
 /*
 //Condition number calculation
 //void Condition (TH2* RM, TH1* miss){
@@ -995,7 +972,8 @@ void Condition (TH2* RM, TH1* miss){
     }
 }
 */
-double Condition (TH2 * RM)
+//-----------------------------------------------------------Condition number calculation (Patrick code)
+double ConditionV2(TH2 * RM)
 {
     cout << __LINE__ << "\tCalculating condition" << endl;
     const int Nx = RM->GetNbinsX(),
@@ -1023,7 +1001,8 @@ double Condition (TH2 * RM)
     if (Min > 0) return Max/Min;
     else         return -numeric_limits<double>::infinity();
 }
-double ConditionV2(TH2* RM){
+//-----------------------------------------------------------Condition number calculation
+double ConditionV3(TH2* RM){
 	const int nBinsX = RM->GetNbinsX(),
 	          nBinsY = RM->GetNbinsY();	
     
