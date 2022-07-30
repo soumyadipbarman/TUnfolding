@@ -45,9 +45,8 @@
 #include <TVectorD.h>
 #include <TDecompSVD.h>
 
-#define CLOSURE
+//#define CLOSURE
 #define BLTest
-
 
 using namespace std;
 static const auto feps = numeric_limits<float>::epsilon();
@@ -61,22 +60,26 @@ void testUnfold2c(){
   int const umc=0; //Which MC will used for Unfold
   int const idata=1; //Which MC will used for Unfold
   int irbin = 1; //Rebin
-  //int const untype = 1;  // 0 for 2D , 1 for 2D
 
-  const TString Pyinput = "PY8_bin.root"; 
-  const TString datainput = "Data_UL2017.root"; 
-
-  TFile *inputbinning = new TFile("testUnfold5_binning.root"); //??
+  const TString Pyinput = "PY8_bin.root"; // PY8 bin
+  //const TString datainput = "Data_UL2017.root"; // Data
+  //const TString datainput = "PY8_bin.root"; // PY8 bin
+#ifdef CLOSURE
+  const TString datainput = "PY8_bin.root"; // PY8 bin
+#else
+  const TString datainput = "Data_UL2017.root"; // Data
+#endif
+  TFile *inputbinning = new TFile("testUnfold5_binning.root"); //input binning extracted from testUnfold5b.C
 
   //Input Data and MC histogram
   TFile *inputData=new TFile(datainput);
   TFile *RMinput=new TFile(Pyinput);
 
   TFile *inputMC[nmc];
-  inputMC[0]=new TFile("PY8_bin.root");
-  inputMC[1]=new TFile("PY_CP5_QCD_Pt-15to7000_TuneCP5_Flat_13TeV_pythia8.root");
-  inputMC[2]=new TFile("MG5_PY8_bin.root");
-  inputMC[3]=new TFile("HW_CH3_QCD_Pt-15to7000_TuneCH3_Flat_13TeV_herwig7.root");
+  inputMC[0]=new TFile("PY8_bin.root");   // PY8 bin 
+  inputMC[1]=new TFile("PY_CP5_QCD_Pt-15to7000_TuneCP5_Flat_13TeV_pythia8.root");  // PY8 flat
+  inputMC[2]=new TFile("MG5_PY8_bin.root"); // MG5+PY8
+  inputMC[3]=new TFile("HW_CH3_QCD_Pt-15to7000_TuneCH3_Flat_13TeV_herwig7.root"); // HW7 flat
 
   TFile *outputFile=new TFile("Unfolded_Result.root","recreate");   //Unfolded Data and Covarince matrix, efficincy,fake rate, purity, stability
 
@@ -112,9 +115,7 @@ void testUnfold2c(){
 
   void setgstyle();
   void Fold(TH2D* HistoMatrix, TH1D* HistReco, TH1D* HistoGen, TH1D* miss, TH1D* fake, TH1D* HistoCorrect);
-  void Condition (TH2 * RM, TH1* miss);
   void BLT (TH1 * dataDist, TH2 * dataCov, TH1 * MC, int rebin = 1);
-  void ConditionV2(TH2* prob_mat);
   void Chi2Root(TH1 * data, TH1 * MC, int rebin = 1);
   void Integralhist(TH1 *hist);
   double Chi2(const TH1* hData, const TH2* covmat, const TH1* hGen, int skip/* = -1*/);
@@ -123,6 +124,8 @@ void testUnfold2c(){
   TH1D* ReadHist1D(string name,TFile* root);
   TH2D* ReadHist2D(string name,TFile* root);
   void HT2_NormalV3(TH1* global2d, TUnfoldBinning* Bin, char* Axisname, int nht,  bool iw=0);
+  void Condition (TH2 * RM, TH1* miss);
+  void ConditionV2(TH2* prob_mat);
   double ConditionV3(TH2* RM);
 
   TH1D *MC_Reco[nmc][ndef][njet][nkappa];  
@@ -166,11 +169,12 @@ void testUnfold2c(){
   TH1D *RMinput_gen_miss[ndef][njet][nkappa];              
   TH2D *RMinput_RM[ndef][njet][nkappa];           
 
-  TUnfoldBinning *binsRec[ndef][njet][nkappa];
+  TUnfoldBinning *binsRec[ndef][njet][nkappa];  
   TUnfoldBinning *binsGen[ndef][njet][nkappa];
+  TUnfoldBinning *RecoBinning[ndef][njet][nkappa];
+  TUnfoldBinning *GenBinning[ndef][njet][nkappa];
 
-  //------------------------------------Binning-------------------------------------
-  
+//-------------------------------------Binning--------------------------------------
  	for(int id=0; id<ndef; id++){
         	for (int ij=0; ij<njet; ij++){
                 	for (int ik=0; ik<nkappa; ik++){
@@ -183,9 +187,7 @@ void testUnfold2c(){
                 		}
         		}
   		}
-
-//----------------------------------------------Read Input Data MC and Response matrix
-
+//-------------------------Read Input Data MC and Response matrix--------------------
   for(int id=0; id<ndef; id++){
         for (int ij=0; ij<njet; ij++){
                 for (int ik=0; ik<nkappa; ik++){
@@ -202,7 +204,7 @@ void testUnfold2c(){
 	
 	Data_fake[id][ij][ik] = (TH1D*)Datafake->Clone();
         Data_miss[id][ij][ik] = (TH1D*)Datamiss->Clone();
-	
+
 	Data_fakerate[id][ij][ik] = (TH1D*)Datafake->Clone();   Data_fakerate[id][ij][ik]->Divide(Data_fakerate[id][ij][ik], Data_Reco[id][ij][ik], 1, 1, "b");
         Data_fakerate[id][ij][ik]->SetNameTitle(Form("%sData_fakerate_d%i_j%i_k%i_eta0", Histtag, id, ij, ik),Form("%sData_fakerate_d%i_j%i_k%i_eta0", Histtag, id, ij, ik));
 		
@@ -236,7 +238,7 @@ void testUnfold2c(){
         Data_gen_miss[id][ij][ik]->Multiply(Data_Gen[id][ij][ik]);
         Extract(Data_gen_miss[id][ij][ik], binsGen[id][ij][ik], Axisname);
 #endif
-//--------------------------------------------MC for Read RM------------------------------------
+//---------------------------------MC for Read RM------------------------------------
         DirRMinput->cd();
         RMinput_Reco[id][ij][ik]= (TH1D*)ReadHist1D(HistDir+"/dd_reco_d"+to_string(id)+"_j"+to_string(ij)+"_k"+ to_string(ik)+"_eta0",RMinput)->Clone();
 	for(int i=1 ; i< RMinput_Reco[id][ij][ik]->GetNbinsX()+1; i++){ if(RMinput_Reco[id][ij][ik]->GetBinContent(i) == 0) {cout << "RMinput Bin entry Nil : bin no : "<< i << endl;}}
@@ -259,6 +261,7 @@ void testUnfold2c(){
           double factor = RMinput_fakerate[id][ij][ik]->GetBinContent(i);
           double content =1-factor;  RMinput_fakerateInv[id][ij][ik]->SetBinContent(i, content);
         }
+
 	RMinput_missrate[id][ij][ik] = (TH1D*)RMinput_miss[id][ij][ik]->Clone(); RMinput_missrate[id][ij][ik]->Divide(RMinput_missrate[id][ij][ik], RMinput_Gen[id][ij][ik], 1, 1, "b");
         RMinput_missrate[id][ij][ik]->SetNameTitle(Form("%sRMinputmiss_rate_d%i_j%i_k%i_eta0", Histtag,id, ij, ik),Form("%s missrate d%i j%i k%i  eta0", Histtag,id, ij, ik));
         HT2_NormalV3(RMinput_missrate[id][ij][ik], binsGen[id][ij][ik], Axisname,nHLTmx);
@@ -278,12 +281,11 @@ void testUnfold2c(){
         RMinput_gen_miss[id][ij][ik]->SetNameTitle(Form("%sRMinputGenminusmiss_d%i_j%i_k%i_eta0",Histtag ,id,ij,ik),Form("%s Gen - miss d%i j%i k%i eta0", Histtag ,id, ij, ik));
         RMinput_gen_miss[id][ij][ik]->Multiply(RMinput_Gen[id][ij][ik]);
         HT2_NormalV3(RMinput_gen_miss[id][ij][ik], binsGen[id][ij][ik], Axisname,nHLTmx);
-
-//--------------------------------------------Read MC--------------------------------------------- 
+//----------------------------------Read MC------------------------------------------
 	for (int imc=0; imc<nmc ; imc++){
 	//for (int imc=0; imc<1 ; imc++){
         	cout <<  "MC number : " << imc << endl;
-          	outputDir[imc]->cd(); //..........................MC directory .......................................
+          	outputDir[imc]->cd(); //.................. MC directory .............
 		//cout <<"Test 1"<<endl;
 		MC_Reco[imc][id][ij][ik] = (TH1D*)ReadHist1D(HistDir+"/dd_reco_d"+to_string(id)+"_j"+to_string(ij)+"_k"+ to_string(ik)+"_eta0", inputMC[imc])->Clone();
 	        MC_Gen[imc][id][ij][ik]  = (TH1D*)ReadHist1D(HistDir+"/dd_gen_d"+to_string(id)+"_j"+to_string(ij)+"_k"+ to_string(ik)+"_eta0", inputMC[imc])->Clone();
@@ -299,7 +301,7 @@ void testUnfold2c(){
 	        cout << "Miss= " <<MC_miss[imc][id][ij][ik]->GetEntries() <<" Gen-Miss: " << (MC_Gen[imc][id][ij][ik]->GetEntries() - MC_miss[imc][id][ij][ik]->GetEntries()) <<endl ;		 	 //Response Matrix
 	        h2dGenDetMC[imc][id][ij][ik] = (TH2D*)ReadHist2D(HistDir+"/dd_corr_d"+to_string(id)+"_j"+to_string(ij)+"_k"+ to_string(ik)+"_eta0", inputMC[imc])->Clone();
           	cout << "Corr = "  << h2dGenDetMC[imc][id][ij][ik]->GetEntries() <<endl;
-          	//--------------------------------------Calculate Fake rate and Miss Rate
+          	//--------------Calculate Fake rate and Miss Rate---------------------
 		TH1D* fakerate = (TH1D*)MC_fake[imc][id][ij][ik]->Clone();
           	fakerate->Divide(fakerate,MC_Reco[imc][id][ij][ik], 1, 1, "b");
           	sprintf(name,"%sfake_rate_d%i_j%i_k%i_eta0", Histtag, id, ij, ik); fakerate->SetNameTitle(name,Form("%s fake rate d%i j%i k%i eta0", Histtag, id, ij, ik));
@@ -310,7 +312,7 @@ void testUnfold2c(){
           	MC_fakerate[imc][id][ij][ik] = (TH1D*)fakerate->Clone();  MC_missrate[imc][id][ij][ik] = (TH1D*)missrate->Clone();
           	HT2_NormalV3(MC_fakerate[imc][id][ij][ik], binsRec[id][ij][ik], Axisname,nHLTmx,1);
           	HT2_NormalV3(MC_missrate[imc][id][ij][ik], binsGen[id][ij][ik], Axisname,nHLTmx,1);
-		//--------------------------------------Check RM Projection with Reco(gen)-Fake(miss)  : Patrick 1 Sep20
+		//---Check RM Projection with Reco(gen)-Fake(miss) : Patrick 1 Sep20---
 		TH1* RMx = h2dGenDetMC[imc][id][ij][ik]->ProjectionX(); TH1* RMy = h2dGenDetMC[imc][id][ij][ik]->ProjectionY();
 	        sprintf(name,"%sProjectX_d%i_j%i_k%i_eta0", Histtag, id, ij, ik); RMx->SetNameTitle(name,name);
           	sprintf(name,"%sProjectY_d%i_j%i_k%i_eta0", Histtag, id, ij, ik); RMy->SetNameTitle(name,name);
@@ -338,8 +340,7 @@ void testUnfold2c(){
           	RMx->Write(); RMy->Write();
           	HT2_NormalV3(MC_reco_fake[imc][id][ij][ik], binsRec[id][ij][ik], Axisname,nHLTmx,1);
           	HT2_NormalV3(MC_Gen_miss[imc][id][ij][ik], binsGen[id][ij][ik], Axisname,nHLTmx,1);
-
-		//------------------------------------------------------Stability and Purity -----------------------------------------
+		//--------------------Stability and Purity ------------------------
 	        TH1* hist_pu = (TH1D*)MC_miss[imc][id][ij][ik]->Clone(); hist_pu->Reset();
           	TH1* hist_st = (TH1D*)MC_miss[imc][id][ij][ik]->Clone(); hist_st->Reset();
           	TH2* RMcopy  = (TH2D*)h2dGenDetMC[imc][id][ij][ik]->Clone(); RMcopy->RebinX(2);   // CHECK REBIN required or not
@@ -366,7 +367,6 @@ void testUnfold2c(){
 
           	//TH1* RMMx= (TH1D*)RMx->Clone(); RMMx->Rebin(2);
           	//hist_pu->Divide(RMy,RMMx, 1, 1, "b");
-
 		TH1D *h_pu = (TH1D*)fakerate->Clone(); h_pu->Reset();
           	TH1D *h_st = (TH1D*)fakerate->Clone(); h_st->Reset();
           	int ir = h_pu->GetNbinsX(); int ig = missrate->GetNbinsX(); 
@@ -392,7 +392,7 @@ void testUnfold2c(){
 }
     cout << "Histogram Read Data and MC Done " <<endl;
 
-    //------------------Fold check : Patrick 1 Sep 20
+    //------------------Fold check : Patrick 1 Sep 20------------
     //Get Probability Matrix  (gen-miss)*probability = (reco-fake). Of course, don't forget to account for miss and fake entries (if applicable).
     folddir->cd();
     for(int id=0; id<ndef; id++){
@@ -416,8 +416,7 @@ void testUnfold2c(){
       			}
     		}
 	}
-//----------------------------Condition  number of Probability Matrix
-    
+//-------------------------Condition  number of Probability Matrix-------------------    
     for(int id=0; id<ndef; id++){
         for (int ij=0; ij<njet; ij++){
                 for (int ik=0; ik<nkappa; ik++){
@@ -431,7 +430,7 @@ void testUnfold2c(){
       			}
     		}
     }
-
+//--------------------------------Start Unfolding-----------------------------------
     Unfolddir->cd();
     for(int id=0; id<ndef; id++){
         for (int ij=0; ij<njet; ij++){
@@ -440,7 +439,7 @@ void testUnfold2c(){
 		        //Rebin for match the condition of reco vs gen bin 
         		RMinput_RM[id][ij][ik]->RebinY(irbin);   // CHECK 
 			RMinput_Gen[id][ij][ik]->Rebin(irbin);
-			//----------------------------------------------------------Define Input---------------------   
+			//----------------------Define Input------------------------   
         		TUnfoldBinning* RecoBin = binsRec[id][ij][ik];
         		TUnfoldBinning* GenBin = binsGen[id][ij][ik];
 
@@ -472,14 +471,14 @@ void testUnfold2c(){
           				covM->SetBinContent(ix,ix,err*err);
         				}
         				covM->Write();
-			//----------------------------------------------------------No Reguratization-------------------------------------
+			//-----------------------------------------No Reguratization---------------------------------------
 		        TUnfoldDensity density(RMin,TUnfold::kHistMapOutputVert, // truth level on y-axis of response matrix
                 	               TUnfoldDensity::kRegModeNone, // without regularisation
                         	       //TUnfoldDensity::kRegModeCurvature,
                                	       //TUnfoldDensity::kEConstraintArea,
                                	       TUnfoldDensity::kEConstraintNone,  // no constrain on area
-                                       //TUnfoldDensity::kDensityModeNone,
-                                       TUnfoldDensity::kDensityModeBinWidthAndUser, 
+                                       TUnfoldDensity::kDensityModeNone,
+                                       //TUnfoldDensity::kDensityModeBinWidthAndUser, 
                                        GenBin,RecoBin);//REGULARISATION_DISTRIBUTION, REGULARISATION_AXISSTEERING);//,0,0,REGULARISATION_DISTRIBUTION,REGULARISATION_AXISSTEERING);
 			
 			density.SubtractBackground(mcbackground, "fake", 1.0, 0.00); // hist,name,scale, scale error 
@@ -491,28 +490,28 @@ void testUnfold2c(){
       			// density.ScanLcurve(50,0.,0.,0,0,0);
         		density.DoUnfold(0.0);//,input,biasScale);  // tau 0.0 means no regularization
 
-			sprintf(histname, "%sTUnfold_NoReg_typ_d%i_j%i_k%i_eta0", Histtag, id, ij, ik); //unfolded_typ_0_pt2_eta0_3
+			sprintf(histname, "%sTUnfold_NoReg_d%i_j%i_k%i_eta0", Histtag, id, ij, ik); //unfolded_typ_0_pt2_eta0_3
 		        sprintf(title, "Unfolded No Reg %s %s %s 2.5", obs_def[id], jet_num[ij], k_fact[ik]);
         		bool AxisBin = false;
 
 			TH1 *Unfolded = density.GetOutput(histname,title,0,"*[UO]", AxisBin);//,0,"*[UO]" ,true);//,"","*[UO]");//,"signal"); ??
 
-			sprintf(title, "Input Ematrix No Reg %s %s %s 2.5", jet_num[ij], obs_def[id], k_fact[ik]);
+			sprintf(title, "Input Ematrix No Reg %s %s %s 2.5", obs_def[id], jet_num[ij], k_fact[ik]);
 		        TH2 *hist_In_Emat = density.GetEmatrixInput(Form("%sInEmat_NoReg_d%i_j%i_k%i_eta0",Histtag, id, ij, ik),title);//,"signal");
 
-			sprintf(title, "RhoIJtotal No Reg %s %s %s2.5", jet_num[ij], obs_def[id], k_fact[ik]);
+			sprintf(title, "RhoIJtotal No Reg %s %s %s2.5", obs_def[id], jet_num[ij], k_fact[ik]);
 		        TH2 *Hist_RhoIJ = density.GetRhoIJtotal(Form("%scorr_NoReg_d%i_j%i_k%i_eta0", Histtag, id, ij, ik), title);//,"signal");
 
-			sprintf(title, "Ematrix No Reg %s %s %s 2.5", jet_num[ij], obs_def[id], k_fact[ik]);
+			sprintf(title, "Ematrix No Reg %s %s %s 2.5", obs_def[id], jet_num[ij], k_fact[ik]);
 		        TH2 *hist_Emat = density.GetEmatrixTotal(Form("%sEmat_NoReg_d%i_j%i_k%i_eta0",Histtag, id, ij, ik));//,"signal");
 
-        		sprintf(title, "Back folded No Reg %s %s %s 2.5", jet_num[ij], obs_def[id], k_fact[ik]);
+        		sprintf(title, "Back folded No Reg %s %s %s 2.5", obs_def[id], jet_num[ij], k_fact[ik]);
         		TH1 *hist_folded = density.GetFoldedOutput(Form("%sRefold_NoReg_d%i_j%i_k%i_eta0", Histtag, id, ij, ik),title,0,"*[UO]",AxisBin);//,"signal");
 
-        		sprintf(title, "ProbabilityMatrix No Reg %s %s %s 2.5", jet_num[ij], obs_def[id], k_fact[ik]);
+        		sprintf(title, "ProbabilityMatrix No Reg %s %s %s 2.5", obs_def[id], jet_num[ij], k_fact[ik]);
         		TH2 *hist_prob = density.GetProbabilityMatrix(Form("%sProb_NoReg_d%i_j%i_k%i_eta0",Histtag, id, ij, ik),title,TUnfold::kHistMapOutputVert);//,"signal");
 
-			TH1 * BLTUnf = (TH1*)Unfolded->Clone();  //for BLT test
+			TH1 * BLTUnf = (TH1*)Unfolded->Clone();  //-------------------------BLT TEST--------------------
 		        //correction for Miss entries  : Partick
 			for (int i = 1; i <= Unfolded->GetNbinsX(); ++i) {
 		        	double content = Unfolded->GetBinContent(i);
@@ -535,7 +534,7 @@ void testUnfold2c(){
 
 			Hist_RhoIJ->Write(); hist_Emat->Write(); hist_prob->Write(); hist_In_Emat->Write();
 		        ConditionV2(hist_prob);
-        		//----------------------Extract The True Distrubuntions
+        		//---------------Extract The True Distrubuntions---------------
         		HT2_NormalV3(hist_folded,binsRec[id][ij][ik], Axisname,nHLTmx,1);
         		HT2_NormalV3(Unfolded, binsGen[id][ij][ik], Axisname,nHLTmx,1);
 #ifdef BLTest  
@@ -585,15 +584,13 @@ void testUnfold2c(){
         BLTGenRatio->Divide(Unfolded);
         HT2_NormalV3(BLTGenRatio, binsGen[id][ij][ik], Axisname,nHLTmx,1);
 #endif
-        //-----------------------------------------End of Variables loop
+        //----------------End of Variables loop---------------
         cout << endl ;
 		}
 	}
-    }
-
-	cout << "TUnfoldBinning 2D OK " <<endl;
-
-    	delete outputFile;
+}
+cout << "TUnfoldBinning 2D OK " <<endl;
+delete outputFile;
 }
 //-----------------------------------------------------------
 //------------------------FUNCTIONS--------------------------

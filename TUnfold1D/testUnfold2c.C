@@ -49,7 +49,7 @@
 #include <TVectorD.h>
 #include <TDecompSVD.h>
 
-#define CLOUSER
+//#define CLOUSER
 
 using namespace std;
 
@@ -62,14 +62,19 @@ void testUnfold2c()
   TH2::SetDefaultSumw2();
   
   //Input Data and MC histogram
+  //TFile *inputData=new TFile("Data_UL2017.root");
+  //TFile *inputData=new TFile("PY8_bin.root");
+#ifdef CLOUSER
+  TFile *inputData=new TFile("PY8_bin.root");
+#else
   TFile *inputData=new TFile("Data_UL2017.root");
+#endif
   TFile *inputMC=new TFile("PY8_bin.root");
-  
   TFile *inputMC1=new TFile("MG5_PY8_bin.root");
   TFile *inputMC2=new TFile("HW_CH3_QCD_Pt-15to7000_TuneCH3_Flat_13TeV_herwig7.root");
   
   //Unfolded Data and Covarince matrix, efficincy,fake rate, purity, stability
-  TFile *outputFile=new TFile("testunfold2c_unfolded.root","recreate");
+  TFile *outputFile=new TFile("Unfolded_Result.root","recreate");
   
   //int irbin = 2;
   int irbin =1;
