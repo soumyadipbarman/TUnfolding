@@ -49,7 +49,7 @@
 #include <TVectorD.h>
 #include <TDecompSVD.h>
 
-#define CLOUSER
+//#define CLOUSER
 
 using namespace std;
 
@@ -62,13 +62,9 @@ void testUnfold2c()
   TH2::SetDefaultSumw2();
   
   //Input Data and MC histogram
-  //TFile *inputData=new TFile("Data_UL2017.root");
-  //TFile *inputData=new TFile("PY8_bin.root");
-#ifdef CLOUSER
-  TFile *inputData=new TFile("PY8_bin.root"); // PY8 bin
-#else
-  TFile *inputData=new TFile("Data_UL2017.root"); // Data
-#endif
+  //TFile *inputData=new TFile("Data_UL2017.root"); // Data
+  TFile *inputData=new TFile("PY8_bin.root"); // PY8 bin  For closure MC will be used pseudo-data
+
   TFile *inputMC=new TFile("PY8_bin.root"); // PY8 bin
   TFile *inputMC1=new TFile("MG5_PY8_bin.root"); // MG5+PY8
   TFile *inputMC2=new TFile("HW_CH3_QCD_Pt-15to7000_TuneCH3_Flat_13TeV_herwig7.root"); // HW7 flat
@@ -774,12 +770,13 @@ for(int id=0; id <ndef; id++){
        		hist_foldedback_NoReg->Write();
        		hist_prob_Noreg->Write();
        
-       		cout << "Without Regularization finish " << endl;
+       		//cout << "Unfolding without Regularization complete" << endl;
        
 	     		}
    		}
 	}
 }
+cout << "Unfolding without Regularization complete" << endl;
 delete outputFile;
 }
 //-----------------------------------------------------------
