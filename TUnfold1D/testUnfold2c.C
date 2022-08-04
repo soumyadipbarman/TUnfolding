@@ -49,7 +49,7 @@
 #include <TVectorD.h>
 #include <TDecompSVD.h>
 
-//#define CLOUSER
+#define CLOUSER
 
 using namespace std;
 
@@ -724,26 +724,26 @@ for(int id=0; id <ndef; id++){
        		char unfoldhist[100], title[100], NoReg_RhoIJ[100], NoReg_RhoIJ_tit[100], NoReg_Ematrix[100], NoReg_Ematrix_tit[100], foldback[100], foldback_title[100], probMat[100], probmat_title[100];// NoReg_prob[100], NoReg_probtitle[100];
        		
 	       	//unfolding result, signal only
-		sprintf(unfoldhist, "Tunfold_Noreg_D%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt); //unfolded_typ_0_pt2_eta0_3
+		sprintf(unfoldhist, "Tunfold_Noreg_d%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt); //unfolded_typ_0_pt2_eta0_3
 		sprintf(title, "Tunfolded Noreg %i 2.5 %s %s %s", int(leadingPtThreshold[ipt]), obs_def[id], jet_num[ij], k_fact[ik] );
        		TH1 *hist_PTunfolded_noRegularisation = tunfoldNoRegularisation.GetOutput(unfoldhist,title);//,0,"*[UO]" ,true);//,"","*[UO]");//,"signal");
        		//TH1 *hist_PTunfolded_noRegularisation = tunfoldNoRegularisation.GetOutput(unfoldhist,title);//,"","*[UO]");//,"signal");
        		//TH1 *hist_PTunfolded_noRegularisation = tunfoldNoRegularisation.GetOutput("hist_PTunfolded_noRegularisation", "P_{T,unfolded} [GeV]","signal");
 
-		sprintf(NoReg_RhoIJ, "Tunfold_Noreg_corr_D%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt); //unfolded_typ_0_pt2_eta0_3
+		sprintf(NoReg_RhoIJ, "Tunfold_Noreg_corr_d%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt); //unfolded_typ_0_pt2_eta0_3
 		sprintf(NoReg_RhoIJ_tit, "2D correlation coefficients No Regularisation %i 2.5 %s %s %s", int(leadingPtThreshold[ipt]), obs_def[id], jet_num[ij], k_fact[ik]);
        		TH2 *hist_RhoIJ_noRegularisation = tunfoldNoRegularisation.GetRhoIJtotal(NoReg_RhoIJ, NoReg_RhoIJ_tit);//,"signal");
 
-		sprintf(NoReg_Ematrix, "Tunfold_Noreg_Emat_typ_D%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt); //unfolded_typ_0_pt2_eta0_3
+		sprintf(NoReg_Ematrix, "Tunfold_Noreg_Emat_d%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt); //unfolded_typ_0_pt2_eta0_3
 		sprintf(NoReg_Ematrix_tit, "EMatrix No Regularisation %i 2.5 %s %s %s", int(leadingPtThreshold[ipt]), obs_def[id], jet_num[ij], k_fact[ik]);
        		TH2 *hist_Rho2D_noRegularisation = tunfoldNoRegularisation.GetEmatrixTotal(NoReg_Ematrix, NoReg_Ematrix_tit);//,"signal");
        		//tunfoldNoRegularisation.GetEmatrix(COV_Mat_NoReg[ity][ivar][ipt],binMap);//,"signal");
 
-		sprintf(foldback, "Tunfold_NoReg_Refold_D%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt); //unfolded_typ_0_pt2_eta0_3
+		sprintf(foldback, "Tunfold_NoReg_Refold_d%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt); //unfolded_typ_0_pt2_eta0_3
 		sprintf(foldback_title, "TunfoldFolded back  NoReg %i 2.5 %s %s %s", int(leadingPtThreshold[ipt]), obs_def[id], jet_num[ij], k_fact[ik]);
        		TH1 *hist_foldedback_NoReg = tunfoldNoRegularisation.GetFoldedOutput(foldback, foldback_title);//,"signal");
 
-		sprintf(probMat, "Tunfold_Noreg_probM_D%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt);
+		sprintf(probMat, "Tunfold_Noreg_probM_d%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt);
 		sprintf(probmat_title, "Probability matrix Noreg %i 2.5 %s %s %s", int(leadingPtThreshold[ipt]), obs_def[id], jet_num[ij], k_fact[ik]);
        		TH2 *hist_prob_Noreg = tunfoldNoRegularisation.GetProbabilityMatrix(probMat, probmat_title,TUnfold::kHistMapOutputVert);//,"signal");
 
