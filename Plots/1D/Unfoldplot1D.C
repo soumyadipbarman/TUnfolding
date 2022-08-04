@@ -57,8 +57,9 @@ void Unfoldplot1D(){
   Int_t HT2range[nHLTmx+1]={92, 119, 185, 251, 319, 388, 467, 518, 579, 669, 3000};
   const int njetetamn=1;  //eta value used 2.5
 
-  const char* obs_def[3]={"Q","Q_{L}","Q_{T}"};
+  const char* obs_def[3]={"Q_{D}","Q_{L}","Q_{T}"};
   const char* jet_num[2]={"Leading-Jet","Sub-Leading-Jet"};
+  const char* njets[2]={"1","2"};
   const char* k_fact[10]={"k=0.1","k=0.2","k=0.3","k=0.4","k=0.5","k=0.6","k=0.7","k=0.8","k=0.9","k=1.0"};
   
   const char* htrang[10]={"92 < P_{T} < 119", "119 < P_{T} < 185", "185 < P_{T} < 251", "251 < P_{T} < 319", "319 < P_{T} < 388", "388 < P_{T} <467", "467 < P_{T} <518","518 < P_{T} < 579", "579 < P_{T} < 669", "P_{T} > 669"};
@@ -71,9 +72,9 @@ void Unfoldplot1D(){
   const char* ProbN[4]={"Tunfold_Noreg_probM","Tunfold_lscan_probM","Tunfold_scantau_probM","Tunfold_SURE_probM"};
   const char* dirname[3]={"Pythia8","MG8","HW7"};
 
-  const char* Validity_test[4]={"Closure test","Bottom Line test"," Unfolded","Refold"};
-  const char* h2dMat_name[4]={"Covariance matrix","correlation coefficients"," probabilities matrix ","Response matrix"};
-  const char* mcname[3]={"Pythia8 CP5 Tune","Madgraph","Herwig++"};
+  //const char* Validity_test[4]={"Closure test","Bottom Line test"," Unfolded","Refold"};
+  //const char* h2dMat_name[4]={"Covariance matrix","correlation coefficients"," probabilities matrix ","Response matrix"};
+  //const char* mcname[3]={"Pythia8 CP5 Tune","Madgraph","Herwig++"};
   const char* mcnamerco[3]={"Pythia8 RECO","Madgraph RECO","Herwig++ RECO"};
   const char* mcnamegen[3]={"Pythia8 GEN","Madgraph GEN","Herwig++ GEN"};
   const char* DataEra[3]={"Data RECO","Data RECO","Data RECO"};
@@ -84,9 +85,9 @@ void Unfoldplot1D(){
   const char* closuretype[5]={"Unfolded Pythia8(No Regularisation) ","Unfolded Pythia8 (L-curve scan)","Unfolded Pythia8(Scan Tau)","Unfolded Pythia8 (ScanSURE)","Unfolded(Iterative method)"};
   //const char* closuretype[5]={"Unfolded Madgraph(No Regularisation) ","Unfolded Madgraph (L-curve scan)","Unfolded Madgraph(Scan Tau)","Unfolded Madgraph (ScanSURE)","Unfolded(Iterative method)"};
   const char* Modelnm[3]={"Pythia8","Madgraph","Herwig"};
-  const char* Methodtype[5]={"(No Regularisation) ","(L-Curve scan)","(Scan Tau)","(ScanSURE)","(Iterative method)"};
-  const char* smeared[5]={"TUnfold","Refold","Folded-back","GEN","RECO"};
-  static const int iera = 1;
+  //const char* Methodtype[5]={"(No Regularisation) ","(L-Curve scan)","(Scan Tau)","(ScanSURE)","(Iterative method)"};
+  //const char* smeared[5]={"TUnfold","Refold","Folded-back","GEN","RECO"};
+  //static const int iera = 1;
   int iPeriod = 0;  
   int iPos=10 ;
   
@@ -104,10 +105,11 @@ void Unfoldplot1D(){
   TCanvas *ratio_can(int Nplot[2],float plegend[7], TH1D* data, TH1D* MC[Nplot[0]], char* lowpadx,const  char* modnam[Nplot[0]],const  char* datanm[1]);
   TCanvas *ratio_can1(int Nplot[3],float plegend[7], TH1D* data, TH1D* MC[Nplot[0]], char* lowpadx, const char* modnam[Nplot[0]], const  char* datanm[3]);
 //----------------------------------------------------
+//For Clouser
 	for(int id=0; id<ndef; id++){
 		for(int ij=0; ij<njet; ij++){
       			for(int ik =0 ; ik<nkappa ; ik++){
-        			for(Int_t ipt =0; ipt < nHLTmx ; ipt++){     
+        			for(int ipt =0; ipt < nHLTmx ; ipt++){     
 #ifdef CLOUSER
           		sprintf(histname, "Data/gen_jc_d%i_j%i_k%i_pt%i_eta0",id, ij, ik, ipt); //gen_jc_d0_j0_k0_pt0_eta0
 #else
@@ -130,26 +132,29 @@ void Unfoldplot1D(){
     		}
 	}
 //----------------------------------------------------
+//Read MC
   	for(int  imc =0; imc < nmc ; imc++){
     		for(int id=0; id <ndef; id++){
       			for(int ij =0 ; ij < njet ; ij++){
 				for (int ik=0; ik<nkappa; ik++){
-					for(Int_t ipt =0; ipt < nHLTmx ; ipt++){     
-	  		sprintf(histname, "%s/gen_jc_d%i_j%i_k%i_pt%i_eta0",dirname[imc], id, ij, ik, ipt); //reco_typ_1_pt6_eta0_15
+					for(int ipt =0; ipt < nHLTmx ; ipt++){     
+			//Read Gen
+	  		sprintf(histname, "%s/gen_jc_d%i_j%i_k%i_pt%i_eta0",dirname[imc], id, ij, ik, ipt); //gen_jc_d0_j0_k0_pt0_eta0
 	  		MC_gen[imc][id][ij][ik][ipt] = (TH1D*) Unfoldroot->Get(histname);
 	  		//MC_gen[imc][id][ij][ik][ipt]->Rebin(2);   // check rebin 
 
-	  		sprintf(histname, "%s/reco_jc_d%i_j%i_k%i_pt%i_eta0", dirname[imc], id, ij, ik,  ipt); //reco_typ_1_pt6_eta0_15
+			//Read Reco
+	  		sprintf(histname, "%s/reco_jc_d%i_j%i_k%i_pt%i_eta0", dirname[imc], id, ij, ik,  ipt); //reco_jc_d0_j0_k0_pt0_eta0
 	  		MC_reco[imc][id][ij][ik][ipt] = (TH1D*) Unfoldroot->Get(histname);
 	  		cout << histname << endl;
-			//Read Reso
-			sprintf(histname, "%s/RM_jc_d%i_j%i_k%i_pt%i_eta0",dirname[imc], id, ij, ik,  ipt); //reco_typ_1_pt6_eta0_15
+			//Read Response matrix
+			sprintf(histname, "%s/RM_jc_d%i_j%i_k%i_pt%i_eta0",dirname[imc], id, ij, ik,  ipt); //response matrix RM
 	  		MC_Res[imc][id][ij][ik][ipt] = (TH2D*) Unfoldroot->Get(histname);
 	  		cout << histname << endl;
 
-	  		sprintf(histname,"Unfold/genmiss_jc_d%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt);
+	  		sprintf(histname,"Unfold/genmiss_jc_d%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt); //genmiss
 	  		hist_eff[imc][id][ij][ik][ipt] = (TH1D*) Unfoldroot->Get(histname);
-	  		sprintf(histname,"Unfold/recofake_jc_d%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt);
+	  		sprintf(histname,"Unfold/recofake_jc_d%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt); //recofake
 	  		hist_fake[imc][id][ij][ik][ipt] = (TH1D*) Unfoldroot->Get(histname);
 	  		sprintf(histname,"Unfold/Purity1_d%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt);
 	  		hist_purity[imc][id][ij][ik][ipt] = (TH1D*) Unfoldroot->Get(histname);
@@ -165,8 +170,8 @@ void Unfoldplot1D(){
 	for(int id=0; id <ndef; id++){
     		for(int ij =0 ; ij < njet ; ij++){
 			for (int ik=0; ik<nkappa; ik++){
-      				for(Int_t ipt =0; ipt < nHLTmx ; ipt++){
-			sprintf(histname, "Data/reco_jc_d%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt); //reco_typ_1_pt6_eta0_15
+      				for(int ipt =0; ipt < nHLTmx ; ipt++){
+			sprintf(histname, "Data/reco_jc_d%i_j%i_k%i_pt%i_eta0", id, ij, ik, ipt); //reco_jc_d0_j0_k0_pt0_eta0
 			Data_reco[id][ij][ik][ipt] = (TH1D*) Unfoldroot->Get(histname);
 			cout << histname << endl;     
       				}
@@ -180,7 +185,7 @@ void Unfoldplot1D(){
       			for(int ij=0; ij < njet ; ij++){
 				for(int ik=0; ik<nkappa; ik++){
 					for(int ipt = 0 ; ipt < nHLTmx ; ipt++){
-	  		sprintf(histname, "Unfold/%s_d%i_j%i_k%i_pt%i_eta0",regN[iun], id, ij, ik, ipt); //Tunfolded_typ_0_pt0_eta0_3
+	  		sprintf(histname, "Unfold/%s_d%i_j%i_k%i_pt%i_eta0",regN[iun], id, ij, ik, ipt); //unfolded variable
 	  		Unfold[iun][id][ij][ik][ipt] = (TH1D*) Unfoldroot->Get(histname);
 	  		cout << histname << endl;
 	  		//Exclude Underflow and overflow bins
@@ -193,17 +198,15 @@ void Unfoldplot1D(){
           		NewData->SetBinError(ix, sqrt( Unfold[iun][id][ij][ik][ipt]->GetBinError(ix)* Unfold[iun][id][ij][ik][ipt]->GetBinError(ix)));
        			}
 	 
-	  		sprintf(histname, "Unfold/%s_d%i_j%i_k%i_pt%i_eta0",CORR[iun], id, ij, ik, ipt); //Tunfolded_typ_0_pt0_eta0_3
-			//sprintf(histname, "Unfold/Tunfold_Noreg_corr_d%i_j%i_k%i_pt%i_eta0",id, ij, ik, ipt);
+	  		sprintf(histname, "Unfold/%s_d%i_j%i_k%i_pt%i_eta0",CORR[iun], id, ij, ik, ipt); //correlation matrix
           		Corr[iun][id][ij][ik][ipt]=(TH2D*) Unfoldroot->Get(histname);
-	  		sprintf(histname, "Unfold/%s_d%i_j%i_k%i_pt%i_eta0",COVN[iun], id, ij, ik, ipt); //Tunfolded_typ_0_pt0_eta0_3
-			//sprintf(histname, "Unfold/Tunfold_Noreg_Emat_d%i_j%i_k%i_pt%i_eta0",COVN[iun], id, ij, ik, ipt); //Tunfolded_typ_0_pt0_eta0_3
+	  		sprintf(histname, "Unfold/%s_d%i_j%i_k%i_pt%i_eta0",COVN[iun], id, ij, ik, ipt); //covariance matrix
            		Ematrix[iun][id][ij][ik][ipt]= (TH2D*) Unfoldroot->Get(histname);
-	  		sprintf(histname, "Unfold/%s_d%i_j%i_k%i_pt%i_eta0",ProbN[iun], id, ij, ik, ipt); //Tunfolded_typ_0_pt0_eta0_3
+	  		sprintf(histname, "Unfold/%s_d%i_j%i_k%i_pt%i_eta0",ProbN[iun], id, ij, ik, ipt); //probability matrix
 	   		Prob[iun][id][ij][ik][ipt] = (TH2D*) Unfoldroot->Get(histname);
 				}
       			}
-    		} //unfolded histUnfold
+    		}
 	}
 }
 //----------------------------------------------------
@@ -213,13 +216,13 @@ void Unfoldplot1D(){
       			for(int ij=0; ij < njet ; ij++){
 				for(int ik=0; ik<nkappa; ik++){
 					for(int ipt = 0 ; ipt < nHLTmx ; ipt++){
-	  		sprintf(histname, "Unfold/%s_d%i_j%i_k%i_pt%i_eta0",reg_refold[iun], id, ij, ik, ipt); //Tunfolded_typ_0_pt0_eta0_3
+	  		sprintf(histname, "Unfold/%s_d%i_j%i_k%i_pt%i_eta0",reg_refold[iun], id, ij, ik, ipt); //TUnfold refold
 	  		Refold[iun][id][ij][ik][ipt] = (TH1D*) Unfoldroot->Get(histname);
 	  		cout << histname << endl;
 				}
       			}
 		}
-	}//unfolded histUnfold
+	}
 }
 cout <<"Read histogram OK" << endl;
 //----------------------------------------------------
@@ -244,8 +247,8 @@ cout <<"Read histogram OK" << endl;
 			//divBybinWidth(MyHist);
 			Myplotset(MyHist,0,0);
 	
-			if(ipt<=8){sprintf(Title,"%s_{%s}^{%s}:     %i <P_{T}< %i %s", obs_def[id], jet_num[ij], k_fact[ik], HT2range[ipt] , HT2range[ipt+1] ,"GeV/c" );}
-			else if(ipt==9){ sprintf(Title,"%s_{%s}^{%s}:     <P_{T}> %i %s", obs_def[id], jet_num[ij], k_fact[ik], HT2range[ipt] ,"GeV/c"  );}
+			if(ipt<=8){sprintf(Title,"%s_{%s}^{%s}:     %i <P_{T}< %i %s", obs_def[id], njets[ij], k_fact[ik], HT2range[ipt] , HT2range[ipt+1] ,"GeV/c" );}
+			else if(ipt==9){ sprintf(Title,"%s_{%s}^{%s}:     <P_{T}> %i %s", obs_def[id], njets[ij], k_fact[ik], HT2range[ipt] ,"GeV/c"  );}
 				sprintf(Yaxis," %s %s^{%s}" ,obs_logy[ik], obs_def[id], k_fact[ik]);
 				MyHist->SetTitle(Title);
 				MyHist->GetXaxis()->SetTitle("");
@@ -301,8 +304,8 @@ cout <<"Read histogram OK" << endl;
         		//divBybinWidth(MyHist);
         		Myplotset(MyHist,0,0);
 
-        		if(ipt<=8){sprintf(Title,"%s_{%s}^{%s}:     %i <P_{T}< %i %s", obs_def[id], jet_num[ij], k_fact[ik], HT2range[ipt] , HT2range[ipt+1] ,"GeV/c"  );}
-        		else if(ipt==9){ sprintf(Title,"%s_{%s}^{%s}:      <P_{T}> %i %s", obs_def[id], jet_num[ij], k_fact[ik], HT2range[ipt] ,"GeV/c"  );}
+        		if(ipt<=8){sprintf(Title,"%s_{%s}^{%s}:     %i <P_{T}< %i %s", obs_def[id], njets[ij], k_fact[ik], HT2range[ipt] , HT2range[ipt+1] ,"GeV/c"  );}
+        		else if(ipt==9){ sprintf(Title,"%s_{%s}^{%s}:      <P_{T}> %i %s", obs_def[id], njets[ij], k_fact[ik], HT2range[ipt] ,"GeV/c"  );}
         		sprintf(Yaxis," %s %s^{%s}" ,obs_logy[ik], obs_def[id], k_fact[ik]);
         		MyHist->SetTitle(Title);
         		MyHist->GetXaxis()->SetTitle("");
@@ -357,8 +360,8 @@ cout <<"Read histogram OK" << endl;
         		//divBybinWidth(MyHist);
         		Myplotset(MyHist,0,0);
 
-        		if(ipt<=8){sprintf(Title,"%s_{%s}^{%s}:     %i <P_{T}< %i %s", obs_def[id], jet_num[ij], k_fact[ik], HT2range[ipt] , HT2range[ipt+1] ,"GeV/c" );}
-        		else if(ipt==9){sprintf(Title,"%s_{%s}^{%s}:      <P_{T}> %i %s", obs_def[id], jet_num[ij], k_fact[ik], HT2range[ipt],"GeV/c");}
+        		if(ipt<=8){sprintf(Title,"%s_{%s}^{%s}:     %i <P_{T}< %i %s", obs_def[id], njets[ij], k_fact[ik], HT2range[ipt] , HT2range[ipt+1] ,"GeV/c" );}
+        		else if(ipt==9){sprintf(Title,"%s_{%s}^{%s}:      <P_{T}> %i %s", obs_def[id], njets[ij], k_fact[ik], HT2range[ipt],"GeV/c");}
         		sprintf(Yaxis," %s %s^{%s}" ,obs_logy[ik], obs_def[id], k_fact[ik]);
         		MyHist->SetTitle(Title);
         		MyHist->GetXaxis()->SetTitle("");
@@ -409,8 +412,8 @@ cout <<"Read histogram OK" << endl;
         		//divBybinWidth(MyHist);
         		Myplotset(MyHist,0,0);
 
-        		if(ipt<=8){sprintf(Title,"%s_{%s}^{%s}:     %i <P_{T}< %i %s", obs_def[id], jet_num[ij], k_fact[ik], HT2range[ipt] , HT2range[ipt+1] ,"GeV/c" );}
-                        else if(ipt==9){sprintf(Title,"%s_{%s}^{%s}:      <P_{T}> %i %s", obs_def[id], jet_num[ij], k_fact[ik], HT2range[ipt] ,"GeV/c");}
+        		if(ipt<=8){sprintf(Title,"%s_{%s}^{%s}:     %i <P_{T}< %i %s", obs_def[id], njets[ij], k_fact[ik], HT2range[ipt] , HT2range[ipt+1] ,"GeV/c" );}
+                        else if(ipt==9){sprintf(Title,"%s_{%s}^{%s}:      <P_{T}> %i %s", obs_def[id], njets[ij], k_fact[ik], HT2range[ipt] ,"GeV/c");}
                         sprintf(Yaxis," %s %s^{%s}" ,obs_logy[ik], obs_def[id], k_fact[ik]);
         		MyHist->SetTitle(Title);
         		MyHist->GetXaxis()->SetTitle("");
@@ -458,8 +461,8 @@ cout <<"Read histogram OK" << endl;
 
 			//MC_Res[imc][ity][ivar][ipt]->RebinY(2);
         		char lplot_xtitle[800]; char lplot_ytitle[800];
-			sprintf(lplot_xtitle, "RECO     %s %s^{%s}" ,jet_num[ij],obs_def[id],k_fact[ik]); 
-			sprintf(lplot_ytitle, "GEN      %s %s^{%s}" ,jet_num[ij],obs_def[id],k_fact[ik]);	
+			sprintf(lplot_xtitle, "RECO     %s_{%s}^{%s}" ,obs_def[id],njets[ij],k_fact[ik]); 
+			sprintf(lplot_ytitle, "GEN      %s_{%s}^{%s}" ,obs_def[id],njets[ij],k_fact[ik]);	
 			double titoff1[3]={1.2,1.3,1.0};
         		double titsize1[3] ={0.035,0.035,0.035};
 	
