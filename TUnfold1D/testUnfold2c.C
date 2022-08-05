@@ -49,7 +49,7 @@
 #include <TVectorD.h>
 #include <TDecompSVD.h>
 
-#define CLOUSER
+//#define CLOUSER
 
 using namespace std;
 
@@ -62,8 +62,8 @@ void testUnfold2c()
   TH2::SetDefaultSumw2();
   
   //Input Data and MC histogram
-  //TFile *inputData=new TFile("Data_UL2017.root"); // Data
-  TFile *inputData=new TFile("PY8_bin.root"); // PY8 bin  For closure MC will be used pseudo-data
+  TFile *inputData=new TFile("Data_UL2017.root"); // Data
+  //TFile *inputData=new TFile("PY8_bin.root"); // PY8 bin  For closure MC will be used pseudo-data
 
   TFile *inputMC=new TFile("PY8_bin.root"); // PY8 bin
   TFile *inputMC1=new TFile("MG5_PY8_bin.root"); // MG5+PY8
