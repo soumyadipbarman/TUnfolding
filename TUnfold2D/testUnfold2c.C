@@ -62,13 +62,10 @@ void testUnfold2c(){
   int irbin = 1; //Rebin
 
   const TString Pyinput = "PY8_bin.root"; // PY8 bin
-  //const TString datainput = "Data_UL2017.root"; // Data
-  //const TString datainput = "PY8_bin.root"; // PY8 bin
-#ifdef CLOSURE
-  const TString datainput = "PY8_bin.root"; // PY8 bin
-#else
+  
   const TString datainput = "Data_UL2017.root"; // Data
-#endif
+  //const TString datainput = "PY8_bin.root"; // PY8 bin for closure
+
   TFile *inputbinning = new TFile("testUnfold5_binning.root"); //input binning extracted from testUnfold5b.C
 
   //Input Data and MC histogram
