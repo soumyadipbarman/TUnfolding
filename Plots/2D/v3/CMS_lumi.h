@@ -37,9 +37,9 @@ TString lumi_7TeV  = "5.1 fb^{-1}";
 //TString lumi_sqrtS = "36.811 fb^{-1}"; //Moriond 17 data (previous)
 
 //TString lumi_sqrtS = " 41.53  fb^{-1}"; //UL 17 data Prelegacy
-//TString lumi_sqrtS = " 41.48  fb^{-1}"; //UL 17 data Legacy
+TString lumi_sqrtS = " 41.48  fb^{-1}"; //UL 17 data Legacy
 //TString lumi_sqrtS = "59.74 fb^{-1}"; //UL 18 data Pre Legacy
-TString lumi_sqrtS = "59.83 fb^{-1}"; //UL 18 data Legacy
+//TString lumi_sqrtS = "59.83 fb^{-1}"; //UL 18 data Legacy
 
 
 bool drawLogo = false;
