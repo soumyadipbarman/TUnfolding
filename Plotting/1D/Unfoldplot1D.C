@@ -133,17 +133,17 @@ void Unfoldplot1D(){
   TFile *Unf_root[clos_ty];
   TFile *Unf_dataCT[clos_ty];
 //----------------------------------------------------
-  TFile *Unfoldroot = TFile::Open("../../../Unfolded/26Nov2022/1D/Unfolded_HW7_flat_PY8_flat.root");//Unfolded data by Py8
+  TFile *Unfoldroot = TFile::Open("../../Unfolded/26Nov2022/1D/Unfolded_HW7_flat_PY8_flat.root");//Unfolded data by Py8
 
-  Unf_root[0] = TFile::Open("../../../Unfolded/26Nov2022/1D/Unfolded_HW7_flat_PY8_flat.root");      //Py- by Py8
-  Unf_root[1] = TFile::Open("../../../Unfolded/26Nov2022/1D/Unfolded_HW7_flat_PY8_flat.root");      //PyFlat - By Py8
-  Unf_root[2] = TFile::Open("../../../Unfolded/26Nov2022/1D/Unfolded_HW7_flat_PY8_flat.root");      //MG by Py8
-  Unf_root[3] = TFile::Open("../../../Unfolded/26Nov2022/1D/Unfolded_HW7_flat_PY8_flat.root");      //HW by Py8
+  Unf_root[0] = TFile::Open("../../Unfolded/26Nov2022/1D/Unfolded_HW7_flat_PY8_flat.root");      //Py- by Py8
+  Unf_root[1] = TFile::Open("../../Unfolded/26Nov2022/1D/Unfolded_HW7_flat_PY8_flat.root");      //PyFlat - By Py8
+  Unf_root[2] = TFile::Open("../../Unfolded/26Nov2022/1D/Unfolded_HW7_flat_PY8_flat.root");      //MG by Py8
+  Unf_root[3] = TFile::Open("../../Unfolded/26Nov2022/1D/Unfolded_HW7_flat_PY8_flat.root");      //HW by Py8
 
-  Unf_dataCT[0] = TFile::Open("../../../Unfolded/26Nov2022/1D/Unfolded_HW7_flat_PY8_flat.root");    //data by Py8
-  Unf_dataCT[1] = TFile::Open("../../../Unfolded/26Nov2022/1D/Unfolded_HW7_flat_PY8_flat.root");    //data by Py8flat
-  Unf_dataCT[2] = TFile::Open("../../../Unfolded/26Nov2022/1D/Unfolded_HW7_flat_PY8_flat.root");    //data by MG5
-  Unf_dataCT[3] = TFile::Open("../../../Unfolded/26Nov2022/1D/Unfolded_HW7_flat_PY8_flat.root");    //data by HW7
+  Unf_dataCT[0] = TFile::Open("../../Unfolded/26Nov2022/1D/Unfolded_HW7_flat_PY8_flat.root");    //data by Py8
+  Unf_dataCT[1] = TFile::Open("../../Unfolded/26Nov2022/1D/Unfolded_HW7_flat_PY8_flat.root");    //data by Py8flat
+  Unf_dataCT[2] = TFile::Open("../../Unfolded/26Nov2022/1D/Unfolded_HW7_flat_PY8_flat.root");    //data by MG5
+  Unf_dataCT[3] = TFile::Open("../../Unfolded/26Nov2022/1D/Unfolded_HW7_flat_PY8_flat.root");    //data by HW7
 
 //----------------------------------------------------
 //Function declaration

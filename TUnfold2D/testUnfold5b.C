@@ -79,7 +79,7 @@ void testUnfold5b()
 {
 
   // write binning schemes to root file
-  TFile *binningSchemes=new TFile("testUnfold5_binning.root","recreate");
+  TFile *binningSchemes=new TFile("testUnfold5_binning_24Oct2022.root","recreate");
 
   // reconstructed pt, eta, discriminator
 #define NBIN_PT_FINE 8
@@ -185,7 +185,7 @@ void testUnfold5b()
 
   const int nkappa=10;
   const int njetetamn=1;
-
+/*
   int recojcd1bins[nkappa]={40,40,40,40,20,20,20,20,20,20};
   double recojcd1minran[nkappa]={-8.0,-5.0,-4.0,-3.0,-2.0,-2.0,-2.0,-2.0,-1.0,-1.0};
   double recojcd1maxran[nkappa]={8.0,5.0,4.0,3.0,2.0,2.0,2.0,2.0,1.0,1.0};
@@ -201,6 +201,25 @@ void testUnfold5b()
   int genjcd23bins[nkappa]={10,10,10,10,10,10,10,10,10,10};
   double genjcd23minran[nkappa]={-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0};
   double genjcd23maxran[nkappa]={1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0};
+*/
+  //24Sept2022
+  //Reco level
+  int recojcd1bins[nkappa]={32,32,32,20,20,20,20,20,20,20};
+  double recojcd1minran[nkappa]={-6.0,-4.0,-3.0,-2.0,-2.0,-1.0,-1.0,-1.0,-1.0,-1.0};
+  double recojcd1maxran[nkappa]={6.0,4.0,3.0,2.0,2.0,1.0,1.0,1.0,1.0,1.0};
+
+  int recojcd23bins[nkappa]={20,20,20,20,20,20,20,20,20,20};
+  double recojcd23minran[nkappa]={-0.4,-0.6,-0.6,-0.8,-0.8,-1.0,-1.0,-1.0,-1.0,-1.0};
+  double recojcd23maxran[nkappa]={0.4,0.6,0.6,0.8,0.8,1.0,1.0,1.0,1.0,1.0};
+
+  //Gen level
+  int genjcd1bins[nkappa]={16,16,16,10,10,10,10,10,10,10};
+  double genjcd1minran[nkappa]={-6.0,-4.0,-3.0,-2.0,-2.0,-1.0,-1.0,-1.0,-1.0,-1.0};
+  double genjcd1maxran[nkappa]={6.0,4.0,3.0,2.0,2.0,1.0,1.0,1.0,1.0,1.0};
+
+  int genjcd23bins[nkappa]={10,10,10,10,10,10,10,10,10,10};
+  double genjcd23minran[nkappa]={-0.4,-0.6,-0.6,-0.8,-0.8,-1.0,-1.0,-1.0,-1.0,-1.0};
+  double genjcd23maxran[nkappa]={0.4,0.6,0.6,0.8,0.8,1.0,1.0,1.0,1.0,1.0};
 
   static const int nHLTmx=10;
   double recohtbins[nHLTmx+1] = {92, 119, 185, 251, 319, 388, 467, 518, 579, 669, 3000.0};

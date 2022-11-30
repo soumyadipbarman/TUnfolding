@@ -34,9 +34,6 @@
 
 #include "TDataMember.h"
 
-// The generated code does not explicitly qualifies STL entities
-namespace std {} using namespace std;
-
 // Header files passed as explicit arguments
 #include "./TUnfoldIterativeEM.h"
 #include "./TUnfoldDensity.h"
@@ -44,8 +41,11 @@ namespace std {} using namespace std;
 
 // Header files passed via #pragma extra_include
 
+// The generated code does not explicitly qualify STL entities
+namespace std {} using namespace std;
+
 namespace ROOT {
-   static void *new_TUnfoldV17(void *p = 0);
+   static void *new_TUnfoldV17(void *p = nullptr);
    static void *newArray_TUnfoldV17(Long_t size, void *p);
    static void delete_TUnfoldV17(void *p);
    static void deleteArray_TUnfoldV17(void *p);
@@ -54,8 +54,8 @@ namespace ROOT {
    // Function generating the singleton type initializer
    static TGenericClassInfo *GenerateInitInstanceLocal(const ::TUnfoldV17*)
    {
-      ::TUnfoldV17 *ptr = 0;
-      static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::TUnfoldV17 >(0);
+      ::TUnfoldV17 *ptr = nullptr;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::TUnfoldV17 >(nullptr);
       static ::ROOT::TGenericClassInfo 
          instance("TUnfoldV17", ::TUnfoldV17::Class_Version(), "TUnfold.h", 108,
                   typeid(::TUnfoldV17), ::ROOT::Internal::DefineBehavior(ptr, ptr),
@@ -70,14 +70,14 @@ namespace ROOT {
    }
    TGenericClassInfo *GenerateInitInstance(const ::TUnfoldV17*)
    {
-      return GenerateInitInstanceLocal((::TUnfoldV17*)0);
+      return GenerateInitInstanceLocal((::TUnfoldV17*)nullptr);
    }
    // Static variable to force the class initialization
-   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::TUnfoldV17*)0x0); R__UseDummy(_R__UNIQUE_DICT_(Init));
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::TUnfoldV17*)nullptr); R__UseDummy(_R__UNIQUE_DICT_(Init));
 } // end of namespace ROOT
 
 namespace ROOT {
-   static void *new_TUnfoldIterativeEMV17(void *p = 0);
+   static void *new_TUnfoldIterativeEMV17(void *p = nullptr);
    static void *newArray_TUnfoldIterativeEMV17(Long_t size, void *p);
    static void delete_TUnfoldIterativeEMV17(void *p);
    static void deleteArray_TUnfoldIterativeEMV17(void *p);
@@ -86,8 +86,8 @@ namespace ROOT {
    // Function generating the singleton type initializer
    static TGenericClassInfo *GenerateInitInstanceLocal(const ::TUnfoldIterativeEMV17*)
    {
-      ::TUnfoldIterativeEMV17 *ptr = 0;
-      static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::TUnfoldIterativeEMV17 >(0);
+      ::TUnfoldIterativeEMV17 *ptr = nullptr;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::TUnfoldIterativeEMV17 >(nullptr);
       static ::ROOT::TGenericClassInfo 
          instance("TUnfoldIterativeEMV17", ::TUnfoldIterativeEMV17::Class_Version(), "", 49,
                   typeid(::TUnfoldIterativeEMV17), ::ROOT::Internal::DefineBehavior(ptr, ptr),
@@ -102,14 +102,14 @@ namespace ROOT {
    }
    TGenericClassInfo *GenerateInitInstance(const ::TUnfoldIterativeEMV17*)
    {
-      return GenerateInitInstanceLocal((::TUnfoldIterativeEMV17*)0);
+      return GenerateInitInstanceLocal((::TUnfoldIterativeEMV17*)nullptr);
    }
    // Static variable to force the class initialization
-   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::TUnfoldIterativeEMV17*)0x0); R__UseDummy(_R__UNIQUE_DICT_(Init));
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::TUnfoldIterativeEMV17*)nullptr); R__UseDummy(_R__UNIQUE_DICT_(Init));
 } // end of namespace ROOT
 
 namespace ROOT {
-   static void *new_TUnfoldSysV17(void *p = 0);
+   static void *new_TUnfoldSysV17(void *p = nullptr);
    static void *newArray_TUnfoldSysV17(Long_t size, void *p);
    static void delete_TUnfoldSysV17(void *p);
    static void deleteArray_TUnfoldSysV17(void *p);
@@ -118,8 +118,8 @@ namespace ROOT {
    // Function generating the singleton type initializer
    static TGenericClassInfo *GenerateInitInstanceLocal(const ::TUnfoldSysV17*)
    {
-      ::TUnfoldSysV17 *ptr = 0;
-      static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::TUnfoldSysV17 >(0);
+      ::TUnfoldSysV17 *ptr = nullptr;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::TUnfoldSysV17 >(nullptr);
       static ::ROOT::TGenericClassInfo 
          instance("TUnfoldSysV17", ::TUnfoldSysV17::Class_Version(), "TUnfoldSys.h", 60,
                   typeid(::TUnfoldSysV17), ::ROOT::Internal::DefineBehavior(ptr, ptr),
@@ -134,14 +134,14 @@ namespace ROOT {
    }
    TGenericClassInfo *GenerateInitInstance(const ::TUnfoldSysV17*)
    {
-      return GenerateInitInstanceLocal((::TUnfoldSysV17*)0);
+      return GenerateInitInstanceLocal((::TUnfoldSysV17*)nullptr);
    }
    // Static variable to force the class initialization
-   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::TUnfoldSysV17*)0x0); R__UseDummy(_R__UNIQUE_DICT_(Init));
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::TUnfoldSysV17*)nullptr); R__UseDummy(_R__UNIQUE_DICT_(Init));
 } // end of namespace ROOT
 
 namespace ROOT {
-   static void *new_TUnfoldBinningV17(void *p = 0);
+   static void *new_TUnfoldBinningV17(void *p = nullptr);
    static void *newArray_TUnfoldBinningV17(Long_t size, void *p);
    static void delete_TUnfoldBinningV17(void *p);
    static void deleteArray_TUnfoldBinningV17(void *p);
@@ -150,8 +150,8 @@ namespace ROOT {
    // Function generating the singleton type initializer
    static TGenericClassInfo *GenerateInitInstanceLocal(const ::TUnfoldBinningV17*)
    {
-      ::TUnfoldBinningV17 *ptr = 0;
-      static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::TUnfoldBinningV17 >(0);
+      ::TUnfoldBinningV17 *ptr = nullptr;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::TUnfoldBinningV17 >(nullptr);
       static ::ROOT::TGenericClassInfo 
          instance("TUnfoldBinningV17", ::TUnfoldBinningV17::Class_Version(), "TUnfoldBinning.h", 59,
                   typeid(::TUnfoldBinningV17), ::ROOT::Internal::DefineBehavior(ptr, ptr),
@@ -166,14 +166,14 @@ namespace ROOT {
    }
    TGenericClassInfo *GenerateInitInstance(const ::TUnfoldBinningV17*)
    {
-      return GenerateInitInstanceLocal((::TUnfoldBinningV17*)0);
+      return GenerateInitInstanceLocal((::TUnfoldBinningV17*)nullptr);
    }
    // Static variable to force the class initialization
-   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::TUnfoldBinningV17*)0x0); R__UseDummy(_R__UNIQUE_DICT_(Init));
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::TUnfoldBinningV17*)nullptr); R__UseDummy(_R__UNIQUE_DICT_(Init));
 } // end of namespace ROOT
 
 namespace ROOT {
-   static void *new_TUnfoldDensityV17(void *p = 0);
+   static void *new_TUnfoldDensityV17(void *p = nullptr);
    static void *newArray_TUnfoldDensityV17(Long_t size, void *p);
    static void delete_TUnfoldDensityV17(void *p);
    static void deleteArray_TUnfoldDensityV17(void *p);
@@ -182,8 +182,8 @@ namespace ROOT {
    // Function generating the singleton type initializer
    static TGenericClassInfo *GenerateInitInstanceLocal(const ::TUnfoldDensityV17*)
    {
-      ::TUnfoldDensityV17 *ptr = 0;
-      static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::TUnfoldDensityV17 >(0);
+      ::TUnfoldDensityV17 *ptr = nullptr;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::TUnfoldDensityV17 >(nullptr);
       static ::ROOT::TGenericClassInfo 
          instance("TUnfoldDensityV17", ::TUnfoldDensityV17::Class_Version(), "", 147,
                   typeid(::TUnfoldDensityV17), ::ROOT::Internal::DefineBehavior(ptr, ptr),
@@ -198,14 +198,14 @@ namespace ROOT {
    }
    TGenericClassInfo *GenerateInitInstance(const ::TUnfoldDensityV17*)
    {
-      return GenerateInitInstanceLocal((::TUnfoldDensityV17*)0);
+      return GenerateInitInstanceLocal((::TUnfoldDensityV17*)nullptr);
    }
    // Static variable to force the class initialization
-   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::TUnfoldDensityV17*)0x0); R__UseDummy(_R__UNIQUE_DICT_(Init));
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::TUnfoldDensityV17*)nullptr); R__UseDummy(_R__UNIQUE_DICT_(Init));
 } // end of namespace ROOT
 
 namespace ROOT {
-   static void *new_TUnfoldBinningXMLV17(void *p = 0);
+   static void *new_TUnfoldBinningXMLV17(void *p = nullptr);
    static void *newArray_TUnfoldBinningXMLV17(Long_t size, void *p);
    static void delete_TUnfoldBinningXMLV17(void *p);
    static void deleteArray_TUnfoldBinningXMLV17(void *p);
@@ -214,8 +214,8 @@ namespace ROOT {
    // Function generating the singleton type initializer
    static TGenericClassInfo *GenerateInitInstanceLocal(const ::TUnfoldBinningXMLV17*)
    {
-      ::TUnfoldBinningXMLV17 *ptr = 0;
-      static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::TUnfoldBinningXMLV17 >(0);
+      ::TUnfoldBinningXMLV17 *ptr = nullptr;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::TUnfoldBinningXMLV17 >(nullptr);
       static ::ROOT::TGenericClassInfo 
          instance("TUnfoldBinningXMLV17", ::TUnfoldBinningXMLV17::Class_Version(), "", 363,
                   typeid(::TUnfoldBinningXMLV17), ::ROOT::Internal::DefineBehavior(ptr, ptr),
@@ -230,14 +230,14 @@ namespace ROOT {
    }
    TGenericClassInfo *GenerateInitInstance(const ::TUnfoldBinningXMLV17*)
    {
-      return GenerateInitInstanceLocal((::TUnfoldBinningXMLV17*)0);
+      return GenerateInitInstanceLocal((::TUnfoldBinningXMLV17*)nullptr);
    }
    // Static variable to force the class initialization
-   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::TUnfoldBinningXMLV17*)0x0); R__UseDummy(_R__UNIQUE_DICT_(Init));
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::TUnfoldBinningXMLV17*)nullptr); R__UseDummy(_R__UNIQUE_DICT_(Init));
 } // end of namespace ROOT
 
 //______________________________________________________________________________
-atomic_TClass_ptr TUnfoldV17::fgIsA(0);  // static to hold class pointer
+atomic_TClass_ptr TUnfoldV17::fgIsA(nullptr);  // static to hold class pointer
 
 //______________________________________________________________________________
 const char *TUnfoldV17::Class_Name()
@@ -248,31 +248,31 @@ const char *TUnfoldV17::Class_Name()
 //______________________________________________________________________________
 const char *TUnfoldV17::ImplFileName()
 {
-   return ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldV17*)0x0)->GetImplFileName();
+   return ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldV17*)nullptr)->GetImplFileName();
 }
 
 //______________________________________________________________________________
 int TUnfoldV17::ImplFileLine()
 {
-   return ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldV17*)0x0)->GetImplFileLine();
+   return ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldV17*)nullptr)->GetImplFileLine();
 }
 
 //______________________________________________________________________________
 TClass *TUnfoldV17::Dictionary()
 {
-   fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldV17*)0x0)->GetClass();
+   fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldV17*)nullptr)->GetClass();
    return fgIsA;
 }
 
 //______________________________________________________________________________
 TClass *TUnfoldV17::Class()
 {
-   if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldV17*)0x0)->GetClass(); }
+   if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldV17*)nullptr)->GetClass(); }
    return fgIsA;
 }
 
 //______________________________________________________________________________
-atomic_TClass_ptr TUnfoldIterativeEMV17::fgIsA(0);  // static to hold class pointer
+atomic_TClass_ptr TUnfoldIterativeEMV17::fgIsA(nullptr);  // static to hold class pointer
 
 //______________________________________________________________________________
 const char *TUnfoldIterativeEMV17::Class_Name()
@@ -283,31 +283,31 @@ const char *TUnfoldIterativeEMV17::Class_Name()
 //______________________________________________________________________________
 const char *TUnfoldIterativeEMV17::ImplFileName()
 {
-   return ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldIterativeEMV17*)0x0)->GetImplFileName();
+   return ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldIterativeEMV17*)nullptr)->GetImplFileName();
 }
 
 //______________________________________________________________________________
 int TUnfoldIterativeEMV17::ImplFileLine()
 {
-   return ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldIterativeEMV17*)0x0)->GetImplFileLine();
+   return ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldIterativeEMV17*)nullptr)->GetImplFileLine();
 }
 
 //______________________________________________________________________________
 TClass *TUnfoldIterativeEMV17::Dictionary()
 {
-   fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldIterativeEMV17*)0x0)->GetClass();
+   fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldIterativeEMV17*)nullptr)->GetClass();
    return fgIsA;
 }
 
 //______________________________________________________________________________
 TClass *TUnfoldIterativeEMV17::Class()
 {
-   if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldIterativeEMV17*)0x0)->GetClass(); }
+   if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldIterativeEMV17*)nullptr)->GetClass(); }
    return fgIsA;
 }
 
 //______________________________________________________________________________
-atomic_TClass_ptr TUnfoldSysV17::fgIsA(0);  // static to hold class pointer
+atomic_TClass_ptr TUnfoldSysV17::fgIsA(nullptr);  // static to hold class pointer
 
 //______________________________________________________________________________
 const char *TUnfoldSysV17::Class_Name()
@@ -318,31 +318,31 @@ const char *TUnfoldSysV17::Class_Name()
 //______________________________________________________________________________
 const char *TUnfoldSysV17::ImplFileName()
 {
-   return ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldSysV17*)0x0)->GetImplFileName();
+   return ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldSysV17*)nullptr)->GetImplFileName();
 }
 
 //______________________________________________________________________________
 int TUnfoldSysV17::ImplFileLine()
 {
-   return ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldSysV17*)0x0)->GetImplFileLine();
+   return ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldSysV17*)nullptr)->GetImplFileLine();
 }
 
 //______________________________________________________________________________
 TClass *TUnfoldSysV17::Dictionary()
 {
-   fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldSysV17*)0x0)->GetClass();
+   fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldSysV17*)nullptr)->GetClass();
    return fgIsA;
 }
 
 //______________________________________________________________________________
 TClass *TUnfoldSysV17::Class()
 {
-   if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldSysV17*)0x0)->GetClass(); }
+   if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldSysV17*)nullptr)->GetClass(); }
    return fgIsA;
 }
 
 //______________________________________________________________________________
-atomic_TClass_ptr TUnfoldBinningV17::fgIsA(0);  // static to hold class pointer
+atomic_TClass_ptr TUnfoldBinningV17::fgIsA(nullptr);  // static to hold class pointer
 
 //______________________________________________________________________________
 const char *TUnfoldBinningV17::Class_Name()
@@ -353,31 +353,31 @@ const char *TUnfoldBinningV17::Class_Name()
 //______________________________________________________________________________
 const char *TUnfoldBinningV17::ImplFileName()
 {
-   return ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldBinningV17*)0x0)->GetImplFileName();
+   return ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldBinningV17*)nullptr)->GetImplFileName();
 }
 
 //______________________________________________________________________________
 int TUnfoldBinningV17::ImplFileLine()
 {
-   return ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldBinningV17*)0x0)->GetImplFileLine();
+   return ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldBinningV17*)nullptr)->GetImplFileLine();
 }
 
 //______________________________________________________________________________
 TClass *TUnfoldBinningV17::Dictionary()
 {
-   fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldBinningV17*)0x0)->GetClass();
+   fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldBinningV17*)nullptr)->GetClass();
    return fgIsA;
 }
 
 //______________________________________________________________________________
 TClass *TUnfoldBinningV17::Class()
 {
-   if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldBinningV17*)0x0)->GetClass(); }
+   if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldBinningV17*)nullptr)->GetClass(); }
    return fgIsA;
 }
 
 //______________________________________________________________________________
-atomic_TClass_ptr TUnfoldDensityV17::fgIsA(0);  // static to hold class pointer
+atomic_TClass_ptr TUnfoldDensityV17::fgIsA(nullptr);  // static to hold class pointer
 
 //______________________________________________________________________________
 const char *TUnfoldDensityV17::Class_Name()
@@ -388,31 +388,31 @@ const char *TUnfoldDensityV17::Class_Name()
 //______________________________________________________________________________
 const char *TUnfoldDensityV17::ImplFileName()
 {
-   return ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldDensityV17*)0x0)->GetImplFileName();
+   return ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldDensityV17*)nullptr)->GetImplFileName();
 }
 
 //______________________________________________________________________________
 int TUnfoldDensityV17::ImplFileLine()
 {
-   return ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldDensityV17*)0x0)->GetImplFileLine();
+   return ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldDensityV17*)nullptr)->GetImplFileLine();
 }
 
 //______________________________________________________________________________
 TClass *TUnfoldDensityV17::Dictionary()
 {
-   fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldDensityV17*)0x0)->GetClass();
+   fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldDensityV17*)nullptr)->GetClass();
    return fgIsA;
 }
 
 //______________________________________________________________________________
 TClass *TUnfoldDensityV17::Class()
 {
-   if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldDensityV17*)0x0)->GetClass(); }
+   if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldDensityV17*)nullptr)->GetClass(); }
    return fgIsA;
 }
 
 //______________________________________________________________________________
-atomic_TClass_ptr TUnfoldBinningXMLV17::fgIsA(0);  // static to hold class pointer
+atomic_TClass_ptr TUnfoldBinningXMLV17::fgIsA(nullptr);  // static to hold class pointer
 
 //______________________________________________________________________________
 const char *TUnfoldBinningXMLV17::Class_Name()
@@ -423,26 +423,26 @@ const char *TUnfoldBinningXMLV17::Class_Name()
 //______________________________________________________________________________
 const char *TUnfoldBinningXMLV17::ImplFileName()
 {
-   return ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldBinningXMLV17*)0x0)->GetImplFileName();
+   return ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldBinningXMLV17*)nullptr)->GetImplFileName();
 }
 
 //______________________________________________________________________________
 int TUnfoldBinningXMLV17::ImplFileLine()
 {
-   return ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldBinningXMLV17*)0x0)->GetImplFileLine();
+   return ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldBinningXMLV17*)nullptr)->GetImplFileLine();
 }
 
 //______________________________________________________________________________
 TClass *TUnfoldBinningXMLV17::Dictionary()
 {
-   fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldBinningXMLV17*)0x0)->GetClass();
+   fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldBinningXMLV17*)nullptr)->GetClass();
    return fgIsA;
 }
 
 //______________________________________________________________________________
 TClass *TUnfoldBinningXMLV17::Class()
 {
-   if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldBinningXMLV17*)0x0)->GetClass(); }
+   if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::TUnfoldBinningXMLV17*)nullptr)->GetClass(); }
    return fgIsA;
 }
 
@@ -648,12 +648,12 @@ namespace {
   void TriggerDictionaryInitialization_TUnfoldV17Dict_Impl() {
     static const char* headers[] = {
 "0",
-0
+nullptr
     };
     static const char* includePaths[] = {
-"/home/soumyadip/Package/Root/Root62208build/include/",
+"/home/soumyadip/Package/Root/Root62606build/include/",
 "/home/soumyadip/Package/TUnfold/JetCharge/TUnfold2D/",
-0
+nullptr
     };
     static const char* fwdDeclCode = R"DICTFWDDCLS(
 #line 1 "TUnfoldV17Dict dictionary forward declarations' payload"
