@@ -39,6 +39,7 @@
 #include <TLorentzVector.h>
 #include "TUnfoldDensity.h"
 #include "TUnfoldIterativeEM.h"
+#include <iomanip>
 
 #include "TUnfoldBinning.h"
 #include "TUnfoldBinningXML.h"
@@ -49,7 +50,7 @@
 #include <TVectorD.h>
 #include <TDecompSVD.h>
 
-//#define CLOUSER
+#define CLOUSER
 
 using namespace std;
 
@@ -62,15 +63,15 @@ void testUnfold2c()
   TH2::SetDefaultSumw2();
   
   //Input Data and MC histogram
-  TFile *inputData=new TFile("Data_UL2017.root"); // Data
-  //TFile *inputData=new TFile("PY8_bin.root"); // PY8 bin  For closure MC will be used pseudo-data
+  //TFile *inputData=new TFile("Data_UL2017.root"); // Data
+  TFile *inputData=new TFile("../Input/11Aug2022/PY8_bin.root"); // PY8 bin  For closure MC will be used pseudo-data
 
-  TFile *inputMC=new TFile("PY8_bin.root"); // PY8 bin
-  TFile *inputMC1=new TFile("MG5_PY8_bin.root"); // MG5+PY8
-  TFile *inputMC2=new TFile("HW_CH3_QCD_Pt-15to7000_TuneCH3_Flat_13TeV_herwig7.root"); // HW7 flat
+  TFile *inputMC=new TFile("../Input/11Aug2022/PY8_bin.root"); // PY8 bin
+  TFile *inputMC1=new TFile("../Input/11Aug2022/MG5_PY8_bin.root"); // MG5+PY8
+  TFile *inputMC2=new TFile("../Input/11Aug2022/HW_CH3_QCD_Pt-15to7000_TuneCH3_Flat_13TeV_herwig7.root"); // HW7 flat
   
   //Unfolded Data and Covarince matrix, efficincy,fake rate, purity, stability
-  TFile *outputFile=new TFile("Unfolded_Result.root","recreate");
+  TFile *outputFile=new TFile("../Unfolded/11Aug2022/Unfolded_Result.root","recreate");
   
   //int irbin = 2;
   int irbin =1;
@@ -751,13 +752,18 @@ for(int id=0; id <ndef; id++){
        		for (int i = 1; i <= hist_PTunfolded_noRegularisation->GetNbinsX(); ++i) {
 	 		double content = hist_PTunfolded_noRegularisation->GetBinContent(i);
 	 		double factor = 1;
-	 		factor += MC_miss1[id][ij][ik][ipt]->GetBinContent(i);  // correction required ??
+	 		//factor += MC_miss1[id][ij][ik][ipt]->GetBinContent(i);  // correction required ??
+			factor += (MC_miss2[id][ij][ik][ipt]->GetBinContent(i)/(MC_Gen1[id][ij][ik][ipt]->GetBinContent(i) - MC_miss2[id][ij][ik][ipt]->GetBinContent(i)));
 			////////////////////////////
          		content *= factor;
 	 		hist_PTunfolded_noRegularisation->SetBinContent(i, content);
        			}
       
-       		/*  //Quick check for closure Ratio Plots
+		for (int i =1; i<=hist_PTunfolded_noRegularisation->GetNbinsX(); i++){cout<<setprecision(4)<<"   "<<(hist_PTunfolded_noRegularisation->GetBinContent(i)/MC_Gen1[id][ij][ik][ipt]->GetBinContent(i));}; cout <<endl;
+
+                for (int i =1; i<=hist_PTunfolded_noRegularisation->GetNbinsX(); i++){cout<<setprecision(4)<<"   "<<(hist_PTunfolded_noRegularisation->GetBinContent(i)/mcgen->GetBinContent(i));}; cout <<endl;
+		/*
+       		//Quick check for closure Ratio Plots
        		hist_PTunfolded_noRegularisation->Scale(1/(hist_PTunfolded_noRegularisation->Integral()));
        		mcgen->Scale(1/mcgen->Integral());
        		hist_PTunfolded_noRegularisation->Divide(mcgen);
