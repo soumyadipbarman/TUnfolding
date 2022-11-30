@@ -1,3 +1,4 @@
+//Version-1
 #include <iostream>
 #include <fstream>
 #include <cmath>
@@ -29,16 +30,12 @@
 #include <cmath>
 #include <TFile.h>
 #include <TDirectoryFile.h>
-#include <TTree.h>
 #include <TProfile.h>
-#include <TH2D.h>
 #include <THStack.h>
 #include <TLegend.h>
 #include <TStyle.h>
 #include <TLine.h>
 #include <TLorentzVector.h>
-#include "TUnfoldDensity.h"
-#include "TUnfoldIterativeEM.h"
 #include <iomanip>
 
 #include "TUnfoldBinning.h"
@@ -56,7 +53,7 @@ using namespace std;
 
 static const auto feps = numeric_limits<float>::epsilon();
 
-void testUnfold2c()
+void testUnfold2c1D_v1()
 {
   //switch on histogram errors
   TH1::SetDefaultSumw2();
@@ -65,13 +62,15 @@ void testUnfold2c()
   //Input Data and MC histogram
   //TFile *inputData=new TFile("Data_UL2017.root"); // Data
   TFile *inputData=new TFile("../Input/11Aug2022/PY8_bin.root"); // PY8 bin  For closure MC will be used pseudo-data
+  //TFile *inputData=new TFile("PY_CP5_QCD_Pt-15to7000_TuneCP5_Flat_13TeV_pythia8.root");
 
+  //TFile *inputMC=new TFile("PY_CP5_QCD_Pt-15to7000_TuneCP5_Flat_13TeV_pythia8.root");
   TFile *inputMC=new TFile("../Input/11Aug2022/PY8_bin.root"); // PY8 bin
   TFile *inputMC1=new TFile("../Input/11Aug2022/MG5_PY8_bin.root"); // MG5+PY8
   TFile *inputMC2=new TFile("../Input/11Aug2022/HW_CH3_QCD_Pt-15to7000_TuneCH3_Flat_13TeV_herwig7.root"); // HW7 flat
   
   //Unfolded Data and Covarince matrix, efficincy,fake rate, purity, stability
-  TFile *outputFile=new TFile("../Unfolded/11Aug2022/Unfolded_Result.root","recreate");
+  TFile *outputFile=new TFile("../Unfolded/11Aug2022/Unfolded_Result_v1.root","recreate");
   
   //int irbin = 2;
   int irbin =1;
@@ -753,17 +752,19 @@ for(int id=0; id <ndef; id++){
 	 		double content = hist_PTunfolded_noRegularisation->GetBinContent(i);
 	 		double factor = 1;
 	 		//factor += MC_miss1[id][ij][ik][ipt]->GetBinContent(i);  // correction required ??
+			//factor += (MC_miss1[id][ij][ik][ipt]->GetBinContent(i)/(mcgen->GetBinContent(i) - MC_miss1[id][ij][ik][ipt]->GetBinContent(i)));
 			factor += (MC_miss2[id][ij][ik][ipt]->GetBinContent(i)/(MC_Gen1[id][ij][ik][ipt]->GetBinContent(i) - MC_miss2[id][ij][ik][ipt]->GetBinContent(i)));
+			//factor += (mc_miss->GetBinContent(i)/(mcgen->GetBinContent(i) - mc_miss->GetBinContent(i)));
 			////////////////////////////
          		content *= factor;
 	 		hist_PTunfolded_noRegularisation->SetBinContent(i, content);
        			}
-      
-		for (int i =1; i<=hist_PTunfolded_noRegularisation->GetNbinsX(); i++){cout<<setprecision(4)<<"   "<<(hist_PTunfolded_noRegularisation->GetBinContent(i)/MC_Gen1[id][ij][ik][ipt]->GetBinContent(i));}; cout <<endl;
+     
+	        for (int i =1; i<=hist_PTunfolded_noRegularisation->GetNbinsX(); i++){cout<<setprecision(4)<<"   "<<(hist_PTunfolded_noRegularisation->GetBinContent(i)/MC_Gen1[id][ij][ik][ipt]->GetBinContent(i));}; cout <<endl;
 
                 for (int i =1; i<=hist_PTunfolded_noRegularisation->GetNbinsX(); i++){cout<<setprecision(4)<<"   "<<(hist_PTunfolded_noRegularisation->GetBinContent(i)/mcgen->GetBinContent(i));}; cout <<endl;
-		/*
-       		//Quick check for closure Ratio Plots
+
+       		/*  //Quick check for closure Ratio Plots
        		hist_PTunfolded_noRegularisation->Scale(1/(hist_PTunfolded_noRegularisation->Integral()));
        		mcgen->Scale(1/mcgen->Integral());
        		hist_PTunfolded_noRegularisation->Divide(mcgen);
