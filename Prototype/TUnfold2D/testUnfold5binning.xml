@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE TUnfoldBinning SYSTEM "tunfoldbinning.dtd">
+<TUnfoldBinning>
+<BinningNode name="detector" firstbin="1" factor="1">
+ <BinningNode name="detectordistribution" firstbin="1" factor="1">
+  <Axis name="pt" lowEdge="3.5">
+   <Bin repeat="3" width="0.5" center="3.75" />
+   <Bin repeat="3" width="1" center="5.5" />
+   <Bin width="2" center="9" />
+   <Bin width="3" center="11.5" />
+   <Bin location="overflow" width="3" center="14.5"/>
+   <Axis name="eta" lowEdge="-3">
+    <Bin repeat="2" width="0.5" center="-2.75" />
+    <Bin width="1" center="-1.5" />
+    <Bin repeat="4" width="0.5" center="-0.75" />
+    <Bin width="1" center="1.5" />
+    <Bin repeat="2" width="0.5" center="2.25" />
+    <Axis name="discriminator" lowEdge="0">
+     <Bin width="0.15" center="0.075" />
+     <Bin repeat="2" width="0.35" center="0.325" />
+     <Bin width="0.15" center="0.925" />
+    </Axis>
+   </Axis>
+  </Axis>
+ </BinningNode>
+</BinningNode>
+<BinningNode name="generator" firstbin="1" factor="1">
+ <BinningNode name="signal" firstbin="1">
+  <Binfactorlist length="25">
+   1.79821 1.73472 1.67917 1.63015 1.59946 0.598214 0.534722 0.479167 0.430147 0.399457
+   0.285714 0.222222 0.166667 0.117647 0.0869565 0.598214 0.534722 0.479167 0.430147 0.399457
+   1.79821 1.73472 1.67917 1.63015 1.59946
+  </Binfactorlist>
+  <Axis name="ptgen" lowEdge="4">
+   <Bin location="underflow" width="1" center="3.5" />
+   <Bin width="1" center="4.5" />
+   <Bin width="2" center="6" />
+   <Bin width="3" center="8.5" />
+   <Bin location="overflow" width="3" center="11.5"/>
+   <Axis name="etagen" lowEdge="-2">
+    <Bin location="underflow" width="1.5" center="-2.75" />
+    <Bin width="1.5" center="-1.25" />
+    <Bin width="1" center="0" />
+    <Bin width="1.5" center="1.25" />
+    <Bin location="overflow" width="1.5" center="2.75"/>
+   </Axis>
+  </Axis>
+ </BinningNode>
+ <BinningNode name="background" firstbin="26" factor="1">
+  <Axis name="ptrec" lowEdge="3.5">
+   <Bin repeat="3" width="0.5" center="3.75" />
+   <Bin repeat="3" width="1" center="5.5" />
+   <Bin width="2" center="9" />
+   <Bin width="3" center="11.5" />
+   <Bin location="overflow" width="3" center="14.5"/>
+   <Axis name="etarec" lowEdge="-3">
+    <Bin repeat="2" width="0.5" center="-2.75" />
+    <Bin width="1" center="-1.5" />
+    <Bin repeat="4" width="0.5" center="-0.75" />
+    <Bin width="1" center="1.5" />
+    <Bin repeat="2" width="0.5" center="2.25" />
+   </Axis>
+  </Axis>
+ </BinningNode>
+</BinningNode>
+</TUnfoldBinning>
