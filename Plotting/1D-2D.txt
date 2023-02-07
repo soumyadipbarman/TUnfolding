@@ -1,0 +1,221 @@
+11,12c11
+<   
+<   	//TCanvas *canvas =new TCanvas("cptfun", "canvas_fun", 575,600 );
+---
+> 
+16,17c15,17
+<   	canvas->SetTopMargin(0.02);
+<   
+---
+> 	//canvas->SetLeftMargin(0.03);
+>   	canvas->SetTopMargin(0.04);
+> 
+21,26c21,26
+<   	//canvas->SetBottomMargin(0.1); 
+<   	data->GetYaxis()->SetLabelSize(0.03);
+<   	data->GetXaxis()->SetLabelSize(0.03);
+<   	data->GetYaxis()->SetTitleSize(0.045);
+<   	data->GetYaxis()->SetTitleOffset(1.0);
+<   	data->GetXaxis()->SetTitleSize(0.055);
+---
+>   	//canvas->SetBottomMargin(0.1);
+>   	data->GetYaxis()->SetLabelSize(0.055);
+>   	data->GetXaxis()->SetLabelSize(0.0);
+>   	data->GetYaxis()->SetTitleSize(0.065);
+>   	data->GetYaxis()->SetTitleOffset(1.33);
+>   	data->GetXaxis()->SetTitleSize(0.053);
+30,31c30,33
+<   	
+< 	data->SetLineWidth(2);
+---
+>   	data->GetXaxis()->SetTickLength(0.05);
+>   	data->GetYaxis()->SetTickLength(0.05);
+> 
+>   	data->SetLineWidth(2);
+33c35
+<   	data->SetMarkerSize(.8);
+---
+>   	data->SetMarkerSize(.9);
+36c38
+<   	data->GetYaxis()->SetTitleFont(ifont);     
+---
+>   	data->GetYaxis()->SetTitleFont(ifont);
+38,44c40,48
+<   	//ymax = data->GetMaximum(); //Divide the histogram with bin width
+<   
+<   	TPad *padfun1 = new TPad("padfun1", "padfun1", 0, 0.30, 1.0, 1.0);
+<   	padfun1->SetBottomMargin(0.01); //Upper and lower plot are joined
+<   	padfun1->SetTopMargin(0.05);    //Upper and lowd
+<   	padfun1->SetRightMargin(.04);
+<   	padfun1->Draw();                //Draw the upper pad: pad1
+---
+>   	//ymax = data->GetMaximum();
+>   	//Divide the histogram with bin width
+> 
+>   	TPad *padfun1 = new TPad("padfun1", "padfun1", 0.05, 0.35, 1.0, 1.0);
+>   	padfun1->SetBottomMargin(0.0); //Upper and lower plot are joined
+> 	//padfun1->SetTopMargin(0.05); //Upper and lowd
+>   	padfun1->SetLeftMargin(0.17);  //Left
+>   	padfun1->SetRightMargin(.02);
+>   	padfun1->Draw();               //Draw the upper pad: pad1
+54c58
+<   	HT_range->SetTextSize(0.04);
+---
+>   	HT_range->SetTextSize(0.06);
+62c66
+<   
+---
+> 
+65,72c69,74
+<   	gPad->SetTickx();
+<   	gPad->SetTicky();
+<   
+<   	double chi2rat[Nplot[0]];        //for chi2 plot in legend 
+<   	double chi2Ndfrat[Nplot[0]];     //for chi2 plot in legend
+<   
+<   	//int color[40] = {2,4,6,7,8,49,1,41,42,30,46,28,29,38,30,12,37,49,9,32,2,3,6,7,8,49,1,41,42,30,46,28,29,38,30,12,37,49,9,32};
+<   	//int style[40]={1,2,3,4,5,6,7,8,9,9,2,3,4,5,6,7,8,9,9,9,1,2,3,4,5,6,7,8,9,9,2,3,4,5,6,7,8,9,9,9};
+---
+>   	gPad->SetTickx(1);
+>   	gPad->SetTicky(1);
+> 
+>   	double chi2rat[Nplot[0]];    // for chi2 plot in legend
+>   	double chi2Ndfrat[Nplot[0]]; // for chi2 plot in legend
+> 
+74c76
+<         int style[40]={1,1,1,1,5,6,7,8,9,9,2,3,4,5,6,7,8,9,9,9,1,2,3,4,5,6,7,8,9,9,2,3,4,5,6,7,8,9,9,9};
+---
+>   	int style[40]={1,1,1,1,5,6,7,8,9,9,2,3,4,5,6,7,8,9,9,9,1,2,3,4,5,6,7,8,9,9,2,3,4,5,6,7,8,9,9,9};
+76c78
+<   		MC[iup]->SetLineStyle(style[iup]);
+---
+>     		MC[iup]->SetLineStyle(style[iup]);
+78,87c80,89
+<     		MC[iup]->SetLineWidth(2);
+<     		//MC[iup]->Draw("same hist ");// gPad->SetLogy();        
+<   
+< 		//Addition fo chi2/Ndf  with legend
+<   		int nn = data->GetNbinsX();
+<   		Double_t resl[nn] , chi2l;
+<   		Int_t ndfl ,igoodl;
+<   		TH1D *chidatal = (TH1D*)data->Clone("chidatal");   //for chi square test   
+<   		TH1D *chiMCl = (TH1D*)MC[iup]->Clone("chiMCl");    //for chi square test
+<   		chiMCl->Chi2TestX(chidatal, chi2l, ndfl, igoodl, "WU", resl);
+---
+>     		MC[iup]->SetLineWidth(3);
+>     		//MC[iup]->Draw("same hist ");// gPad->SetLogy();
+> 
+>     		//Addition fo chi2/Ndf  with legend
+>     		int nn = data->GetNbinsX();
+>     		Double_t resl[nn] , chi2l;
+>     		Int_t ndfl ,igoodl;
+>     		TH1D *chidatal = (TH1D*)data->Clone("chidatal");   //for chi square test
+>     		TH1D *chiMCl = (TH1D*)MC[iup]->Clone("chiMCl");    //for chi square test
+>     		chiMCl->Chi2TestX(chidatal, chi2l, ndfl, igoodl, "WU", resl);
+89,92c91,94
+< 		cout << "Ndf value =" << ndfl << "chi2 value=" << chi2l << endl;
+<   		chi2rat[iup]=chi2l;
+<   		chi2Ndfrat[iup]=chi2l/ndfl;
+<   		MC[iup]->Draw("same hist e1 ");
+---
+>     		cout << "Ndf value =" << ndfl << "chi2 value=" << chi2l << endl;
+>     		chi2rat[iup]=chi2l;
+>     		chi2Ndfrat[iup]=chi2l/ndfl;
+>     		MC[iup]->Draw("same hist e1 ");
+95,97c97,99
+<   	//end of Uncertainty  
+<   
+< 	//data->Draw("same");
+---
+>   	//end of Uncertainty
+> 
+>   	//data->Draw("same");
+103c105
+<   	legendn->SetTextFont(42);  
+---
+>   	legendn->SetTextFont(42);
+108c110
+<   		sprintf(MCindex,"%s" , modnam[iup]);      //use if chi2 is not needed in the legend
+---
+>     		sprintf(MCindex,"%s" , modnam[iup]);      //use if chi2 is not needed in the legend
+116c118
+<   	TPad *padfun2 = new TPad("padfun2", "padfun2", 0, 0.02,1.0, 0.30);
+---
+>   	TPad *padfun2 = new TPad("padfun2", "padfun2", 0.05,0.02,1.0, 0.35);
+119,120c121,123
+<   	padfun2->SetRightMargin(.04);
+<   	padfun2->SetGridy();   //Horizontal grid
+---
+>   	padfun2->SetLeftMargin(.17);
+>   	padfun2->SetRightMargin(.02);
+>   	padfun2->SetGridy(); // Horizontal grid
+123,124c126,127
+<   	gPad->SetTickx();
+<   	gPad->SetTicky();
+---
+>   	gPad->SetTickx(1);
+>   	gPad->SetTicky(1);
+127c130
+<   		TH1D *rh2;
+---
+>     		TH1D *rh2;
+129,130c132,133
+<     			//if(  data->GetBinContent(10) > 0) {
+<     			rh2 = (TH1D*)MC[ilow]->Clone("rh2"); 
+---
+>     			//if(data->GetBinContent(10) > 0) {
+>     			rh2 = (TH1D*)MC[ilow]->Clone("rh2");
+143,154c146,159
+<     		//rh2->SetMaximum(lowYrange[0]);       //.. range
+<     		//rh2->SetMinimum(lowYrange[1]);       //Define Y ..
+<     		//cout << "max = " << plegend[5] << "  min = " << plegend[6] << endl;   
+<     		rh2->SetMinimum(plegend[6]);           //Define Y ..
+<     		rh2->SetMaximum(plegend[5]);           //.. range
+<     		rh2->SetStats(0);                      //No statistics on lower plot
+<     		//rh2->Divide(data);                   //MC divide by data
+<     		//rh2->SetMarkerStyle(21);
+<     		//rh2->Draw(" same e1");
+<     		rh2->Draw("same e1");
+<     		//MC_inputerr->Draw("same E2");        //Draw the Uncertainty in Ratio plot
+<     		rh2->GetXaxis()->SetTitleSize(0.13);
+---
+>     		//rh2->SetMaximum(lowYrange[0]);  // .. range
+>     		//rh2->SetMinimum(lowYrange[1]);  // Define Y ..
+>     		//cout << "max = " << plegend[5] << "  min = " << plegend[6] << endl;
+>     		rh2->SetMinimum(plegend[6]);  // Define Y ..
+>     		rh2->SetMaximum(plegend[5]);  // .. range
+>     		rh2->SetStats(0);      // No statistics on lower plot
+>     		//rh2->Divide(data);     //MC devide by data
+>     		rh2->SetMarkerStyle(20);
+>     		rh2->SetMarkerStyle(kFullCircle);
+>     		//rh2->Draw(" same hist");
+>     		rh2->Draw(" same ");
+>     		//rh2->Draw("same hist e1");
+> 
+>     		rh2->GetXaxis()->SetTitleSize(0.12);
+156,157c161,162
+<     		rh2->GetXaxis()->SetTitleOffset(1.15);
+<     		rh2->GetXaxis()->SetLabelSize(0.1);
+---
+>     		rh2->GetXaxis()->SetTitleOffset(1.33);
+>     		rh2->GetXaxis()->SetLabelSize(0.13);
+161c166
+<     
+---
+> 
+165c170
+<     		rh2->GetYaxis()->SetTitleSize(0.12);
+---
+>     		rh2->GetYaxis()->SetTitleSize(0.15);
+168,169c173,176
+<     		rh2->GetYaxis()->SetTitleOffset(0.35);
+<     		//rh2->GetYaxis()->SetLabelFont(1.0);   //Absolute font size in pixel (precision 3)
+---
+>     		rh2->GetYaxis()->SetTitleOffset(0.6);
+>     		rh2->GetXaxis()->SetTickLength(0.06);
+>     		rh2->GetYaxis()->SetTickLength(0.06);
+>     		//rh2->GetYaxis()->SetLabelFont(1.0); // Absolute font size in pixel (precision 3)
+173c180
+<   return canvas;
+---
+> return canvas;

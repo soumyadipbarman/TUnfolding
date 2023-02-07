@@ -31,7 +31,7 @@
 #include <TVectorD.h>
 #include <TDecompSVD.h>
 
-#define CLOUSER
+//#define CLOUSER
 //#define BLT
 
 void Unfoldplot(){
@@ -42,8 +42,8 @@ void Unfoldplot(){
   static const int nmc = 4;      //Number of MC sample
   static const int umc = 0;      //0 for Py8, 1 for Py8flat, 2 for MG , 3 for Herwig : which MC have used in Unfolding
 
-  static const int ndef=1; // Test for error due to bin entries
-  //static const int ndef=3;       //3 observable
+  //static const int ndef=1; // Test for error due to bin entries
+  static const int ndef=3;       //3 observable
   static const int njet=2;       //2 jets
   static const int nkappa=10;    //10 kappa values
 
@@ -66,8 +66,8 @@ void Unfoldplot(){
   string mcdir[4]={"Pythia8","Py8Flat","MG5","HW7"};   //Sequence For Unfold and Refold plot
 #endif
   
-  //const char* obs_def[3]={"Q_{D}","Q_{L}","Q_{T}"};
-  const char* obs_def[1]={"Q_{D}"};
+  const char* obs_def[3]={"Q_{D}","Q_{L}","Q_{T}"};
+  //const char* obs_def[1]={"Q_{D}"};
   const char* jet_num[2]={"Leading-Jet","Sub-Leading-Jet"};
   const char* njets[2]={"1","2"};
   const char* k_fact[10]={"k=0.1","k=0.2","k=0.3","k=0.4","k=0.5","k=0.6","k=0.7","k=0.8","k=0.9","k=1.0"};
@@ -110,38 +110,52 @@ void Unfoldplot(){
   const char* data_unf[5]={"Unf by Py8","Unf by MadGraph","Unf by Herwig7","GEN","RECO"};
   const char* Refoldname[5]={"Py8 Refold","Py8 Flat Refold ","MadGraph Refold","Herwig7 Refold","Refold Pythia8(Iterative method)"};
   const char* Recomcname[4]={"Py8-reco","Py8 Flat-reco","MadGraph-reco","Herwig7-reco"};
-
-  TFile *Unf_root[clos_ty];
-  TFile *Unf_dataCT[clos_ty];
 //----------------------------------------------------
-  TFile *Unfoldroot = TFile::Open("../../Unfolded/26Nov2022/2D/Unfolded_HW7_flat_PY8_flat.root"); //Unfolded data by Py8
+  //string Date = "26Nov2022"; //Run date
+  string Date = "03Dec2022";
 
-  Unf_root[0] = TFile::Open("../../Unfolded/26Nov2022/2D/Unfolded_HW7_flat_PY8_flat.root");           //Py8 by Py8
-  Unf_root[1] = TFile::Open("../../Unfolded/26Nov2022/2D/Unfolded_HW7_flat_PY8_flat.root");          //PyFlat by Py8
-  Unf_root[2] = TFile::Open("../../Unfolded/26Nov2022/2D/Unfolded_HW7_flat_PY8_flat.root");       //MG5 by Py8
-  Unf_root[3] = TFile::Open("../../Unfolded/26Nov2022/2D/Unfolded_HW7_flat_PY8_flat.root");          //HW7 by Py8
+  TFile *Unf_root[clos_ty];    //Closure
+  TFile *Unf_dataCT[clos_ty];  //Data by MC
 
-  Unf_dataCT[0] = TFile::Open("../../Unfolded/26Nov2022/2D/Unfolded_HW7_flat_PY8_flat.root");     //data by Py8
-  Unf_dataCT[1] = TFile::Open("../../Unfolded/26Nov2022/2D/Unfolded_HW7_flat_PY8_flat.root");    //data by Py8 flat
-  Unf_dataCT[2] = TFile::Open("../../Unfolded/26Nov2022/2D/Unfolded_HW7_flat_PY8_flat.root"); //data by MG5
-  Unf_dataCT[3] = TFile::Open("../../Unfolded/26Nov2022/2D/Unfolded_HW7_flat_PY8_flat.root");    //data by HW7
+  const TString Unfolded = "../../Unfolded/"+Date+"/2D/Unfolded_Data_UL2017_PY8_bin.root";  //Unfolded data by Py8
+  TFile *Unfoldroot = TFile::Open(Unfolded);
+
+  const TString Unf_root0 = "../../Unfolded/"+Date+"/2D/Unfolded_PY8_bin_PY8_bin.root";     //Py8- by Py8
+  const TString Unf_root1 = "../../Unfolded/"+Date+"/2D/Unfolded_PY8_flat_PY8_bin.root";    //Py8Flat - By Py8
+  const TString Unf_root2 = "../../Unfolded/"+Date+"/2D/Unfolded_MG5_PY8_bin_PY8_bin.root"; //MG5 by Py8
+  const TString Unf_root3 = "../../Unfolded/"+Date+"/2D/Unfolded_HW7_flat_PY8_bin.root";    //HW7 by Py8
+
+  Unf_root[0] = TFile::Open(Unf_root0);
+  Unf_root[1] = TFile::Open(Unf_root1);
+  Unf_root[2] = TFile::Open(Unf_root2);
+  Unf_root[3] = TFile::Open(Unf_root3);
+
+  const TString Unf_dataCT0 = "../../Unfolded/"+Date+"/2D/Unfolded_Data_UL2017_PY8_bin.root";  //data by Py8
+  const TString Unf_dataCT1 = "../../Unfolded/"+Date+"/2D/Unfolded_Data_UL2017_PY8_flat.root"; //data by Py8flat
+  const TString Unf_dataCT2 = "../../Unfolded/"+Date+"/2D/Unfolded_Data_UL2017_MG5_PY8_bin.root";  //data by MG5
+  const TString Unf_dataCT3 = "../../Unfolded/"+Date+"/2D/Unfolded_Data_UL2017_HW7_flat.root"; //data by HW7
+
+  Unf_dataCT[0] = TFile::Open(Unf_dataCT0);
+  Unf_dataCT[1] = TFile::Open(Unf_dataCT1);
+  Unf_dataCT[2] = TFile::Open(Unf_dataCT2);
+  Unf_dataCT[3] = TFile::Open(Unf_dataCT3); 
 //----------------------------------------------------
 //Function declaration
-  TH1D* ReadHist1D(string name,TFile* root, int irbin=1);
-  TH2D* ReadHist2D(string name,TFile* root, int irbin=1);
+  TCanvas *ratio_can(int Nplot[2],float plegend[7], TH1D* data, TH1D* MC[Nplot[0]], char* lowpadx,const  char* modnam[Nplot[0]],const  char* datanm[1]);
+  TCanvas *ratio_canV2(int Nplot[3],float plegend[8], TH1D* data, TH1D* MC[Nplot[0]], char* lowpadx, const char* modnam[Nplot[0]], const  char* datanm[3]);
   void Integralhist(TH1D *hist);
   void divBybinWidth(TH1D *hist);
   void Myplotset(TH1D *Myhist,const char* XTitle, const char* YTitle);
-  void Set2dHist(TH2D *MyHist, const char* XTitle, const char* YTitle,const char* ZTitle, double titoff[3], double titsize[3]);
+  void MyplotsetV2(TH1D *MyHist, const char* XT, const char* YT, float mx, float min, int ilw, int ilsty, int imsty, int imstysize, int icl);
   void SetMycanvas(TCanvas *cpt,double bs,double lm, double rm, double tm,double bm);
   void CTLegend(TLegend *legendn, const char* txt1, const char* txt2);
-  TCanvas *ratio_can(int Nplot[2],float plegend[7], TH1D* data, TH1D* MC[Nplot[0]], char* lowpadx,const  char* modnam[Nplot[0]],const  char* datanm[1]);
-  TCanvas *ratio_canV2(int Nplot[3],float plegend[8], TH1D* data, TH1D* MC[Nplot[0]], char* lowpadx, const char* modnam[Nplot[0]], const  char* datanm[3]);
+  TLegend* CTLegendV2(float x1, float y1, float x2, float y2, float txtsize, const char* txt1="", const char* txt2="",const char* txt3="",const char* txt4="");
+  void Set2dHist(TH2D *MyHist, const char* XTitle, const char* YTitle,const char* ZTitle, double titoff[3], double titsize[3]);
+  TH1D* ReadHist1D(string name,TFile* root, int irbin=1);
+  TH2D* ReadHist2D(string name,TFile* root, int irbin=1);
   void HT2_Normal(TH2D* VarHT, int nht, int htbin[nht+1], TH1D* Var[nht]);
   void HT2_NormalV2(TH2D* VarHT, int nht, int htbin[nht+1], TH1D* Var[nht]);
-  TLegend* CTLegendV2(float x1, float y1, float x2, float y2, float txtsize, const char* txt1="", const char* txt2="",const char* txt3="",const char* txt4="");
   void Chi2Root(TH1 * data, TH1 * MC, int rebin = 1);
-  void MyplotsetV2(TH1D *MyHist, const char* XT, const char* YT, float mx, float min, int ilw, int ilsty, int imsty, int imstysize, int icl);
 //----------------------------------------------------
   TH1D *Data_reco[ndef][njet][nkappa];       //reco histogram
   TH2D *Data_reco2d[ndef][njet][nkappa];     //true bin
@@ -368,7 +382,8 @@ cout <<" Read histogram OK " << endl;
 		sprintf(lplot_xtitle,"%s_{%s}^{%s}", obs_def[id], njets[ij], k_fact[ik]);
 		//float ratio_range1[2]={1.2,0.9};
 		int num1[2]={nmc,1} ;
-		float lpos1[7] ={.32,0.2,0.55,0.45, .055, 1.5,0.7};
+		//float lpos1[7] ={.32,0.2,0.55,0.45, .055, 1.5,0.7};
+		float lpos1[7] ={0.48,0.15,0.60,0.35, .04, 1.5,0.7};
 
 		cpt0->cd();
 		SetMycanvas(cpt0,0,0,0,0,0);
@@ -379,12 +394,60 @@ cout <<" Read histogram OK " << endl;
 
 		sprintf(pdfname, "%sRecoJC_%s.pdf(","dd_",RunEra[iera]); sprintf(pdfname1, "%sRecoJC_%s.pdf","dd_",RunEra[iera]); sprintf(pdfname2, "%sRecoJC_%s.pdf)","dd_",RunEra[iera]); 
 		if(id==0 && ij==0 && ik==0 && ipt ==0){cpt0->Print(pdfname,"pdf");
-        	}else if(id==0 && ij==1 && ik==9 && ipt==9) {cpt0->Print(pdfname2,"pdf");
+        	}else if(id==2 && ij==1 && ik==9 && ipt==9) {cpt0->Print(pdfname2,"pdf");
        		}else{cpt0->Print(pdfname1,"pdf");};
       			}
     		}
 	}
 }//end of RECO PLOT
+//----------------------------------------------------
+//Reco Vs. Gen
+	for (int iun=0; iun< nmc; iun++){
+		for (int id=0; id<ndef; id++){
+			for(int ij=0; ij<njet; ij++){
+				for(int ik=0; ik<nkappa; ik++){
+		char lplot_xtitle[100];
+		for(int ipt=0; ipt< nHLTmx; ipt++){
+			TCanvas *cpt0 = new TCanvas("cpt0", "canvas0", 600,600);
+			TH1D *GenHT = (TH1D*)MC_genHT[iun][id][ij][ik][ipt]->Clone();
+			Integralhist(GenHT);
+			divBybinWidth(GenHT);
+			Myplotset(GenHT,0,0);
+			GenHT->GetXaxis()->SetTitle("");
+
+			if(ipt<=8){GenHT->SetTitle(Form(" %i < P_{T} < %i %s", HT2range[ipt], HT2range[ipt+1], Unit[0]));}
+				else if (ipt==9){GenHT->SetTitle(Form(" P_{T} < %i %s", HT2range[ipt], Unit[0]));}
+			GenHT->GetYaxis()->SetTitle(Form("%s %s_{%s}^{%s}", obs_logy[ik], obs_def[id], njets[ij], k_fact[ik]));
+
+			TH1D *Reco_input[1];
+			const char *Recoinput_index[1], *Gen_index[1];
+			Reco_input[0] = (TH1D*)MC_recoHT[iun][id][ij][ik][ipt]->Clone();
+			Reco_input[0]->Rebin(2);
+			Integralhist(Reco_input[0]);
+                        divBybinWidth(Reco_input[0]);
+			Recoinput_index[0] = "Reco";
+			Gen_index[0] = "Gen";
+
+			sprintf(lplot_xtitle, "%s_{%s}^{%s}",obs_def[id], njets[ij], k_fact[ik]);
+			int num1[4]={1,1,1,1};
+			//float lpos1[7] ={.32,0.2,0.55,0.45, .055, 1.5,0.7};
+			//float lpos1[7] ={0.45,0.15,0.60,0.35, .04, 1.5,0.7};
+			float lpos1[7] ={0.48,0.15,0.60,0.35, .04, 1.5,0.7};
+
+			cpt0 = (TCanvas*)(ratio_can(num1, lpos1, GenHT, Reco_input , lplot_xtitle, Recoinput_index, Gen_index));
+			SetMycanvas(cpt0,0,0.1,0.02,0.05,0.12);
+			CMS_lumi( cpt0, iPeriod, iPos ); cpt0->Update();
+		
+			sprintf(pdfname, "%sReco-Gen_JC_%s_%s.pdf(" ,"dd_",dirname[iun],RunEra[iera]); sprintf(pdfname1, "%sReco-Gen_JC_%s_%s.pdf" ,"dd_",dirname[iun],RunEra[iera]);sprintf(pdfname2, "%sReco-Gen_JC_%s_%s.pdf)" ,"dd_",dirname[iun],RunEra[iera]);
+                        if(id==0 && ij==0 && ik==0 && ipt==0){cpt0->Print(pdfname,"pdf");
+                        }else if(id==2 && ij==1 && ik==9 && ipt==9) {cpt0->Print(pdfname2,"pdf");
+                        }else{cpt0->Print(pdfname,"pdf");};
+
+					}
+				}
+			}
+		}
+	}
 //----------------------------------------------------
 //Response Matrix
 	for(int  imc =0; imc < nmc ; imc++){
@@ -409,7 +472,7 @@ cout <<" Read histogram OK " << endl;
         	CMS_lumi( cpt0, iPeriod, iPos ); cpt0->Update();
 		sprintf(pdfname, "%sRM_%s_%s.pdf(","dd_",dirname[imc],RunEra[iera]); sprintf(pdfname1, "%sRM_%s_%s.pdf","dd_",dirname[imc],RunEra[iera]); sprintf(pdfname2, "%sRM_%s_%s.pdf)","dd_",dirname[imc],RunEra[iera]);
         	if(id==0 && ij==0 && ik==0 ){cpt0->Print(pdfname,"pdf"); }
-		else if(id==0 && ij==1 && ik==9) {cpt0->Print(pdfname2,"pdf"); }
+		else if(id==2 && ij==1 && ik==9) {cpt0->Print(pdfname2,"pdf"); }
 		else{  cpt0->Print(pdfname1,"pdf");};
         		}
       		}
@@ -492,22 +555,22 @@ cout <<" RECO PLOT OK " << endl;
 
     		sprintf(pdfname, "%sEfficiency_%s.pdf(","dd_",RunEra[iera]); sprintf(pdfname1, "%sEfficiency_%s.pdf","dd_",RunEra[iera]); sprintf(pdfname2, "%sEfficiency_%s.pdf)","dd_",RunEra[iera]);
         	if(id==0 && ij==0 && ik==0){cpt1->Print(pdfname,"pdf");
-        	}else if(id==0 && ij==1 && ik==9 ) {cpt1->Print(pdfname2,"pdf");
+        	}else if(id==2 && ij==1 && ik==9 ) {cpt1->Print(pdfname2,"pdf");
         	}else{  cpt1->Print(pdfname1,"pdf");};
 
 		sprintf(pdfname, "%sPurity_%s.pdf(","dd_",RunEra[iera]); sprintf(pdfname1, "%sPurity_%s.pdf","dd_",RunEra[iera]); sprintf(pdfname2, "%sPurity_%s.pdf)","dd_",RunEra[iera]); 
         	if(id==0 && ij==0 && ik==0 ){cpt2->Print(pdfname,"pdf");
-        	}else if(id==0 && ij==1 && ik==9 ) {cpt2->Print(pdfname2,"pdf");
+        	}else if(id==2 && ij==1 && ik==9 ) {cpt2->Print(pdfname2,"pdf");
         	}else{  cpt2->Print(pdfname1,"pdf");};
 
 		sprintf(pdfname, "%sFakerate_%s.pdf(","dd_",RunEra[iera]); sprintf(pdfname1, "%sFakerate_%s.pdf","dd_",RunEra[iera]); sprintf(pdfname2, "%sFakerate_%s.pdf)","dd_",RunEra[iera]); 
         	if(id==0 && ij==0 && ik==0 ){cpt3->Print(pdfname,"pdf");
-        	}else if(id==0 && ij==1 && ik==9 ) {cpt3->Print(pdfname2,"pdf");
+        	}else if(id==2 && ij==1 && ik==9 ) {cpt3->Print(pdfname2,"pdf");
         	}else{  cpt3->Print(pdfname1,"pdf");};
 
 		sprintf(pdfname, "%sStability_%s.pdf(","dd_",RunEra[iera]); sprintf(pdfname1, "%sStability_%s.pdf","dd_",RunEra[iera]); sprintf(pdfname2, "%sStability_%s.pdf)","dd_",RunEra[iera]); 
         	if(id==0 && ij==0 && ik==0 ){cpt4->Print(pdfname,"pdf");
-        	}else if(id==0 && ij==1 && ik==9 ) {cpt4->Print(pdfname2,"pdf");
+        	}else if(id==2 && ij==1 && ik==9 ) {cpt4->Print(pdfname2,"pdf");
         	}else{ cpt4->Print(pdfname1,"pdf");};
 
 		cpt1->Clear(); cpt2->Clear(); cpt3->Clear(); cpt4->Clear();
@@ -551,7 +614,8 @@ cout << "Efficiency, Stabilty, Fakerate, Purity " <<endl;
        			sprintf(lplot_xtitle,"%s_{%s}^{%s}", obs_def[id], njets[ij], k_fact[ik]);
        			//float ratio_range1[2]={1.2,0.9};
        			int num1[2]={nmc,1} ;
-       			float lpos1[7] ={.32,0.2,0.55,0.45, .055, 1.45,0.7};
+       			//float lpos1[7] ={.32,0.2,0.55,0.45, .055, 1.45,0.7};
+			float lpos1[7] ={0.5,0.15,0.60,0.35, .04, 1.5,0.7};
 
        			cpt0 =(TCanvas*)(ratio_can(num1, lpos1, MyHist, MC_input, lplot_xtitle,MCinput_index,data_index));
        			SetMycanvas(cpt0,0,0.1,0.02,0.05,0.12);
@@ -559,7 +623,7 @@ cout << "Efficiency, Stabilty, Fakerate, Purity " <<endl;
 
        			sprintf(pdfname, "%sTUnfold_%s_%s.pdf(" ,"dd_",dirname[iun],RunEra[iera]); sprintf(pdfname1, "%sTUnfold_%s_%s.pdf" ,"dd_",dirname[iun],RunEra[iera]);sprintf(pdfname2, "%sTUnfold_%s_%s.pdf)" ,"dd_",dirname[iun],RunEra[iera]);
        			if(id==0 && ij==0 && ik==0 && ipt==0){cpt0->Print(pdfname,"pdf");
-	 		}else if(id==0 && ij==1 && ik==9 && ipt ==9) {cpt0->Print(pdfname2,"pdf");
+	 		}else if(id==2 && ij==1 && ik==9 && ipt ==9) {cpt0->Print(pdfname2,"pdf");
 	  		}else{cpt0->Print(pdfname,"pdf");};
 		}
 
@@ -573,16 +637,18 @@ cout << "Efficiency, Stabilty, Fakerate, Purity " <<endl;
        		Set2dHist(Corr[id][ij][ik],lplot_xtitle, lplot_ytitle,"correlation coefficients", titoff1, titsize1);
        		Corr[id][ij][ik]->Draw("colz ");
        		//Corr[iun][ity][ivar]->Draw("colz text");
-       		sprintf(Yaxis," %s %s_{%s}^{%s}" ,obs_logy[ik], obs_def[id], njets[ij], k_fact[ik]);
+       		//sprintf(Yaxis," %s %s_{%s}^{%s}" ,obs_logy[ik], obs_def[id], njets[ij], k_fact[ik]);
+		//sprintf(Title," %s %s_{%s}^{%s}" ,obs_logy[ik], obs_def[id], njets[ij], k_fact[ik]);
        		cout <<"OK1" <<endl;
 
        		TLegend *leg1 = new TLegend(0.05,0.6,0.4,0.8);
-       		CTLegend(leg1,"Unfolded with Pythia8",Title); leg1->AddEntry((TObject*)0,obs_def[id] , ""); leg1->AddEntry((TObject*)0,Unfoldtype[iun] , "");leg1->SetTextColor(-8);leg1->Draw();// CHECK legends
+       		//CTLegend(leg1,"Unfolded with Pythia8",Title); leg1->AddEntry((TObject*)0,obs_def[id] , ""); leg1->AddEntry((TObject*)0,Unfoldtype[iun] , "");leg1->SetTextColor(-8);leg1->Draw();// CHECK legends
+		CTLegend(leg1,"",""); leg1->AddEntry((TObject*)0,"" , ""); leg1->AddEntry((TObject*)0,"" , "");leg1->SetTextColor(1);leg1->Draw();
 
        		CMS_lumi( cpt5, iPeriod, iPos ); cpt5->Update();
        		sprintf(pdfname, "%sTUnfold_corr_%s_%s.pdf(" ,"dd_",dirname[iun],RunEra[iera]); sprintf(pdfname1, "%sTUnfold_corr_%s_%s.pdf" ,"dd_",dirname[iun],RunEra[iera]);sprintf(pdfname2, "%sTUnfold_corr_%s_%s.pdf)" ,"dd_",dirname[iun],RunEra[iera]); 
        		if(id==0 && ij==0 && ik==0 ){cpt5->Print(pdfname,"pdf");
-          	}else if(id==0 && ij==1 && ik==9 ) {cpt5->Print(pdfname2,"pdf");
+          	}else if(id==2 && ij==1 && ik==9 ) {cpt5->Print(pdfname2,"pdf");
           	}else{cpt5->Print(pdfname,"pdf");};
 
        		cpt6->cd();
@@ -593,7 +659,7 @@ cout << "Efficiency, Stabilty, Fakerate, Purity " <<endl;
        		CMS_lumi( cpt6, iPeriod, iPos ); cpt6->Update();
        		sprintf(pdfname, "%sTUnfold_prob_%s_%s.pdf(" ,"dd_",dirname[iun],RunEra[iera]); sprintf(pdfname1, "%sTUnfold_prob_%s_%s.pdf" ,"dd_",dirname[iun],RunEra[iera]);sprintf(pdfname2, "%sTUnfold_prob_%s_%s.pdf)" ,"dd_",dirname[iun],RunEra[iera]); 
        		if(id==0 && ij==0 && ik==0){cpt6->Print(pdfname,"pdf");
-          	}else if(id==0 && ij==1 && ik==9) {cpt6->Print(pdfname2,"pdf");
+          	}else if(id==2 && ij==1 && ik==9) {cpt6->Print(pdfname2,"pdf");
           	}else{cpt6->Print(pdfname,"pdf");};
 
        		cpt7->cd();
@@ -603,7 +669,7 @@ cout << "Efficiency, Stabilty, Fakerate, Purity " <<endl;
        		CMS_lumi( cpt7, iPeriod, iPos ); cpt7->Update();
        		sprintf(pdfname, "%sTUnfold_cov_%s_%s.pdf(" ,"dd_",dirname[iun],RunEra[iera]); sprintf(pdfname1, "%sTUnfold_cov_%s_%s.pdf" ,"dd_",dirname[iun],RunEra[iera]);sprintf(pdfname2, "%sTUnfold_cov_%s_%s.pdf)" ,"dd_",dirname[iun],RunEra[iera]);
       		if(id==0 && ij==0 && ik==0 ){cpt7->Print(pdfname,"pdf");
-          	}else if(id==0 && ij==1 && ik==9) {cpt7->Print(pdfname2,"pdf");
+          	}else if(id==2 && ij==1 && ik==9) {cpt7->Print(pdfname2,"pdf");
           	}else{cpt7->Print(pdfname,"pdf");};
       			}
     		}
@@ -643,7 +709,8 @@ cout << "Efficiency, Stabilty, Fakerate, Purity " <<endl;
        			sprintf(lplot_xtitle,"%s_{%s}^{%s}",obs_def[id], njets[ij], k_fact[ik]);
        			//float ratio_range1[2]={1.2,0.9};
        			int num1[3]={1,1,0} ;
-       			float lpos1[8] ={.32,0.2,0.55,0.45, .055, 1.6,0.2,0.1};
+       			//float lpos1[8] ={.32,0.2,0.55,0.45, .055, 1.6,0.2,0.1};
+			float lpos1[8] ={0.48,0.15,0.60,0.35,.055, 1.6,0.2,0.1};
 
        			//cpt0 =(TCanvas*)(ratio_can(num1, lpos1, MyHist, MC_input, lplot_xtitle,MCinput_index,data_index));
        			cpt0 =(TCanvas*)(ratio_canV2(num1, lpos1, MyHist, MC_input, lplot_xtitle,MCinput_index,data_index));
@@ -653,7 +720,7 @@ cout << "Efficiency, Stabilty, Fakerate, Purity " <<endl;
        			//sprintf(pdfname, "%i_%sClosureHist_%s_%i.pdf(" ,icl,"dd_",RunEra[iera],iun); sprintf(pdfname1, "%i_%s_%splot_%i.pdf" ,icl,"dd_",RunEra[iera],iun);sprintf(pdfname2, "%i_%sClosureHist_%s_%i.pdf)" ,icl,"dd_",RunEra[iera],iun);// check ??
 			sprintf(pdfname, "%sClosure_%s_by_%s_%s.pdf(" ,"dd_",dirname[icl],dirname[iun],RunEra[iera]); sprintf(pdfname1, "%sClosure_%s_by_%s_%s.pdf" ,"dd_",dirname[icl],dirname[iun],RunEra[iera]);sprintf(pdfname2, "%sClosure_%s_by_%s_%s.pdf)" ,"dd_",dirname[icl],dirname[iun],RunEra[iera]);
        			if(id==0 && ij==0 && ik==0 && ipt==0){cpt0->Print(pdfname,"pdf");
-         		}else if(id==0 && ij==1 && ik==9 && ipt==9) {cpt0->Print(pdfname2,"pdf");
+         		}else if(id==2 && ij==1 && ik==9 && ipt==9) {cpt0->Print(pdfname2,"pdf");
           		}else{cpt0->Print(pdfname,"pdf");};
         			}
       			}
@@ -693,7 +760,8 @@ cout << "Efficiency, Stabilty, Fakerate, Purity " <<endl;
        			sprintf(lplot_xtitle, "%s_{%s}^{%s}",obs_def[id], njets[ij], k_fact[ik]);
        			//float ratio_range1[2]={1.2,0.9};
        			int num1[3]={2,1,0} ;
-       			float lpos1[8] ={.32,0.2,0.55,0.45, .05, 1.45,0.7,0.1};
+       			//float lpos1[8] ={.32,0.2,0.55,0.45, .05, 1.45,0.7,0.1};
+			float lpos1[8] ={0.45,0.15,0.60,0.35,.055, 1.6,0.2,0.1};
 
        			//cpt0 =(TCanvas*)(ratio_can(num1, lpos1, MyHist, MC_input, lplot_xtitle,MCinput_index,data_index));
        			cpt0 =(TCanvas*)(ratio_canV2(num1, lpos1, MyHist, MC_input, lplot_xtitle,MCinput_index,data_index));
@@ -702,7 +770,7 @@ cout << "Efficiency, Stabilty, Fakerate, Purity " <<endl;
 
        			sprintf(pdfname, "%sDataCT_%s_%s.pdf(" ,"dd_",dirname[iun],RunEra[iera]); sprintf(pdfname1, "%sDataCT_%s_%s.pdf" ,"dd_",dirname[iun],RunEra[iera]);sprintf(pdfname2, "%sDataCT_%s_%s.pdf)" ,"dd_",dirname[iun],RunEra[iera]);
        			if(id==0 && ij==0 && ik==0 && ipt==0){cpt0->Print(pdfname,"pdf");
-         		}else if(id==0 && ij==1 && ik==9 && ipt ==9) {cpt0->Print(pdfname2,"pdf");
+         		}else if(id==2 && ij==1 && ik==9 && ipt ==9) {cpt0->Print(pdfname2,"pdf");
           		}else{cpt0->Print(pdfname,"pdf");};
         		}
       		}
@@ -740,7 +808,8 @@ cout << "Efficiency, Stabilty, Fakerate, Purity " <<endl;
        			sprintf(lplot_xtitle,"%s_{%s}^{%s}",obs_def[id], njets[ij], k_fact[ik]);
       	 		//float ratio_range1[2]={1.2,0.9};
        			int num1[3]={1,1,0} ;
-       			float lpos1[8] ={.32,0.2,0.55,0.45, .055, 1.6,0.2,0.1};
+       			//float lpos1[8] ={.32,0.2,0.55,0.45, .055, 1.6,0.2,0.1};
+			float lpos1[8] ={0.48,0.15,0.60,0.35,.055, 1.6,0.2,0.1};
 
        			//cpt0 =(TCanvas*)(ratio_can(num1, lpos1, MyHist, MC_input, lplot_xtitle,MCinput_index,data_index));
        			cpt0 =(TCanvas*)(ratio_canV2(num1, lpos1, MyHist, MC_input, lplot_xtitle,MCinput_index,data_index));
@@ -751,7 +820,7 @@ cout << "Efficiency, Stabilty, Fakerate, Purity " <<endl;
 			sprintf(pdfname, "%sRefold_%s_by_%s_%s.pdf(" ,"dd_",dirname[icl],dirname[iun],RunEra[iera]);sprintf(pdfname1, "%sRefold_%s_by_%s_%s.pdf" ,"dd_",dirname[icl],dirname[iun],RunEra[iera]);sprintf(pdfname2, "%sRefold_%s_by_%s_%s.pdf)" ,"dd_",dirname[icl],dirname[iun],RunEra[iera]);
 
        			if(id==0 && ij==0 && ik==0 && ipt==0){cpt0->Print(pdfname,"pdf");
-         		}else if(id==0 && ij==1 && ik==9 && ipt ==9) {cpt0->Print(pdfname2,"pdf");
+         		}else if(id==2 && ij==1 && ik==9 && ipt ==9) {cpt0->Print(pdfname2,"pdf");
           		}else{cpt0->Print(pdfname,"pdf");};
         			}
       			}
@@ -946,98 +1015,6 @@ TCanvas *ratio_can(int Nplot[2],float plegend[7], TH1D* data, TH1D* MC[Nplot[0]]
 return canvas;
 }//end of ratio plot function
 //----------------------------------------------------
-void Integralhist(TH1D *hist){ hist->Scale(1/(hist->Integral()));}
-//----------------------------------------------------
-void divBybinWidth(TH1D *hist){
-	int tmpnbn = hist->GetNbinsX();
-  	for (int ix=0; ix<tmpnbn; ix++) {
-    		double awidth = hist->GetBinWidth(ix+1); //tmpwid;
-    		hist->SetBinContent(ix+1, hist->GetBinContent(ix+1)/awidth);
-    		double error = hist->GetBinError(ix+1);
-    		hist->SetBinError(ix+1, error/awidth);
-  	}
-}
-//----------------------------------------------------
-void Myplotset(TH1D *MyHist, const char* XTitle, const char* YTitle){
-	//int ifornt =102;
-  	MyHist->SetTitleOffset(0.4);
-  	//MyHist->SetTitleFont(ifornt);
-  	MyHist->SetTitleSize(0.02);
-  	MyHist->SetStats(0);
-
-  	MyHist->GetXaxis()->SetLabelSize(0.03);
-  	MyHist->GetXaxis()->SetTitleSize(0.050);
-  	MyHist->GetXaxis()->SetTitleOffset(1.0);
-  	//MyHist->GetXaxis()->SetTitleFont(ifornt);
-  	MyHist->GetXaxis()->CenterTitle();
-  	MyHist->GetXaxis()->SetTitle(XTitle);
-
-  	MyHist->GetYaxis()->SetLabelSize(0.03);
-  	MyHist->GetYaxis()->SetTitleSize(0.050);
-  	MyHist->GetYaxis()->SetTitleOffset(1.0);
-  	MyHist->GetYaxis()->SetTitle(YTitle);
-  	//MyHist->GetYaxis()->SetTitleFont(ifornt);
-  	MyHist->GetYaxis()->CenterTitle();
-  	MyHist->SetTitle("");
-  	//gStyle->SetTitleFontSize(.08);
-  	MyHist->SetLineWidth(2);
-}
-//----------------------------------------------------
-void SetMycanvas(TCanvas *cpt,double bs,double lm, double rm, double tm,double bm){
-	cpt->SetBorderSize(bs);
-        cpt->SetLeftMargin(lm);
-        cpt->SetRightMargin(rm);
-        cpt->SetTopMargin(tm);
-        cpt->SetBottomMargin(bm);
-}
-//----------------------------------------------------
-void CTLegend(TLegend *legendn, const char* txt1, const char* txt2){
-  	legendn->SetFillStyle(0);
-  	legendn->SetBorderSize(0);
-  	legendn->SetTextSize(0.03);
-  	legendn->SetTextFont(42);
-  	legendn->AddEntry((TObject*)0, txt1, "");
-  	legendn->AddEntry((TObject*)0, txt2, "");
-}
-//----------------------------------------------------
-TLegend* CTLegendV2(float x1, float y1, float x2, float y2, float txtsize, const char* txt1="", const char* txt2="",const char* txt3="",const char* txt4=""){
-  	TLegend *leg = new TLegend(x1,y1,x2,y2);
-  	leg->SetFillStyle(0);
-  	leg->SetBorderSize(0);
-  	leg->SetTextSize(txtsize);
-  	leg->SetTextFont(42);
-  	leg->AddEntry((TObject*)0, txt1, "");
-  	leg->AddEntry((TObject*)0, txt2, "");
-  	leg->AddEntry((TObject*)0, txt3, "");
-  	leg->AddEntry((TObject*)0, txt4, "");
-return leg;
-}
-//----------------------------------------------------
-void Set2dHist(TH2D *MyHist, const char* XTitle, const char* YTitle,const char* ZTitle, double titoff[3], double titsize[3] ){
-  	MyHist->SetTitleOffset(0.2);
-  	//MyHist->SetTitleFont(102);
-  	MyHist->SetTitleSize(0.02);
-
-  	MyHist->GetXaxis()->SetLabelSize(0.03);
-  	MyHist->GetXaxis()->SetTitleSize(titsize[0]);
-  	MyHist->GetXaxis()->SetTitleOffset(titoff[0]);
-  	//MyHist->GetXaxis()->SetTitleFont(102);
-  	//MyHist->GetXaxis()->CenterTitle();
-
-  	MyHist->GetYaxis()->SetLabelSize(0.03);
-  	MyHist->GetYaxis()->SetTitleSize(titsize[1]);
-  	MyHist->GetYaxis()->SetTitleOffset(titoff[1]);
-
-  	MyHist->GetZaxis()->SetLabelSize(0.03);
-  	MyHist->GetZaxis()->SetTitleSize(titsize[2]);
-  	MyHist->GetZaxis()->SetTitleOffset(titoff[2]);
-
-  	MyHist->SetTitle("");
-  	MyHist->GetXaxis()->SetTitle(XTitle);
-  	MyHist->GetYaxis()->SetTitle(YTitle);
-  	MyHist->GetZaxis()->SetTitle(ZTitle);
-}
-//----------------------------------------------------
 TCanvas *ratio_canV2(int Nplot[3],float plegend[8], TH1D* data, TH1D* MC[Nplot[0]], char* lowpadx, const char* modnam[Nplot[0]], const  char* datanm[3]){
   	//Nplot[0] = number of MC enetered
   	//Nplot[1] = place 1 if upper part is log scale needed
@@ -1075,6 +1052,7 @@ TCanvas *ratio_canV2(int Nplot[3],float plegend[8], TH1D* data, TH1D* MC[Nplot[0
 
   	data->SetLineWidth(2);
   	data->SetMarkerStyle(9);
+	//data->SetLineStyle(1);
   	data->SetMarkerSize(.9);
   	int ifont =42;
   	data->GetXaxis()->SetTitleFont(ifont);
@@ -1272,20 +1250,115 @@ TCanvas *ratio_canV2(int Nplot[3],float plegend[8], TH1D* data, TH1D* MC[Nplot[0
 return canvas;
 }//end of ratio plot function
 //----------------------------------------------------
-void HT2_Normal(TH2D* VarHT, int nht, int htbin[nht+1], TH1D* Var[nht]){
-	TH2D* VarHTin = (TH2D*)VarHT->Clone();
-	int nbiny= VarHTin->GetNbinsY();
-	int nbinx= VarHTin->GetNbinsX();
-	TH1D* h_var = VarHTin->ProjectionX(); h_var->Reset();
-	for(int iht =1 ; iht <= nbiny; iht++){
-   		h_var->Reset();
-   		for(int ivar =1 ; ivar<= nbinx  ; ivar++){
-   			h_var->SetBinContent(ivar,VarHTin->GetBinContent(ivar,iht));
-   			h_var->SetBinError(ivar,VarHTin->GetBinError(ivar,iht));
-           	}
-  		Var[iht-1] =(TH1D*)h_var->Clone();
-		cout << " iht :"<< iht << endl;
-    	}
+void Integralhist(TH1D *hist){ hist->Scale(1/(hist->Integral()));}
+//----------------------------------------------------
+void divBybinWidth(TH1D *hist){
+        int tmpnbn = hist->GetNbinsX();
+        for (int ix=0; ix<tmpnbn; ix++) {
+                double awidth = hist->GetBinWidth(ix+1); //tmpwid;
+                hist->SetBinContent(ix+1, hist->GetBinContent(ix+1)/awidth);
+                double error = hist->GetBinError(ix+1);
+                hist->SetBinError(ix+1, error/awidth);
+        }
+}
+//----------------------------------------------------
+void Myplotset(TH1D *MyHist, const char* XTitle, const char* YTitle){
+        //int ifornt =102;
+        MyHist->SetTitleOffset(0.4);
+        //MyHist->SetTitleFont(ifornt);
+        MyHist->SetTitleSize(0.02);
+        MyHist->SetStats(0);
+
+        MyHist->GetXaxis()->SetLabelSize(0.03);
+        MyHist->GetXaxis()->SetTitleSize(0.050);
+        MyHist->GetXaxis()->SetTitleOffset(1.0);
+        //MyHist->GetXaxis()->SetTitleFont(ifornt);
+        MyHist->GetXaxis()->CenterTitle();
+        MyHist->GetXaxis()->SetTitle(XTitle);
+
+        MyHist->GetYaxis()->SetLabelSize(0.03);
+        MyHist->GetYaxis()->SetTitleSize(0.050);
+        MyHist->GetYaxis()->SetTitleOffset(1.0);
+        MyHist->GetYaxis()->SetTitle(YTitle);
+        //MyHist->GetYaxis()->SetTitleFont(ifornt);
+        MyHist->GetYaxis()->CenterTitle();
+        MyHist->SetTitle("");
+        //gStyle->SetTitleFontSize(.08);
+        MyHist->SetLineWidth(2);
+}
+//----------------------------------------------------
+//Ratio plot
+//xtilte, ytitle, max, min, linewidth, SetLineStyle, SetMarkerStyle, SetMarkerSize, SetLineColor
+void MyplotsetV2(TH1D *MyHist, const char* XT, const char* YT, float mx, float min, int ilw, int ilsty, int imsty, int imstysize, int icl){
+        MyHist->GetXaxis()->SetTitle(XT); MyHist->GetYaxis()->SetTitle(YT);
+        MyHist->SetMinimum(min); MyHist->SetMaximum(mx);
+        MyHist->SetLineWidth(ilw); MyHist->SetLineStyle(ilsty);
+        MyHist->SetMarkerStyle(imsty); MyHist->SetMarkerSize(imstysize); MyHist->SetLineColor(icl);
+        MyHist->SetTitle("");
+        MyHist->GetXaxis()->CenterTitle();
+        MyHist->GetYaxis()->CenterTitle();
+
+        MyHist->GetXaxis()->SetLabelSize(0.03);
+        MyHist->GetXaxis()->SetTitleSize(0.045);
+        MyHist->GetXaxis()->SetTitleOffset(1.0);
+        MyHist->GetYaxis()->SetLabelSize(0.03);
+        MyHist->GetYaxis()->SetTitleSize(0.040);
+        MyHist->GetYaxis()->SetTitleOffset(1.0);
+}
+//----------------------------------------------------
+void SetMycanvas(TCanvas *cpt,double bs,double lm, double rm, double tm,double bm){
+        cpt->SetBorderSize(bs);
+        cpt->SetLeftMargin(lm);
+        cpt->SetRightMargin(rm);
+        cpt->SetTopMargin(tm);
+        cpt->SetBottomMargin(bm);
+}
+//----------------------------------------------------
+void CTLegend(TLegend *legendn, const char* txt1, const char* txt2){
+        legendn->SetFillStyle(0);
+        legendn->SetBorderSize(0);
+        legendn->SetTextSize(0.03);
+        legendn->SetTextFont(42);
+        legendn->AddEntry((TObject*)0, txt1, "");
+        legendn->AddEntry((TObject*)0, txt2, "");
+}
+//----------------------------------------------------
+TLegend* CTLegendV2(float x1, float y1, float x2, float y2, float txtsize, const char* txt1="", const char* txt2="",const char* txt3="",const char* txt4=""){
+        TLegend *leg = new TLegend(x1,y1,x2,y2);
+        leg->SetFillStyle(0);
+        leg->SetBorderSize(0);
+        leg->SetTextSize(txtsize);
+        leg->SetTextFont(42);
+        leg->AddEntry((TObject*)0, txt1, "");
+        leg->AddEntry((TObject*)0, txt2, "");
+        leg->AddEntry((TObject*)0, txt3, "");
+        leg->AddEntry((TObject*)0, txt4, "");
+return leg;
+}
+//----------------------------------------------------
+void Set2dHist(TH2D *MyHist, const char* XTitle, const char* YTitle,const char* ZTitle, double titoff[3], double titsize[3] ){
+        MyHist->SetTitleOffset(0.2);
+        //MyHist->SetTitleFont(102);
+        MyHist->SetTitleSize(0.02);
+
+        MyHist->GetXaxis()->SetLabelSize(0.03);
+        MyHist->GetXaxis()->SetTitleSize(titsize[0]);
+        MyHist->GetXaxis()->SetTitleOffset(titoff[0]);
+        //MyHist->GetXaxis()->SetTitleFont(102);
+        //MyHist->GetXaxis()->CenterTitle();
+
+        MyHist->GetYaxis()->SetLabelSize(0.03);
+        MyHist->GetYaxis()->SetTitleSize(titsize[1]);
+        MyHist->GetYaxis()->SetTitleOffset(titoff[1]);
+
+        MyHist->GetZaxis()->SetLabelSize(0.03);
+        MyHist->GetZaxis()->SetTitleSize(titsize[2]);
+        MyHist->GetZaxis()->SetTitleOffset(titoff[2]);
+
+        MyHist->SetTitle("");
+        MyHist->GetXaxis()->SetTitle(XTitle);
+        MyHist->GetYaxis()->SetTitle(YTitle);
+        MyHist->GetZaxis()->SetTitle(ZTitle);
 }
 //----------------------------------------------------
 TH1D* ReadHist1D(string name, TFile* root, int irbin=1){
@@ -1304,6 +1377,22 @@ TH2D* ReadHist2D(string name, TFile* root, int irbin=1){
 return hist;
 }
 //----------------------------------------------------
+void HT2_Normal(TH2D* VarHT, int nht, int htbin[nht+1], TH1D* Var[nht]){
+        TH2D* VarHTin = (TH2D*)VarHT->Clone();
+        int nbiny= VarHTin->GetNbinsY();
+        int nbinx= VarHTin->GetNbinsX();
+        TH1D* h_var = VarHTin->ProjectionX(); h_var->Reset();
+        for(int iht =1 ; iht <= nbiny; iht++){
+                h_var->Reset();
+                for(int ivar =1 ; ivar<= nbinx  ; ivar++){
+                        h_var->SetBinContent(ivar,VarHTin->GetBinContent(ivar,iht));
+                        h_var->SetBinError(ivar,VarHTin->GetBinError(ivar,iht));
+                }
+                Var[iht-1] =(TH1D*)h_var->Clone();
+                cout << " iht :"<< iht << endl;
+        }
+}
+//----------------------------------------------------
 void HT2_NormalV2(TH2D* VarHT, int nht, int htbin[nht+1], TH1D* Var[nht]){
 	TH2D* VarHTin = (TH2D*)VarHT->Clone();
 	int nbiny= VarHTin->GetNbinsY();
@@ -1315,25 +1404,6 @@ void HT2_NormalV2(TH2D* VarHT, int nht, int htbin[nht+1], TH1D* Var[nht]){
         	Var[iht-1] =(TH1D*)h_var->Clone();
         	//h_var-Write();
       		}
-}
-//----------------------------------------------------
-//Ratio plot
-//xtilte, ytitle, max, min, linewidth, SetLineStyle, SetMarkerStyle, SetMarkerSize, SetLineColor
-void MyplotsetV2(TH1D *MyHist, const char* XT, const char* YT, float mx, float min, int ilw, int ilsty, int imsty, int imstysize, int icl){
-  	MyHist->GetXaxis()->SetTitle(XT); MyHist->GetYaxis()->SetTitle(YT);
-  	MyHist->SetMinimum(min); MyHist->SetMaximum(mx);
-  	MyHist->SetLineWidth(ilw); MyHist->SetLineStyle(ilsty);
-  	MyHist->SetMarkerStyle(imsty); MyHist->SetMarkerSize(imstysize); MyHist->SetLineColor(icl);
-  	MyHist->SetTitle("");
-  	MyHist->GetXaxis()->CenterTitle();
-  	MyHist->GetYaxis()->CenterTitle();
-
-  	MyHist->GetXaxis()->SetLabelSize(0.03);
-  	MyHist->GetXaxis()->SetTitleSize(0.045);
-  	MyHist->GetXaxis()->SetTitleOffset(1.0);
-  	MyHist->GetYaxis()->SetLabelSize(0.03);
-  	MyHist->GetYaxis()->SetTitleSize(0.040);
-  	MyHist->GetYaxis()->SetTitleOffset(1.0);
 }
 //----------------------------------------------------
 void Chi2Root(TH1 * data, TH1 * MC, int rebin = 1){

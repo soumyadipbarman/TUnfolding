@@ -1,4 +1,3 @@
-//Version-2
 #include <iostream>
 #include <fstream>
 #include <cmath>
@@ -47,13 +46,13 @@
 #include <TVectorD.h>
 #include <TDecompSVD.h>
 
-#define CLOSURE
+//#define CLOSURE
 //#define BLTest
 
 using namespace std;
 static const auto feps = numeric_limits<float>::epsilon();
 
-void testUnfold2c1D_v2()
+void testUnfold2c()
 {
   //switch on histogram errors
   TH1::SetDefaultSumw2();
@@ -65,29 +64,48 @@ void testUnfold2c1D_v2()
   int const idata=3; //MC will used for Unfold
   int irbin = 1;     //Rebin
 
-  //const TString Pyinput = "../Input/26Nov2022/PY8_bin.root"; // PY8 bin
-  const TString Pyinput = "../Input/26Nov2022/PY8_flat.root"; // PY8 bin
-  //const TString Pyinput = "../Input/26Nov2022/MG5_PY8_bin.root"; // PY8 bin
-  //const TString Pyinput = "../Input/26Nov2022/HW7_flat.root"; // PY8 bin
+  string Date = "26Nov2022"; // Run date
 
-  //const TString datainput = "../Input/26Nov2022/Data_UL2017.root"; // Data
-  
-  //const TString datainput = "../Input/26Nov2022/PY8_bin.root"; // PY8 bin for closure
-  //const TString datainput = "../Input/26Nov2022/PY8_flat.root"; // PY8 bin for closure
-  //const TString datainput = "../Input/26Nov2022/MG5_PY8_bin.root"; // PY8 bin for closure
-  const TString datainput = "../Input/26Nov2022/HW7_flat.root"; // PY8 bin for closure
+  //const TString Pyinput = "../Input/"+Date+"/PY8_bin.root";       // PY8 bin
+  //const TString Pyinput = "../Input/"+Date+"/PY8_flat.root";      // PY8 flat
+  //const TString Pyinput = "../Input/"+Date+"/MG5_PY8_bin.root";   // MG5+PY8
+  const TString Pyinput = "../Input/"+Date+"/HW7_flat.root";      // HW7 flat
+
+  //const TString datainput = "../Input/"+Date+"/PY8_bin.root";     // PY8 bin for closure
+  //const TString datainput = "../Input/"+Date+"/PY8_flat.root";    // PY8 flat for closure
+  //const TString datainput = "../Input/"+Date+"/MG5_PY8_bin.root"; // MG5+PY8 for closure
+  //const TString datainput = "../Input/"+Date+"/HW7_flat.root";    // HW7 flat for closure
+
+  const TString datainput = "../Input/"+Date+"/Data_UL2017.root"; // Data
 
   //Input Data and MC histogram
   TFile *inputData=new TFile(datainput);
   TFile *RMinput=new TFile(Pyinput);
 
-  TFile *inputMC[nmc];
-  inputMC[0]=new TFile("../Input/26Nov2022/PY8_flat.root");     // PY8 bin
-  inputMC[1]=new TFile("../Input/26Nov2022/PY8_flat.root");    // PY8 flat
-  inputMC[2]=new TFile("../Input/26Nov2022/PY8_flat.root"); // MG5+PY8
-  inputMC[3]=new TFile("../Input/26Nov2022/HW7_flat.root");    // HW7 flat
+  const TString inputMC0 = "../Input/"+Date+"/PY8_bin.root";     // PY8 bin
+  const TString inputMC1 = "../Input/"+Date+"/PY8_flat.root";    // PY8 flat
+  const TString inputMC2 = "../Input/"+Date+"/MG5_PY8_bin.root"; // MG5+PY8
+  const TString inputMC3 = "../Input/"+Date+"/HW7_flat.root";    // HW7 flat
 
-  TFile *outputFile=new TFile("../Unfolded/26Nov2022/1D/Unfolded_HW7_flat_PY8_flat.root","recreate");   //Unfolded Data and Covarince matrix, efficincy,fake rate, purity, stability
+  TFile *inputMC[nmc];
+  inputMC[0]=new TFile(inputMC0);
+  inputMC[1]=new TFile(inputMC1);
+  inputMC[2]=new TFile(inputMC2);
+  inputMC[3]=new TFile(inputMC3);
+
+  // Closure
+  //const TString output = "../Unfolded/"+Date+"/1D/Unfolded_PY8_bin_PY8_bin.root";         // PY8 bin by PY8 bin
+  //const TString output = "../Unfolded/"+Date+"/1D/Unfolded_PY8_flat_PY8_bin.root";        // PY8 flat by PY8 bin
+  //const TString output = "../Unfolded/"+Date+"/1D/Unfolded_MG5_PY8_bin_PY8_bin.root";     // MG5+PY8 by PY8 bin
+  //const TString output = "../Unfolded/"+Date+"/1D/Unfolded_HW7_flat_PY8_bin.root";        // HW7 flat by PY8 bin
+
+  // Data
+  //const TString output = "../Unfolded/"+Date+"/1D/Unfolded_Data_UL2017_PY8_bin.root";     // Data by PY8 bin
+  //const TString output = "../Unfolded/"+Date+"/1D/Unfolded_Data_UL2017_PY8_flat.root";    // Data by PY8 flat
+  //const TString output = "../Unfolded/"+Date+"/1D/Unfolded_Data_UL2017_MG5_PY8_bin.root"; // Data by MG5+PY8
+  const TString output = "../Unfolded/"+Date+"/1D/Unfolded_Data_UL2017_HW7_flat.root";    // Data by HW7 flat
+
+  TFile *outputFile=new TFile(output,"recreate");  //Unfolded Data and Covarince matrix, efficincy,fake rate, purity, stability
   
   string HistDir = "analyzeBasicPat";
   //const char* Dimtag = "2d";

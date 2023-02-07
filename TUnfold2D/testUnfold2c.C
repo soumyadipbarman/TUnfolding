@@ -46,7 +46,7 @@
 #include <TVectorD.h>
 #include <TDecompSVD.h>
 
-#define CLOSURE
+//#define CLOSURE
 //#define BLTest
 
 using namespace std;
@@ -60,46 +60,66 @@ void testUnfold2c(){
 
   //MC -> 0,1,2,3 PY8, PY8_Flat, MG, HW7 (umc,idata)
   int const nmc=4;   // Number of MC sample
-  int const umc=1;   // MC will used for Unfold
-  int const idata=1; // MC will used for Unfold
+  int const umc=3;   // MC will used for Unfold
+  int const idata=3; // MC will used for Unfold
   int irbin = 1;     // Rebin
 
-  //string Date = "11Aug2022"; // Run date
-  //string Date = "24Sept2022"; // Run date
-  //string Date = "15Oct2022"; // Run date
-  string Date = "26Nov2022"; // Run date
+  // Run date
+  //string Date = "11Aug2022";
+  //string Date = "24Sept2022"; 
+  //string Date = "15Oct2022";  
+  //string Date = "26Nov2022";   
+  string Date = "03Dec2022"; 
 
-  // MC RM input for unfoldind
-  //const TString Pyinput = "../Input/"+Date+"/PY8_bin.root"; // PY8 bin
-  //const TString Pyinput = "../Input/"+Date+"/PY8_flat.root"; // PY8 flat
-  //const TString Pyinput = "../Input/"+Date+"/MG5_PY8_bin.root"; // MG5+PY8
-  const TString Pyinput = "../Input/"+Date+"/HW7_flat.root"; // HW7 flat
-  
-  // Data for unfolding
-  //const TString datainput = "../Input/"+Date+"/Data_UL2017.root"; // Data
+  // MC RM input for unfolding
+  //const TString Pyinput = "../Input/"+Date+"/PY8_bin.root";       // PY8 bin
+  //const TString Pyinput = "../Input/"+Date+"/PY8_flat.root";      // PY8 flat
+  //const TString Pyinput = "../Input/"+Date+"/MG5_PY8_bin.root";   // MG5+PY8
+  const TString Pyinput = "../Input/"+Date+"/HW7_flat.root";      // HW7 flat
 
   // Pseduo data For closure
-  //const TString datainput = "../Input/"+Date+"/PY8_bin.root"; // PY8 bin for closure
-  const TString datainput = "../Input/"+Date+"/PY8_flat.root"; // PY8 flat for closure
+  //const TString datainput = "../Input/"+Date+"/PY8_bin.root";     // PY8 bin for closure
+  //const TString datainput = "../Input/"+Date+"/PY8_flat.root";    // PY8 flat for closure
   //const TString datainput = "../Input/"+Date+"/MG5_PY8_bin.root"; // MG5+PY8 for closure
-  //const TString datainput = "../Input/"+Date+"/HW7_flat.root"; // HW7 flat for closure
+  //const TString datainput = "../Input/"+Date+"/HW7_flat.root";    // HW7 flat for closure
+
+  // Data for unfolding
+  const TString datainput = "../Input/"+Date+"/Data_UL2017.root"; // Data
 
   //input binning extracted from testUnfold5b.C
   //TFile *inputbinning = new TFile("testUnfold5_binning_11Aug2022.root");
-  TFile *inputbinning = new TFile("testUnfold5_binning_24Oct2022.root");
+  //TFile *inputbinning = new TFile("testUnfold5_binning_24Oct2022.root");
+  //TFile *inputbinning = new TFile("testUnfold5_binning_07Dec2022.root");
+  TFile *inputbinning = new TFile("testUnfold5_binning_equidistant.root");
 
   //Input Data and MC histogram
   TFile *inputData=new TFile(datainput);
   TFile *RMinput=new TFile(Pyinput);
 
-  TFile *inputMC[nmc];
-  inputMC[0]=new TFile("../Input/26Nov2022/PY8_flat.root");     // PY8 bin 
-  inputMC[1]=new TFile("../Input/26Nov2022/PY8_flat.root");    // PY8 flat
-  inputMC[2]=new TFile("../Input/26Nov2022/PY8_flat.root"); // MG5+PY8
-  inputMC[3]=new TFile("../Input/26Nov2022/HW7_flat.root");    // HW7 flat
+  const TString inputMC0 = "../Input/"+Date+"/PY8_bin.root";     // PY8 bin
+  const TString inputMC1 = "../Input/"+Date+"/PY8_flat.root";    // PY8 flat
+  const TString inputMC2 = "../Input/"+Date+"/MG5_PY8_bin.root"; // MG5+PY8
+  const TString inputMC3 = "../Input/"+Date+"/HW7_flat.root";    // HW7 flat
 
-  //Unfolded Data and Covarince matrix, efficincy,fake rate, purity, stability
-  TFile *outputFile=new TFile("../Unfolded/26Nov2022/2D/Unfolded_HW7_flat_PY8_flat.root","recreate");
+  TFile *inputMC[nmc];
+  inputMC[0]=new TFile(inputMC0);
+  inputMC[1]=new TFile(inputMC1);
+  inputMC[2]=new TFile(inputMC2);
+  inputMC[3]=new TFile(inputMC3);
+
+  // Closure
+  //const TString output = "../Unfolded/"+Date+"/2D/Unfolded_PY8_bin_PY8_bin.root";         // PY8 bin by PY8 bin
+  //const TString output = "../Unfolded/"+Date+"/2D/Unfolded_PY8_flat_PY8_bin.root";        // PY8 flat by PY8 bin
+  //const TString output = "../Unfolded/"+Date+"/2D/Unfolded_MG5_PY8_bin_PY8_bin.root";     // MG5+PY8 by PY8 bin
+  //const TString output = "../Unfolded/"+Date+"/2D/Unfolded_HW7_flat_PY8_bin.root";        // HW7 flat by PY8 bin
+
+  // Data
+  //const TString output = "../Unfolded/"+Date+"/2D/Unfolded_Data_UL2017_PY8_bin.root";     // Data by PY8 bin
+  //const TString output = "../Unfolded/"+Date+"/2D/Unfolded_Data_UL2017_PY8_flat.root";    // Data by PY8 flat
+  //const TString output = "../Unfolded/"+Date+"/2D/Unfolded_Data_UL2017_MG5_PY8_bin.root"; // Data by MG5+PY8
+  const TString output = "../Unfolded/"+Date+"/2D/Unfolded_Data_UL2017_HW7_flat.root";    // Data by HW7 flat
+
+  TFile *outputFile=new TFile(output,"recreate");  //Unfolded Data and Covarince matrix, efficincy,fake rate, purity, stability
 
   string HistDir = "analyzeBasicPat2D";
   const char* Dimtag = "2d";
@@ -111,12 +131,12 @@ void testUnfold2c(){
   const int njetptmn = nHLTmx;
   //Int_t HT2range[nHLTmx+1]={92, 119, 185, 251, 319, 388, 467, 518, 579, 669, 3000};
 
-  static const int ndef = 2;    // 3 definition of JC
+  static const int ndef = 3;    // 3 definition of JC
   static const int njet = 2;    // 2 Jets
   static const int nkappa = 10; // 10 kappa values
 
-  const char* obs_def[ndef]={"Q","Q_{L}"}; // Test for error obseved due to bin entries
-  //const char* obs_def[ndef]={"Q","Q_{L}","Q_{T}"};
+  //const char* obs_def[ndef]={"Q","Q_{L}"}; // Test for error obseved due to bin entries
+  const char* obs_def[ndef]={"Q","Q_{L}","Q_{T}"};
   const char* jet_num[njet]={"Leading-Jet","Sub-Leading-Jet"};
   const char* k_fact[nkappa]={"k=0.1","k=0.2","k=0.3","k=0.4","k=0.5","k=0.6","k=0.7","k=0.8","k=0.9","k=1.0"};
 
@@ -432,9 +452,9 @@ void testUnfold2c(){
 
           	HT2_NormalV3(hist_purity[imc][id][ij][ik], binsGen[id][ij][ik], Axisname,nHLTmx,1);
           	HT2_NormalV3(hist_stbl[imc][id][ij][ik], binsGen[id][ij][ik], Axisname,nHLTmx,1);
-        	} //for (int imc=0;imc<nmc;imc++)
-      	}//for(int ivar=0; ivar < nusedvar ; ivar ++)
-    }//for(int ity=0; ity <type; ity++)
+        	}
+      	}
+    }
 }
 cout << "Histogram Read Data and MC Done " <<endl;
 //------------------Fold check : Patrick 1 Sep 20------------
@@ -597,27 +617,33 @@ for(int id=0; id<ndef; id++){
         		HT2_NormalV3(Unfolded, binsGen[id][ij][ik], Axisname,nHLTmx,1);
 
 #ifdef BLTest  
-        		int ib =0;
-        		TH1 * BLTdata = (TH1*)Data_Reco[id][ij][ik]->Clone(); //Data Reco
-        		TH1 * BLTreco = (TH1*)MC_Reco[ib][id][ij][ik]->Clone(); //Data Reco
-        		TH1 * BLTdata1 = (TH1*)RMinput_fakerateInv[id][ij][ik]->Clone(); BLTdata1->Multiply(Data_Reco[id][ij][ik]);  //Data -background
+        		int ib =0;  // Any one MC -> Pythia8
+        		TH1 * BLTdata = (TH1*)Data_Reco[id][ij][ik]->Clone();   //Data Reco
+        		TH1 * BLTreco = (TH1*)MC_Reco[ib][id][ij][ik]->Clone(); //MC Reco
+        		TH1 * BLTdata1 = (TH1*)RMinput_fakerateInv[id][ij][ik]->Clone(); 
+			
+			BLTdata1->Multiply(Data_Reco[id][ij][ik]);              //Data -background
 
-			TH1 * BLTgen = (TH1*)MC_Gen[ib][id][ij][ik]->Clone(); //Data Reco
-		        TH1 * BLTunf = (TH1*)Unfolded->Clone(); //Data Reco
+			TH1 * BLTgen = (TH1*)MC_Gen[ib][id][ij][ik]->Clone();   //Data Reco  MC GEN ??
+		        TH1 * BLTunf = (TH1*)Unfolded->Clone();                 //Unfolded Reco 
 
+			//https://root.cern.ch/doc/master/testUnfold5d_8C.html      : this get input covariance matrix : Data covariance matrix
         		sprintf(name,"%sBLT_Data_covariance_d%i_j%i_k%i_eta0",Histtag, id, ij, ik);
-        		TH2D* covMBLT = RecoBin->CreateErrorMatrixHistogram(name,false); covMBLT->Sumw2();
+        		TH2D* covMBLT = RecoBin->CreateErrorMatrixHistogram(name,false); 
+			covMBLT->Sumw2();
 			for (int ix=1; ix<BLTdata1->GetNbinsX()+1; ix++) {
 		        	double err = BLTdata1->GetBinError(ix);
           			covMBLT->SetBinContent(ix,ix,err*err);
        				}
-        		//https://root.cern.ch/doc/master/testUnfold5d_8C.html      : this get input covariance matrix : Data covariance matrix
+
 			sprintf(name,"%sMC_covariance_d%i_j%i_k%i_eta0",Histtag, id, ij, ik);
-		        TH2D* covUf = GenBin->CreateErrorMatrixHistogram(name,false); covUf->Sumw2();
+		        TH2D* covUf = GenBin->CreateErrorMatrixHistogram(name,false); 
+			covUf->Sumw2();
 			for (int ix=1; ix<covUf->GetNbinsX()+1; ix++) {
 	                	double err = Unfolded->GetBinError(ix);
           			covUf->SetBinContent(ix,ix,err*err);
         			}
+
 	cout << " From Density Chi2A() : " << density.GetChi2A() << " " << density.GetChi2L()  << " " << density.GetNdf() <<" Chi2/NDf : "  <<density.GetChi2A()/(density.GetNdf()+1) <<endl;
 	
 	cout << " chi2 det level 1: "; BLT(BLTdata, covM, MC_Reco[ib][id][ij][ik], 1);
@@ -635,13 +661,15 @@ for(int id=0; id<ndef; id++){
         Integralhist(BLTdata);
         Integralhist(BLTreco);
         
-	TH1D* BLTDetRatio= (TH1D*)BLTreco->Clone(); BLTDetRatio->SetNameTitle(Form("BLTDet_d%i_j%i_k%i_eta0",id, ij, ik),Form("BLTDet d%i j%i k%i eta0",id, ij, ik));
+	TH1D* BLTDetRatio= (TH1D*)BLTreco->Clone(); 
+	BLTDetRatio->SetNameTitle(Form("BLTDet_d%i_j%i_k%i_eta0",id, ij, ik),Form("BLTDet d%i j%i k%i eta0",id, ij, ik));
         BLTDetRatio->Divide(BLTdata);
         HT2_NormalV3(BLTDetRatio, binsGen[id][ij][ik], Axisname,nHLTmx,1);
 
         Integralhist(Unfolded);
         Integralhist(MC_Gen[ib][id][ij][ik]);
-        TH1D* BLTGenRatio= (TH1D*)MC_Gen[ib][id][ij][ik]->Clone(); BLTGenRatio->SetNameTitle(Form("BLTgen_d%i_j%i_k%i_eta0",id,ij,ik),Form("BLTgen d%i j%i k%i eta0",id,ij,ik));
+        TH1D* BLTGenRatio= (TH1D*)MC_Gen[ib][id][ij][ik]->Clone(); 
+	BLTGenRatio->SetNameTitle(Form("BLTgen_d%i_j%i_k%i_eta0",id,ij,ik),Form("BLTgen d%i j%i k%i eta0",id,ij,ik));
         BLTGenRatio->Divide(Unfolded);
         HT2_NormalV3(BLTGenRatio, binsGen[id][ij][ik], Axisname,nHLTmx,1);
 #endif
@@ -726,7 +754,6 @@ for(int i=0;i<Histprob->GetNbinsX()+2;i++){
 //---------------------BOTTOM LINE TEST--------------------------
 void BLT (TH1 * dataDistX, TH2 * dataCovX, TH1 * MCX, int rebin = 1)
 {
-
     TH1 * dataDist = (TH1*)dataDistX->Clone();
     TH2 * dataCov = (TH2*)dataCovX->Clone();
     TH1 * MC = (TH1*)MCX->Clone();
@@ -751,8 +778,8 @@ void BLT (TH1 * dataDistX, TH2 * dataCovX, TH1 * MCX, int rebin = 1)
             M(i,j) = dataCov->GetBinContent(index,jndex);
         }
     }
-//    TMatrixD vT = v;
-  //  vT.T();
+    //TMatrixD vT = v;
+    //vT.T();
 
     M.Invert();
 

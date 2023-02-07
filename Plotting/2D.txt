@@ -1,0 +1,181 @@
+TCanvas *ratio_can(int Nplot[2],float plegend[7], TH1D* data, TH1D* MC[Nplot[0]], char* lowpadx, const char* modnam[Nplot[0]], const  char* datanm[1]){
+	//Nplot[0] = number of MC enetered
+  	//Nplot[1] = place 1 if upper part is log scale needed
+  	//plegend[0->3] = x1,y1,x2,y2 of the legend of the upper plot
+  	//plegend[4]= text size
+  	//plegend[5-6]= ratio plot axis range
+  	//data = data histogram
+  	//MC = monte carlo histogram array
+  	//legendN = name of the legends for mC one by one
+  	//lowpadx = x axis title of the ratio plot
+
+  	TCanvas *canvas =new TCanvas("cptfun", "canvas_fun", 680,750 );
+  	canvas->cd();
+  	canvas->SetRightMargin(0.02);
+	//canvas->SetLeftMargin(0.03);
+  	canvas->SetTopMargin(0.04);
+
+  	char ratioXaxis1[100];
+  	char MCindex[100];
+  	//float ymax;
+  	//canvas->SetBottomMargin(0.1);
+  	data->GetYaxis()->SetLabelSize(0.055);
+  	data->GetXaxis()->SetLabelSize(0.0);
+  	data->GetYaxis()->SetTitleSize(0.065);
+  	data->GetYaxis()->SetTitleOffset(1.33);
+  	data->GetXaxis()->SetTitleSize(0.053);
+  	data->GetXaxis()->SetTitleOffset(0.12);
+  	data->GetYaxis()->CenterTitle();
+  	data->GetXaxis()->CenterTitle();
+  	data->GetXaxis()->SetTickLength(0.05);
+  	data->GetYaxis()->SetTickLength(0.05);
+
+  	data->SetLineWidth(2);
+  	data->SetMarkerStyle(9);
+  	data->SetMarkerSize(.9);
+  	int ifont =42;
+  	data->GetXaxis()->SetTitleFont(ifont);
+  	data->GetYaxis()->SetTitleFont(ifont);
+  	data->SetTitleFont(ifont);
+  	//ymax = data->GetMaximum();
+  	//Divide the histogram with bin width
+
+  	TPad *padfun1 = new TPad("padfun1", "padfun1", 0.05, 0.35, 1.0, 1.0);
+  	padfun1->SetBottomMargin(0.0); //Upper and lower plot are joined
+	//padfun1->SetTopMargin(0.05); //Upper and lowd
+  	padfun1->SetLeftMargin(0.17);  //Left
+  	padfun1->SetRightMargin(.02);
+  	padfun1->Draw();               //Draw the upper pad: pad1
+  	padfun1->cd();
+  	data->SetFillColor(kYellow);
+  	data->SetFillStyle(1111);
+  	//create the legend of ht2 range
+  	char MC_HTindex[100];
+  	//TLegend *HT_range = new TLegend(.15,.06,.55,.1);
+  	TLegend *HT_range = new TLegend(plegend[0]-0.08,.06,plegend[2],.1);
+  	HT_range->SetFillStyle(0);
+  	HT_range->SetBorderSize(0);
+  	HT_range->SetTextSize(0.06);
+  	sprintf(MC_HTindex,"%s" , data->GetTitle());   //legend for the HT value range
+  	HT_range->AddEntry((TObject*)0, MC_HTindex, "" );
+  	HT_range->Draw();
+  	data->SetTitle("");
+  	//end the legend of ht2 range
+  	data->Draw("e2");
+  	//data->Draw(" ");
+
+  	//if(Nplot[1]==1){gPad->SetLogy();} //condition for log scale
+  	gStyle->SetOptStat(0);
+  	gPad->SetTickx(1);
+  	gPad->SetTicky(1);
+
+  	double chi2rat[Nplot[0]];    // for chi2 plot in legend
+  	double chi2Ndfrat[Nplot[0]]; // for chi2 plot in legend
+
+  	int color[40] = {2,62,30,46,8,49,1,41,42,30,46,28,29,38,30,12,37,49,9,32,2,3,6,7,8,49,1,41,42,30,46,28,29,38,30,12,37,49,9,32};
+  	int style[40]={1,1,1,1,5,6,7,8,9,9,2,3,4,5,6,7,8,9,9,9,1,2,3,4,5,6,7,8,9,9,2,3,4,5,6,7,8,9,9,9};
+  	for(int iup =0; iup < Nplot[0] ; iup++){
+    		MC[iup]->SetLineStyle(style[iup]);
+    		MC[iup]->SetLineColor(color[iup]);
+    		MC[iup]->SetLineWidth(3);
+    		//MC[iup]->Draw("same hist ");// gPad->SetLogy();
+
+    		//Addition fo chi2/Ndf  with legend
+    		int nn = data->GetNbinsX();
+    		Double_t resl[nn] , chi2l;
+    		Int_t ndfl ,igoodl;
+    		TH1D *chidatal = (TH1D*)data->Clone("chidatal");   //for chi square test
+    		TH1D *chiMCl = (TH1D*)MC[iup]->Clone("chiMCl");    //for chi square test
+    		chiMCl->Chi2TestX(chidatal, chi2l, ndfl, igoodl, "WU", resl);
+    		//chidata->Chi2TestX(chiMC, chi2, ndf, igood, "WU", res);
+    		cout << "Ndf value =" << ndfl << "chi2 value=" << chi2l << endl;
+    		chi2rat[iup]=chi2l;
+    		chi2Ndfrat[iup]=chi2l/ndfl;
+    		MC[iup]->Draw("same hist e1 ");
+  	}//end of Montecarlo loop
+  	data->Draw(" same e1");
+  	//end of Uncertainty
+
+  	//data->Draw("same");
+  	//TLegend *legendn = new TLegend(.4,0.20,0.62,0.35);
+  	TLegend *legendn = new TLegend(plegend[0],plegend[1],plegend[2],plegend[3]);
+  	legendn->SetFillStyle(0);
+  	legendn->SetBorderSize(0);
+  	legendn->SetTextSize(plegend[4]);
+  	legendn->SetTextFont(42);
+
+  	sprintf(MCindex,"%s" , datanm[0]);                //use if chi2 is not needed in the legend
+  	legendn->AddEntry(data, MCindex,"lp");
+  	for(int iup =0 ; iup <  Nplot[0] ; iup++){
+    		sprintf(MCindex,"%s" , modnam[iup]);      //use if chi2 is not needed in the legend
+    		//sprintf(MCindex,"%s-#chi^{2}/NDF: %.2f" ,legendN[iup],chi2Ndfrat[iup]);   //legend with chi2/Ndf value
+    		legendn->AddEntry(MC[iup], MCindex ,"lp");
+  		}
+  	legendn->Draw();
+  	HT_range->Draw();
+  	//ratio plot pad
+  	canvas->cd();          // Go back to the main canvas before defining pad2
+  	TPad *padfun2 = new TPad("padfun2", "padfun2", 0.05,0.02,1.0, 0.35);
+  	padfun2->SetTopMargin(0);
+  	padfun2->SetBottomMargin(.4);
+  	padfun2->SetLeftMargin(.17);
+  	padfun2->SetRightMargin(.02);
+  	padfun2->SetGridy(); // Horizontal grid
+  	padfun2->Draw();
+  	padfun2->cd();
+  	gPad->SetTickx(1);
+  	gPad->SetTicky(1);
+  	//gStyle->SetErrorX(0.5);
+  	for(int ilow =0 ; ilow <  Nplot[0] ; ilow++){  //loop for ratio plot
+    		TH1D *rh2;
+    		//if(data->GetBinContent(1) > 0 ||  data->GetBinContent(10) > 0) {
+    			//if(data->GetBinContent(10) > 0) {
+    			rh2 = (TH1D*)MC[ilow]->Clone("rh2");
+    			//rh2->Sumw2();
+    			rh2->Divide(data);     //MC divide by data
+    		/* 	}else{
+       				rh2 = (TH1D*)data->Clone("rh2");
+       				rh2->Sumw2();
+       				rh2->SetLineColor(MC[ilow]->GetLineColor());
+       				rh2->SetLineWidth(MC[ilow]->GetLineWidth());
+       				rh2->SetLineStyle(MC[ilow]->GetLineStyle());
+       				rh2->Divide(MC[ilow]);
+       			}*/
+    		rh2->SetTitle("");
+    		//rh2->SetLineColor(kBlack);
+    		//rh2->SetMaximum(lowYrange[0]);  // .. range
+    		//rh2->SetMinimum(lowYrange[1]);  // Define Y ..
+    		//cout << "max = " << plegend[5] << "  min = " << plegend[6] << endl;
+    		rh2->SetMinimum(plegend[6]);  // Define Y ..
+    		rh2->SetMaximum(plegend[5]);  // .. range
+    		rh2->SetStats(0);      // No statistics on lower plot
+    		//rh2->Divide(data);     //MC devide by data
+    		rh2->SetMarkerStyle(20);
+    		rh2->SetMarkerStyle(kFullCircle);
+    		//rh2->Draw(" same hist");
+    		rh2->Draw(" same ");
+    		//rh2->Draw("same hist e1");
+
+    		rh2->GetXaxis()->SetTitleSize(0.12);
+    		//rh2->GetXaxis()->SetTitleFont(43);
+    		rh2->GetXaxis()->SetTitleOffset(1.33);
+    		rh2->GetXaxis()->SetLabelSize(0.13);
+    		rh2->GetXaxis()->CenterTitle();
+    		sprintf(ratioXaxis1," %s" ,lowpadx);
+    		rh2->GetXaxis()->SetTitle(ratioXaxis1);
+
+    		rh2->GetYaxis()->SetTitle("MC/Data");
+    		rh2->GetYaxis()->CenterTitle();
+    		rh2->GetYaxis()->SetNdivisions(505);
+    		rh2->GetYaxis()->SetTitleSize(0.15);
+    		rh2->GetXaxis()->SetTitleFont(ifont);
+    		rh2->GetYaxis()->SetTitleFont(ifont);
+    		rh2->GetYaxis()->SetTitleOffset(0.6);
+    		rh2->GetXaxis()->SetTickLength(0.06);
+    		rh2->GetYaxis()->SetTickLength(0.06);
+    		//rh2->GetYaxis()->SetLabelFont(1.0); // Absolute font size in pixel (precision 3)
+    		rh2->GetYaxis()->SetLabelSize(0.09);
+  	}
+  	canvas->Update();
+return canvas;
+}//end of ratio plot function
